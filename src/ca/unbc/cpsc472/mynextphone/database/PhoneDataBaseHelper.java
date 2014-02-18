@@ -11,7 +11,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
     private static String[] ruleColumns = {"id"};
     private static String[] conditionColumns = {"id", "rule_id", "fact_id"};
     private static String[] answerColumns = {"id", "rule_id", "fact_id"};
-    private static String[] factColumns = {"id", "name", "truth_flag"};
+    private static String[] factColumns = {"id", "name", "truth_flag", "type"};
 
 	public PhoneDataBaseHelper(Context context) {
 		super(context);
@@ -85,7 +85,8 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		return new Fact(
 				cursor.getInt(cursor.getColumnIndex(factColumns[0])),
 				cursor.getString(cursor.getColumnIndex(factColumns[1])),
-				cursor.getInt(cursor.getColumnIndex(factColumns[2]))
+				cursor.getInt(cursor.getColumnIndex(factColumns[2])),
+				Fact.FactType.values()[cursor.getInt(cursor.getColumnIndex(factColumns[3]))]
 		);
 	}
 	
