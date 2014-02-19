@@ -1,6 +1,8 @@
 package ca.unbc.cpsc472.mynextphone.models;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import android.util.Log;
 
@@ -10,13 +12,13 @@ public class InferenceEngine {
 	public static enum CompletionMode {SINGLE, EXHAUSTIVE};
 	
 	private CompletionMode completionMode;
-	ArrayList<Fact> workingMem;
+	HashSet<Fact> workingMem;
 	ArrayList<Rule> rules;
 	PhoneDataBaseHelper helper;
 	
 	public InferenceEngine(PhoneDataBaseHelper dbHelper) {
 		completionMode = InferenceEngine.CompletionMode.SINGLE;
-		workingMem = new ArrayList<Fact>();
+		workingMem = new HashSet<Fact>();
 		helper = dbHelper;
 		try {
 			rules = helper.getRules();
@@ -27,7 +29,8 @@ public class InferenceEngine {
 	
 	public InferenceEngine(ArrayList<Fact> initialMem, PhoneDataBaseHelper dbHelper) {
 		completionMode = InferenceEngine.CompletionMode.SINGLE;
-		workingMem = initialMem;
+		workingMem = new HashSet<Fact>();
+		workingMem.addAll(initialMem);
 		helper = dbHelper;
 		try {
 			rules = helper.getRules();
@@ -41,7 +44,9 @@ public class InferenceEngine {
 	}
 	
 	public ArrayList<Fact> getWorkingMem() {
-		return workingMem;
+		ArrayList<Fact> mem = new ArrayList<Fact>();
+		mem.addAll(workingMem);
+		return mem;
 	}
 	
 	public void updateMem() {
@@ -73,6 +78,9 @@ public class InferenceEngine {
 		}
 		ArrayList<Answer> newFacts = helper.getAnswersForRuleId(rule.getId());
 		this.addFactsToMem(newFacts);
+		
+		rules.remove(rule);
+		
 		return true;
 	}
 	
@@ -87,8 +95,9 @@ public class InferenceEngine {
 	}
 	
 	private boolean memContainsConclusiveFact() {
-		for(int i = 0; i < workingMem.size(); i++) {
-			if(workingMem.get(i).getFactType() == Fact.FactType.CONCLUSIVE) {
+		Iterator<Fact> iter = workingMem.iterator();
+		while(iter.hasNext()) {
+			if(iter.next().getFactType() == Fact.FactType.CONCLUSIVE) {
 				return true;
 			}
 		}
