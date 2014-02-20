@@ -57,7 +57,7 @@ public class QuestionGenerator {
 		ArrayList<QuestionAnswer> list = new ArrayList<QuestionAnswer>();
 		Random r = new Random();
 		int q = r.nextInt(bodies.length);
-		int a = r.nextInt(3)+2;
+		int a = r.nextInt(9)+2;
 		for(int i = 0; i < a; i++){
 			list.add(QuestionAnswer.getInstance(
 					strAns[r.nextInt(strAns.length)], QuestionAnswerType.TEXT));

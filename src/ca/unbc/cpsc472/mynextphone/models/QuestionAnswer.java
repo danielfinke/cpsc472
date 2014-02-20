@@ -19,6 +19,9 @@ import android.widget.TextView;
  */
 public abstract class QuestionAnswer {
 
+	//TODO: FOR_DANIEL: Needs some kind of effect here, and probably a method
+	//that updates the inference engine to be called from Question Activity's 
+	//List view's onClick method. (QuestionActivity.drawQuestion())
 	private String stringValue;
 	
 	/**
