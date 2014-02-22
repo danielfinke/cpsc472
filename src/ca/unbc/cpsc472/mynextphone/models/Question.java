@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author Andrew J Toms II
  */
 public class Question {
-
+	private int id;
 	private QuestionAnswerType type;
 	private String text;
 	private ArrayList<QuestionAnswer> answers;
@@ -20,11 +20,16 @@ public class Question {
 	 * @param answerSet The set of answers to this question.
 	 * @param type The type of answers this question accepts.
 	 */
-	public  Question(String text, QuestionAnswerType type, 
-			ArrayList<QuestionAnswer> answerSet){
+	public  Question(int id, String text, QuestionAnswerType type, 
+			ArrayList<QuestionAnswer> answerSet) {
+		this.id = id;
 		this.text = text;
 		this.type = type;
 		this.answers = answerSet;
+	}
+	
+	public int getId() {
+		return id;
 	}
 	
 	/**

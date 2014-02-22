@@ -3,6 +3,7 @@ package ca.unbc.cpsc472.mynextphone;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -14,7 +15,7 @@ import android.widget.TextView;
 import ca.unbc.cpsc472.mynextphone.models.Question;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswer;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswerType;
-import ca.unbc.cpsc472.mynextphone.models.QuestionGenerator;
+import ca.unbc.cpsc472.mynextphone.models.QuestionManager;
 
 /**
  * The Activity responsible for displaying to a user a Question, and having the
@@ -23,19 +24,25 @@ import ca.unbc.cpsc472.mynextphone.models.QuestionGenerator;
  * @author Andrew J Toms II
  */
 public class QuestionActivity extends Activity {
+	
+	public static Context appContext;
 
-	private final String QUESTION= "QUESTION_BODY";
+	private final String QUESTION_ID = "QUESTION_ID";
+	private final String QUESTION = "QUESTION_BODY";
+	private final String ANSWER_ID = "ANSWER_ID_";
 	private final String ANSWER = "ANSWER_";
 	private final String ANSWER_COUNT = "ANSWER_COUNT";
 	private Question question;
 	private TextView questionBody;
 	private ListView answerView;
+	private QuestionManager qMan;
 	
 	@Override
 	protected void onCreate(Bundle savedState) {
 		super.onCreate(savedState);
 		setContentView(R.layout.activity_question);
-		MainActivity.appContext = this;
+		appContext = this;
+		qMan = new QuestionManager(this);
 		
 		//Get the component references
 		this.questionBody = (TextView) this.findViewById(
@@ -63,9 +70,12 @@ public class QuestionActivity extends Activity {
 	@Override
 	public void onSaveInstanceState(Bundle outState){
 		//Need to remember our question
+		outState.putInt(this.QUESTION_ID, question.getId());
 		outState.putString(this.QUESTION, question.getText());
 		outState.putInt(this.ANSWER_COUNT, question.getAnswers().size());
 		for(int i = 0; i < question.getAnswers().size(); i++){
+			outState.putInt(this.ANSWER_ID + i,
+					question.getAnswers().get(i).getId());
 			outState.putString(this.ANSWER + i, 
 					question.getAnswers().get(i).toString());
 		}
@@ -78,7 +88,11 @@ public class QuestionActivity extends Activity {
 	 * so if you're going to touch that; here's where to do it.
 	 */
 	public void fetchNewQuestion(){
-		this.question = QuestionGenerator.getQuestion();
+		this.question = qMan.getQuestion();
+	}
+	
+	public void answerQuestion(QuestionAnswer qa) {
+		qMan.submitAnswer(qa);
 	}
 	
 	/**
@@ -89,15 +103,18 @@ public class QuestionActivity extends Activity {
 	 * question.
 	 */
 	public void restoreQuestion(Bundle savedState){
+		int questionId = savedState.getInt(this.QUESTION_ID);
 		String question_name = savedState.getString(this.QUESTION);
 		ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
 		for(int i = 0; i < savedState.getInt(this.ANSWER_COUNT); i++){
+			int id = savedState.getInt(this.ANSWER_ID + i);
 			String s = savedState.getString(this.ANSWER + i);
-			QuestionAnswer qa = QuestionAnswer.getInstance(s, 
+			QuestionAnswer qa = QuestionAnswer.getInstance(id, s, 
 					QuestionAnswerType.TEXT);									//TODO: Proper Types
 			answers.add(qa);
 		}
-		this.question = new Question(question_name, QuestionAnswerType.TEXT,	//TODO: Proper Types
+		this.question = new Question(questionId, question_name,
+				QuestionAnswerType.TEXT,	//TODO: Proper Types
 				answers);
 	}
 
@@ -113,9 +130,9 @@ public class QuestionActivity extends Activity {
 		this.answerView.setOnItemClickListener(new OnItemClickListener(){
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+			public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
 					long arg3) {
-				//TODO: Update the inference Question here
+				answerQuestion((QuestionAnswer)arg0.getItemAtPosition(pos));
 				fetchNewQuestion();
 				drawQuestion();
 			}

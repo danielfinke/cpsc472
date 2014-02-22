@@ -1,27 +1,37 @@
 package ca.unbc.cpsc472.mynextphone.models;
 
-import java.util.ArrayList;
-
-import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
+import java.util.HashSet;
 
 public class Rule {
-	private int id;
-	private PhoneDataBaseHelper dbHelper;
+	public static enum RuleSide {LEFT, RIGHT};
 	
-	public Rule(int id, PhoneDataBaseHelper dbHelper) {
-		this.id = id;
-		this.dbHelper = dbHelper;
+	private int ruleId;
+	private HashSet<Fact> leftSide;
+	private HashSet<Fact> rightSide;
+	
+	public Rule(int ruleId) {
+		this.ruleId = ruleId;
+		this.leftSide = new HashSet<Fact>();
+		this.rightSide = new HashSet<Fact>();
 	}
 	
-	public int getId() {
-		return id;
+	public int getRuleId() {
+		return ruleId;
 	}
 	
-	public ArrayList<Condition> getConditions() throws Exception {
-		return dbHelper.getConditionsForRuleId(id);
+	public HashSet<Fact> getLeftSide() {
+		return leftSide;
 	}
 	
-	public ArrayList<Answer> getAnswers() throws Exception {
-		return dbHelper.getAnswersForRuleId(id);
+	public HashSet<Fact> getRightSide() {
+		return rightSide;
+	}
+	
+	public void addFactCondition(Fact f) {
+		leftSide.add(f);
+	}
+	
+	public void addFactDeduction(Fact f) {
+		rightSide.add(f);
 	}
 }

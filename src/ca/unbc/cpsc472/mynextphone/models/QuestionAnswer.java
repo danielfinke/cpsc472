@@ -2,10 +2,9 @@ package ca.unbc.cpsc472.mynextphone.models;
 
 import java.io.IOException;
 
-import ca.unbc.cpsc472.mynextphone.MainActivity;
-
 import android.view.View;
 import android.widget.TextView;
+import ca.unbc.cpsc472.mynextphone.QuestionActivity;
 
 /**
  * This is the model for an answer to questions as the user percieves them; an
@@ -18,10 +17,7 @@ import android.widget.TextView;
  * @author Andrew J Toms II
  */
 public abstract class QuestionAnswer {
-
-	//TODO: FOR_DANIEL: Needs some kind of effect here, and probably a method
-	//that updates the inference engine to be called from Question Activity's 
-	//List view's onClick method. (QuestionActivity.drawQuestion())
+	private int id;
 	private String stringValue;
 	
 	/**
@@ -29,7 +25,8 @@ public abstract class QuestionAnswer {
 	 * 
 	 * @param val The String representing the data of the QuestionAnswer.
 	 */
-	private QuestionAnswer(String val){
+	private QuestionAnswer(int id, String val) {
+		this.id = id;
 		this.stringValue = val;
 	}
 	
@@ -44,14 +41,14 @@ public abstract class QuestionAnswer {
 	 * TEXT.
 	 * @return An instance of QuestionAnswer generated from the passed values. 
 	 */
-	public static QuestionAnswer getInstance(String value, 
-			QuestionAnswerType type){
+	public static QuestionAnswer getInstance(int id, String value, 
+			QuestionAnswerType type) {
 		switch(type){
 			case TEXT:
-				return new StringAnswer(value);
+				return new StringAnswer(id, value);
 			case TILE:
 				try{
-					return new ImageAnswer(value);
+					return new ImageAnswer(id, value);
 				}catch(IOException ioe){
 					throw new IllegalArgumentException("Encountered an  error" +
 							" trying to generate Tile Answer from String: " +
@@ -61,6 +58,10 @@ public abstract class QuestionAnswer {
 				throw new IllegalArgumentException(type + " is an undefined A" +
 						"nswer Type.");
 		}
+	}
+	
+	public int getId() {
+		return id;
 	}
 	
 	/**
@@ -87,13 +88,13 @@ public abstract class QuestionAnswer {
 	
 	private static class StringAnswer extends QuestionAnswer{
 
-		private StringAnswer(String text){
-			super(text);
+		private StringAnswer(int id, String text){
+			super(id, text);
 		}
 		
 		@Override
 		public View getView() {
-			TextView tv = new TextView(MainActivity.appContext);
+			TextView tv = new TextView(QuestionActivity.appContext);
 			tv.setText(this.toString());
 			return tv;
 		}
@@ -102,14 +103,14 @@ public abstract class QuestionAnswer {
 	
 	private static class ImageAnswer extends QuestionAnswer{
 
-		private ImageAnswer(String text) throws IOException{
-			super(text);
+		private ImageAnswer(int id, String text) throws IOException{
+			super(id, text);
 		}
 		
 		@Override
 		public View getView() {
 			//TODO: ONLY TEMPORARY; CONVERT TO RETURN AN APPROPRIATE IMAGEVIEW
-			TextView tv = new TextView(MainActivity.appContext);
+			TextView tv = new TextView(QuestionActivity.appContext);
 			tv.setText(this.toString());
 			return tv;
 		}

@@ -1,79 +1,128 @@
 package ca.unbc.cpsc472.mynextphone.database;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.database.Cursor;
-import ca.unbc.cpsc472.mynextphone.models.*;
+import android.database.DatabaseUtils;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+import android.util.SparseArray;
+import ca.unbc.cpsc472.mynextphone.models.Fact;
+import ca.unbc.cpsc472.mynextphone.models.Question;
+import ca.unbc.cpsc472.mynextphone.models.QuestionAnswer;
+import ca.unbc.cpsc472.mynextphone.models.QuestionAnswerType;
+import ca.unbc.cpsc472.mynextphone.models.Rule;
 
 public class PhoneDataBaseHelper extends DataBaseHelper {
-    protected static String DB_NAME = "db.sqlite";
-    private static String[] ruleColumns = {"id"};
-    private static String[] conditionColumns = {"id", "rule_id", "fact_id"};
-    private static String[] answerColumns = {"id", "rule_id", "fact_id"};
-    private static String[] factColumns = {"id", "name", "truth_flag", "type"};
+    private static String[] ruleColumns = {"_id", "rule_id", "fact_id", "left_right"};
+    private static String[] questionColumns = {"_id", "question", "type"};
+    private static String[] answerColumns = {"_id", "question_id", "answer"};
+    private static String[] factColumns = {"_id", "name", "truth_flag", "type"};
+    private static String[] answerFactColumns = {"_id", "answer_id", "fact_id"};
 
 	public PhoneDataBaseHelper(Context context) {
 		super(context);
-		DB_PATH = context.getFilesDir().getPath() + "/databases/";
+		DB_PATH = context.getFilesDir().getParent() + "/databases/";
+		DB_NAME = "db.sqlite";
 	}
 	
+	/*
+	 * Load up the entire set of rules into memory
+	 * Note that each rule row in the database does not represent a unique rule,
+	 * I simply compressed the schema of left and right sides into one table.
+	 * This simplifies the task of adding new rows in SQLite (no placeholder column)
+	 */
 	public ArrayList<Rule> getRules() throws Exception {
 		if(!dbIsOpen()) {
 			throw new Exception();
 		}
 		
-		ArrayList<Rule> rules = new ArrayList<Rule>();
+		// Rules are stored by their ruleId attribute in this array
+		SparseArray<Rule> rules = new SparseArray<Rule>();
 		Cursor cursor = getRulesCursor();
+		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
-			Rule r = new Rule(cursor.getInt(cursor.getColumnIndex(ruleColumns[0])), this);
-			rules.add(r);
+			// Try to find if this rule has already been loaded, if so, append new facts
+			int ruleId = cursor.getInt(cursor.getColumnIndex(ruleColumns[1]));
+			Rule r = rules.get(ruleId);
+			if(r == null) {
+				r = new Rule(ruleId);
+			}
+			
+			// The new fact to be added to the rule in memory
+			Fact f = this.getFactForFactId(
+					cursor.getInt(cursor.getColumnIndex(ruleColumns[2]))
+			);
+			
+			// Add to the left or right
+			int leftRight = cursor.getInt(cursor.getColumnIndex(ruleColumns[3]));
+			if(leftRight == Rule.RuleSide.LEFT.ordinal()) {
+				r.addFactCondition(f);
+			}
+			else {
+				r.addFactDeduction(f);
+			}
+			
+			rules.append(ruleId, r);
+			
 			cursor.moveToNext();
 		}
 		
-		return rules;
+		return this.sparseArrayToArrayList(rules);
 	}
 	
-	public ArrayList<Condition> getConditionsForRuleId(int ruleId) throws Exception {
+	private ArrayList<Rule> sparseArrayToArrayList(SparseArray<Rule> sparse) {
+		ArrayList<Rule> res = new ArrayList<Rule>();
+		for(int i = 0; i < sparse.size(); i++) {
+			res.add(sparse.get(sparse.keyAt(i)));
+		}
+		return res;
+	}
+	
+	/*
+	 * Fetches all available questions from the database
+	 */
+	public ArrayList<Question> getQuestions() throws Exception {
 		if(!dbIsOpen()) {
 			throw new Exception();
 		}
 		
-		ArrayList<Condition> conditions = new ArrayList<Condition>();
-		Cursor cursor = getConditionsCursorForRuleId(ruleId);
+		// Loop, adding each question to the return list
+		ArrayList<Question> questions = new ArrayList<Question>();
+		Cursor cursor = getQuestionsCursor();
+		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
-			Condition c = new Condition(
-					cursor.getInt(cursor.getColumnIndex(conditionColumns[0])),
-					cursor.getInt(cursor.getColumnIndex(conditionColumns[1])),
-					cursor.getInt(cursor.getColumnIndex(conditionColumns[2])),
-					this
+			int questionId = cursor.getInt(cursor.getColumnIndex(questionColumns[0]));
+			
+			// Load the type of question
+			QuestionAnswerType answerType =
+				QuestionAnswerType.values()[
+					cursor.getInt(cursor.getColumnIndex(questionColumns[2]))
+				];
+			// Instantiate Question wrapper class (will also load answers available)
+			Question q = new Question(
+					questionId,
+					cursor.getString(cursor.getColumnIndex(questionColumns[1])),
+					answerType,
+					this.getAnswersForQuestionId(questionId, answerType)
 			);
-			conditions.add(c);
+			questions.add(q);
+			
 			cursor.moveToNext();
 		}
 		
-		return conditions;
+		return questions;
 	}
 	
-	public ArrayList<Answer> getAnswersForRuleId(int ruleId) throws Exception {
+	public long getQuestionCount() throws Exception {
 		if(!dbIsOpen()) {
 			throw new Exception();
 		}
 		
-		ArrayList<Answer> answers = new ArrayList<Answer>();
-		Cursor cursor = getAnswersCursorForRuleId(ruleId);
-		while(!cursor.isAfterLast()) {
-			Answer a = new Answer(
-					cursor.getInt(cursor.getColumnIndex(answerColumns[0])),
-					cursor.getInt(cursor.getColumnIndex(answerColumns[1])),
-					cursor.getInt(cursor.getColumnIndex(answerColumns[2])),
-					this
-			);
-			answers.add(a);
-			cursor.moveToNext();
-		}
-		
-		return answers;
+		return DatabaseUtils.queryNumEntries(myDataBase, "question");
 	}
 	
 	public Fact getFactForFactId(int factId) throws Exception {
@@ -82,6 +131,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		}
 		
 		Cursor cursor = getFactsCursorForFactId(factId);
+		cursor.moveToFirst();
 		return new Fact(
 				cursor.getInt(cursor.getColumnIndex(factColumns[0])),
 				cursor.getString(cursor.getColumnIndex(factColumns[1])),
@@ -90,26 +140,92 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		);
 	}
 	
+	public ArrayList<QuestionAnswer> getAnswersForQuestionId(int questionId, QuestionAnswerType type) throws Exception {
+		if(!dbIsOpen()) {
+			throw new Exception();
+		}
+
+		ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
+		Cursor cursor = getAnswersCursorForQuestionId(questionId);
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast()) {
+			answers.add(QuestionAnswer.getInstance(
+					cursor.getInt(cursor.getColumnIndex(answerColumns[0])),
+					cursor.getString(cursor.getColumnIndex(answerColumns[2])),
+					type
+			));
+			
+			cursor.moveToNext();
+		}
+		
+		return answers;
+	}
+	
+	public ArrayList<Fact> getFactsForAnswerId(int answerId) throws Exception {
+		if(!dbIsOpen()) {
+			throw new Exception();
+		}
+
+		ArrayList<Fact> facts = new ArrayList<Fact>();
+		Cursor cursor = getAnswerFactsCursorForAnswerId(answerId);
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast()) {
+			facts.add(this.getFactForFactId(
+					cursor.getInt(cursor.getColumnIndex(answerFactColumns[2]))
+			));
+			
+			cursor.moveToNext();
+		}
+		
+		return facts;
+	}
+	
 	private Cursor getRulesCursor() {
 		return myDataBase.query("rule", ruleColumns, null, null, null, null, null);
 	}
 	
-	private Cursor getConditionsCursorForRuleId(int ruleId) {
-		return myDataBase.query("condition", conditionColumns, "rule_id = " + ruleId, null, null,
-				null, null);
-	}
-	
-	private Cursor getAnswersCursorForRuleId(int ruleId) {
-		return myDataBase.query("answer", answerColumns, "rule_id = " + ruleId, null, null,
-				null, null);
+	private Cursor getQuestionsCursor() {
+		return myDataBase.query("question", questionColumns, null, null, null, null, null);
 	}
 	
 	private Cursor getFactsCursorForFactId(int factId) {
-		return myDataBase.query("fact", factColumns, "id = " + factId, null, null,
+		return myDataBase.query("fact", factColumns, "_id = " + factId, null, null,
 				null, null);
+	}
+	
+	private Cursor getAnswersCursorForQuestionId(int questionId) {
+		return myDataBase.query("answer", answerColumns, "question_id = " + questionId, null,
+				null, null, null);
+	}
+	
+	private Cursor getAnswerFactsCursorForAnswerId(int answerId) {
+		return myDataBase.query("answer_fact", answerFactColumns,
+				"answer_id = " + answerId,
+				null, null, null, null);
 	}
 	
 	private boolean dbIsOpen() {
 		return myDataBase.isOpen();
+	}
+
+	public void openWriteableDataBase() throws SQLException {
+        String myPath = DB_PATH + DB_NAME;
+    	myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
+    }
+	
+	public void openDataBase() {
+		if(checkDataBase()) {
+			super.openDataBase();
+		}
+		else {
+			try {
+				createDataBase();
+				openWriteableDataBase();
+				myDataBase.close();
+				super.openDataBase();
+			} catch(IOException ex) {
+				Log.e(this.getClass().getName(), "Unable to create SQLite database");
+			}
+		}
 	}
 }
