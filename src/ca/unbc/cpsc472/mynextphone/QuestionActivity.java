@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -43,7 +42,7 @@ public class QuestionActivity extends Activity {
 		super.onCreate(savedState);
 		setContentView(R.layout.activity_question);
 		appContext = this;
-		qMan = new QuestionManager(appContext);
+		qMan = new QuestionManager(this);
 		
 		//Get the component references
 		this.questionBody = (TextView) this.findViewById(
@@ -71,16 +70,14 @@ public class QuestionActivity extends Activity {
 	@Override
 	public void onSaveInstanceState(Bundle outState){
 		//Need to remember our question
-		if(this.questionReady()){
-			outState.putInt(this.QUESTION_ID, question.getId());
-			outState.putString(this.QUESTION, question.getText());
-			outState.putInt(this.ANSWER_COUNT, question.getAnswers().size());
-			for(int i = 0; i < question.getAnswers().size(); i++){
-				outState.putInt(this.ANSWER_ID + i,
-						question.getAnswers().get(i).getId());
-				outState.putString(this.ANSWER + i, 
-						question.getAnswers().get(i).toString());
-			}
+		outState.putInt(this.QUESTION_ID, question.getId());
+		outState.putString(this.QUESTION, question.getText());
+		outState.putInt(this.ANSWER_COUNT, question.getAnswers().size());
+		for(int i = 0; i < question.getAnswers().size(); i++){
+			outState.putInt(this.ANSWER_ID + i,
+					question.getAnswers().get(i).getId());
+			outState.putString(this.ANSWER + i, 
+					question.getAnswers().get(i).toString());
 		}
 	}
 	
@@ -127,6 +124,7 @@ public class QuestionActivity extends Activity {
 	public void drawQuestion(){
 		//Body of the Question goes here.
 		this.questionBody.setText(this.question.getText());
+		
 		//The Answer View; when a user selects an answer it needs to remember
 		//what they selected and then fetch a new question.
 		this.answerView.setOnItemClickListener(new OnItemClickListener(){
@@ -136,26 +134,12 @@ public class QuestionActivity extends Activity {
 					long arg3) {
 				answerQuestion((QuestionAnswer)arg0.getItemAtPosition(pos));
 				fetchNewQuestion();
-				if(questionReady())
-					drawQuestion();
-				else{
-					gotoResult();
-				}
+				drawQuestion();
 			}
 			
 		});
 		ArrayAdapter<QuestionAnswer> x = new ArrayAdapter<QuestionAnswer>(this, 
 				R.layout.item_question_answer, this.question.getAnswers());
 		this.answerView.setAdapter(x);
-	}
-	
-	public boolean questionReady(){
-		return this.question!=null;
-	}
-	
-	public void gotoResult(){
-		Intent intent = new Intent(this,ResultActivity.class);
-		this.startActivity(intent);
-		this.finish();
 	}
 }

@@ -93,12 +93,7 @@ public class QuestionManager {
 		}
 		
 		Random r = new Random();
-		int q;
-		try{
-			q = r.nextInt(questions.size());
-		} catch(IllegalArgumentException e){
-			return null;
-		}
+		int q = r.nextInt(questions.size());
 		// Includes the answers already!
 		return questions.remove(q);
 	}
