@@ -1,16 +1,44 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/light_blue"
     tools:context=".ResultActivity" >
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:id="@+id/result_phone_name"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_marginBottom="10sp"
+        android:layout_weight="1"
+        android:text="@string/place_holder_short"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:background="@drawable/question_bg"
+        android:gravity="center" />
+    
+    <ImageView
+        android:id="@+id/result_phone_img" 
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="2"
+        android:layout_marginBottom="10sp"
+        android:src="@drawable/cell_phone_placeholder"
+        android:contentDescription="@string/place_holder_short"/>
+    
+    <TextView 
+        android:id="@+id/result_phone_reasons"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="4"
+        android:text="@string/place_holder_long"
+        android:textSize="20sp"
+        android:padding="5sp"
+        android:background="@drawable/question_bg" />
 
-</RelativeLayout>
+</LinearLayout>

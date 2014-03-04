@@ -1,7 +1,14 @@
 package ca.unbc.cpsc472.mynextphone.models;
 
-public class Fact {
+import java.io.Serializable;
+
+public class Fact implements Serializable{
 	public static enum FactType {INTERMEDIATE, CONCLUSIVE};
+	
+	//Eclipse is whining at me, had to make facts serializable to pass them as 
+	//objects to the Results View and convention says this is a required field.
+	public final static long serialVersionUID = 0;	
+												
 	
 	private int id;
 	private FactType factType;
