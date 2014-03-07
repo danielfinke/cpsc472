@@ -2,8 +2,7 @@ package ca.unbc.cpsc472.mynextphone.models;
 
 import java.io.Serializable;
 
-public class Fact implements Serializable{
-	public static enum FactType {INTERMEDIATE, CONCLUSIVE};
+public class Fact implements Serializable {
 	
 	//Eclipse is whining at me, had to make facts serializable to pass them as 
 	//objects to the Results View and convention says this is a required field.
@@ -11,15 +10,15 @@ public class Fact implements Serializable{
 												
 	
 	private int id;
-	private FactType factType;
+	private int resultId;
 	private String name;
 	private boolean truthFlag;
 	
-	public Fact(int id, String name, int truthVal, FactType factType) {
+	public Fact(int id, String name, int truthVal, int resultId) {
 		this.id = id;
 		this.name = name;
 		this.truthFlag = truthVal == 1;
-		this.factType = factType;
+		this.resultId = resultId;
 	}
 	
 	public int getId() {
@@ -34,18 +33,25 @@ public class Fact implements Serializable{
 		return truthFlag;
 	}
 	
-	public FactType getFactType() {
-		return factType;
+	public int getResultId() {
+		return resultId;
+	}
+	
+	public boolean isResult() {
+		return resultId != -1;
+	}
+	
+	public void toggleTruthFlag() {
+		truthFlag = !truthFlag;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((factType == null) ? 0 : factType.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + resultId;
 		result = prime * result + (truthFlag ? 1231 : 1237);
 		return result;
 	}
@@ -59,8 +65,6 @@ public class Fact implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Fact other = (Fact) obj;
-		if (factType != other.factType)
-			return false;
 		if (id != other.id)
 			return false;
 		if (name == null) {
@@ -68,28 +72,10 @@ public class Fact implements Serializable{
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (resultId != other.resultId)
+			return false;
 		if (truthFlag != other.truthFlag)
 			return false;
 		return true;
 	}
-	
-	/*@Override
-	public boolean equals(Object other) {
-		boolean retVal = false;
-		
-		if(other instanceof Fact) {
-			Fact f = (Fact)other;
-			retVal = f.getName() == this.getName() && f.getTruthFlag() == this.getTruthFlag();
-		}
-		return retVal;
-	}
-	
-	@Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 89 * hash + 
-        hash = 89 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 89 * hash + this.age;
-        return hash;
-    }*/
 }

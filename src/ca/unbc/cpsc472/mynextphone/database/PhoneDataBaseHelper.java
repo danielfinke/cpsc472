@@ -14,14 +14,16 @@ import ca.unbc.cpsc472.mynextphone.models.Fact;
 import ca.unbc.cpsc472.mynextphone.models.Question;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswer;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswerType;
+import ca.unbc.cpsc472.mynextphone.models.Result;
 import ca.unbc.cpsc472.mynextphone.models.Rule;
 
 public class PhoneDataBaseHelper extends DataBaseHelper {
-    private static String[] ruleColumns = {"_id", "rule_id", "fact_id", "left_right"};
+    private static String[] ruleColumns = {"_id", "rule_id", "fact_id", "left_right", "truth_flag"};
     private static String[] questionColumns = {"_id", "question", "type"};
     private static String[] answerColumns = {"_id", "question_id", "answer"};
-    private static String[] factColumns = {"_id", "name", "truth_flag", "type"};
+    private static String[] factColumns = {"_id", "name", "result_id"};
     private static String[] answerFactColumns = {"_id", "answer_id", "fact_id"};
+    private static String[] resultColumns = {"_id", "name", "image_file"};
 
 	public PhoneDataBaseHelper(Context context) {
 		super(context);
@@ -54,7 +56,8 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 			
 			// The new fact to be added to the rule in memory
 			Fact f = this.getFactForFactId(
-					cursor.getInt(cursor.getColumnIndex(ruleColumns[2]))
+					cursor.getInt(cursor.getColumnIndex(ruleColumns[2])),
+					cursor.getInt(cursor.getColumnIndex(ruleColumns[4]))
 			);
 			
 			// Add to the left or right
@@ -70,6 +73,52 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 			
 			cursor.moveToNext();
 		}
+		cursor.close();
+		
+		return this.sparseArrayToArrayList(rules);
+	}
+	
+	/*
+	 * Returns only rules which can be inferred to produce a result
+	 * Used for the "closeness" check at the end of the questions, when
+	 * the user might not have got /exactly/ a result in the working mem
+	 */
+	public ArrayList<Rule> getResultRules() throws Exception {
+		if(!dbIsOpen()) {
+			throw new Exception();
+		}
+		
+		SparseArray<Rule> rules = new SparseArray<Rule>();
+		Cursor cursor = getResultRulesCursor();
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast()) {
+			// Try to find if this rule has already been loaded, if so, append new facts
+			int ruleId = cursor.getInt(cursor.getColumnIndex(ruleColumns[1]));
+			Rule r = rules.get(ruleId);
+			if(r == null) {
+				r = new Rule(ruleId);
+			}
+			
+			// The new fact to be added to the rule in memory
+			Fact f = this.getFactForFactId(
+					cursor.getInt(cursor.getColumnIndex(ruleColumns[2])),
+					cursor.getInt(cursor.getColumnIndex(ruleColumns[4]))
+			);
+			
+			// Add to the left or right
+			int leftRight = cursor.getInt(cursor.getColumnIndex(ruleColumns[3]));
+			if(leftRight == Rule.RuleSide.LEFT.ordinal()) {
+				r.addFactCondition(f);
+			}
+			else {
+				r.addFactDeduction(f);
+			}
+			
+			rules.append(ruleId, r);
+			
+			cursor.moveToNext();
+		}
+		cursor.close();
 		
 		return this.sparseArrayToArrayList(rules);
 	}
@@ -113,6 +162,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 			
 			cursor.moveToNext();
 		}
+		cursor.close();
 		
 		return questions;
 	}
@@ -125,19 +175,24 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		return DatabaseUtils.queryNumEntries(myDataBase, "question");
 	}
 	
-	public Fact getFactForFactId(int factId) throws Exception {
+	public Fact getFactForFactId(int factId, int truthFlag) throws Exception {
 		if(!dbIsOpen()) {
 			throw new Exception();
 		}
 		
 		Cursor cursor = getFactsCursorForFactId(factId);
 		cursor.moveToFirst();
-		return new Fact(
+		// Handle result_id being null
+		int resultId = cursor.isNull(cursor.getColumnIndex(factColumns[2])) ? -1 :
+			cursor.getInt(cursor.getColumnIndex(factColumns[2]));
+		Fact f = new Fact(
 				cursor.getInt(cursor.getColumnIndex(factColumns[0])),
 				cursor.getString(cursor.getColumnIndex(factColumns[1])),
-				cursor.getInt(cursor.getColumnIndex(factColumns[2])),
-				Fact.FactType.values()[cursor.getInt(cursor.getColumnIndex(factColumns[3]))]
+				truthFlag,
+				resultId
 		);
+		cursor.close();
+		return f;
 	}
 	
 	public ArrayList<QuestionAnswer> getAnswersForQuestionId(int questionId, QuestionAnswerType type) throws Exception {
@@ -157,6 +212,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 			
 			cursor.moveToNext();
 		}
+		cursor.close();
 		
 		return answers;
 	}
@@ -171,17 +227,47 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
 			facts.add(this.getFactForFactId(
-					cursor.getInt(cursor.getColumnIndex(answerFactColumns[2]))
+					cursor.getInt(cursor.getColumnIndex(answerFactColumns[2])),
+					1 // Always true after answering a certain way, may have to reconsider this
 			));
 			
 			cursor.moveToNext();
 		}
+		cursor.close();
 		
 		return facts;
 	}
 	
+	public Result getResultForFactId(int factId) throws Exception {
+		if(!dbIsOpen()) {
+			throw new Exception();
+		}
+		
+		// THIS SHOULD BE CHANGED TO DEALING WITH THE ANSWERS
+		// NOT THE FACTS FROM THE WORKING MEM
+		Fact f = getFactForFactId(factId, 1); // Might have to reconsider the always-true
+		ArrayList<Fact> temp = new ArrayList<Fact>();
+		temp.add(f);
+		Cursor cursor = getResultsCursorForResultId(f.getResultId());
+		cursor.moveToFirst();
+		if(!cursor.isAfterLast()) {
+			return new Result(
+					cursor.getString(cursor.getColumnIndex(resultColumns[1])),
+					cursor.getString(cursor.getColumnIndex(resultColumns[2])),
+					temp
+			);
+		}
+		cursor.close();
+		
+		throw new Exception();
+	}
+	
 	private Cursor getRulesCursor() {
 		return myDataBase.query("rule", ruleColumns, null, null, null, null, null);
+	}
+	
+	private Cursor getResultRulesCursor() {
+		return myDataBase.rawQuery("SELECT * FROM rule WHERE rule_id IN (SELECT a.rule_id FROM rule a INNER JOIN fact b ON a.fact_id = b._id WHERE b.result_id IS NOT NULL);", null);
 	}
 	
 	private Cursor getQuestionsCursor() {
@@ -201,6 +287,12 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 	private Cursor getAnswerFactsCursorForAnswerId(int answerId) {
 		return myDataBase.query("answer_fact", answerFactColumns,
 				"answer_id = " + answerId,
+				null, null, null, null);
+	}
+	
+	private Cursor getResultsCursorForResultId(int resultId) {
+		return myDataBase.query("result", resultColumns,
+				"_id = " + resultId,
 				null, null, null, null);
 	}
 	

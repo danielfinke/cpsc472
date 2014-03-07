@@ -1,6 +1,7 @@
 package ca.unbc.cpsc472.mynextphone.models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -121,10 +122,98 @@ public class InferenceEngine {
 	private boolean memContainsConclusiveFact() {
 		Iterator<Fact> iter = workingMem.iterator();
 		while(iter.hasNext()) {
-			if(iter.next().getFactType() == Fact.FactType.CONCLUSIVE) {
+			if(iter.next().isResult()) {
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	public ArrayList<Result> getResultsForWorkingMem() {
+		Iterator<Fact> iter = workingMem.iterator();
+		ArrayList<Result> results = new ArrayList<Result>();
+		try {
+			while(iter.hasNext()) {
+				Fact f = iter.next();
+				if(f.isResult()) {
+					results.add(helper.getResultForFactId(f.getId()));
+				}
+			}
+		}
+		catch(Exception e) {
+			Log.e(this.getClass().getName(), "Unable to get inferred results");
+			return null;
+		}
+		if(results.isEmpty()) {
+			return nearestResults();
+		}
+		return results;
+	}
+	
+	/*
+	 * Find the collection of the closest results that match to what
+	 * the user chose for the questions
+	 */
+	private ArrayList<Result> nearestResults() {
+		ArrayList<Rule> resultRules;
+		try {
+			resultRules = helper.getResultRules();
+		} catch (Exception e) {
+			Log.e(this.getClass().getName(), "Unable to get nearest results (rules step)");
+			return null;
+		}
+		
+		// Calculate all the rule's score based on current working mem
+		for(int i = 0; i < resultRules.size(); i++) {
+			Rule r = resultRules.get(i);
+			r.setClosenessScore(resultScore(r));
+		}
+		// Sort them by their scores
+		Collections.sort(resultRules);
+		
+		// Return the list of best results
+		// CURRENTLY ONLY CONSIDERING THE LAST ONE EVEN IF THERE ARE TIES!
+		ArrayList<Result> results = new ArrayList<Result>();
+		Rule best = resultRules.get(resultRules.size()-1);
+		HashSet<Fact> producedFacts = best.getRightSide();
+		Iterator<Fact> iter = producedFacts.iterator();
+		try {
+			while(iter.hasNext()) {
+				Fact f = iter.next();
+				Result res = helper.getResultForFactId(f.getId());
+				results.add(res);
+			}
+		}
+		catch(Exception e) {
+			Log.e(this.getClass().getName(), "Unable to get nearest results (results step)");
+			return null;
+		}
+		return results;
+	}
+	
+	/*
+	 * Calculates a "closeness" score for working mem and a result-producing
+	 * rule. Used to determine the best match to the user's choices
+	 */
+	private int resultScore(Rule r) {
+		int score = 0;
+		HashSet<Fact> facts = r.getLeftSide();
+		Iterator<Fact> iter = facts.iterator();
+		while(iter.hasNext()) {
+			Fact f = iter.next();
+			// Contains the fact, give it a +1
+			if(workingMem.contains(f)) {
+				score++;
+			}
+			else {
+				// Contains the negation of the fact, give it a -1
+				f.toggleTruthFlag();
+				if(workingMem.contains(f)) {
+					score--;
+				}
+			}
+			// Doesn't have the fact at all, give it a 0 (no change)
+		}
+		return score;
 	}
 }

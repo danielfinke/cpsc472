@@ -10,17 +10,18 @@ import java.util.ArrayList;
  * 
  * @author Andrew J Toms II
  */
-public class Result implements Serializable{
+public class Result implements Serializable {
 
 	final static long serialVersionUID = 0;
 	
 	private String phoneName;
-	private int imgID;
+	// Andrew: message Daniel about this for why it's been changed to a file path
+	private String imgPath;
 	private ArrayList<Fact> reasoning;
 	
-	public Result(String phoneName, int img, ArrayList<Fact> reasoning){
+	public Result(String phoneName, String imgPath, ArrayList<Fact> reasoning){
 		this.phoneName = phoneName;
-		this.imgID = img;
+		this.imgPath = imgPath;
 		this.reasoning = reasoning;
 	}
 
@@ -31,12 +32,8 @@ public class Result implements Serializable{
 		return phoneName;
 	}
 	
-	/**
-	 * @return The R.drawable.id value for the drawable image for the phone 
-	 * represented by this Result object.
-	 */
-	public int getImageID() {
-		return imgID;
+	public String getImagePath() {
+		return imgPath;
 	}
 
 	/**

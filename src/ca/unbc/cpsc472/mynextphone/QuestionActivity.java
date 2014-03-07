@@ -17,6 +17,7 @@ import ca.unbc.cpsc472.mynextphone.models.Question;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswer;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswerType;
 import ca.unbc.cpsc472.mynextphone.models.QuestionManager;
+import ca.unbc.cpsc472.mynextphone.models.Result;
 
 /**
  * The Activity responsible for displaying to a user a Question, and having the
@@ -155,6 +156,8 @@ public class QuestionActivity extends Activity {
 	
 	public void gotoResult(){
 		Intent intent = new Intent(this,ResultActivity.class);
+		// Andrew: use qMan.getResults() and serialize as necessary
+		ArrayList<Result> res = qMan.getResults();
 		this.startActivity(intent);
 		this.finish();
 	}
