@@ -22,7 +22,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
     private static String[] questionColumns = {"_id", "question", "type"};
     private static String[] answerColumns = {"_id", "question_id", "answer"};
     private static String[] factColumns = {"_id", "name", "result_id"};
-    private static String[] answerFactColumns = {"_id", "answer_id", "fact_id"};
+    private static String[] answerFactColumns = {"_id", "answer_id", "fact_id", "truth_flag"};
     private static String[] resultColumns = {"_id", "name", "image_file"};
 
 	public PhoneDataBaseHelper(Context context) {
@@ -228,7 +228,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		while(!cursor.isAfterLast()) {
 			facts.add(this.getFactForFactId(
 					cursor.getInt(cursor.getColumnIndex(answerFactColumns[2])),
-					1 // Always true after answering a certain way, may have to reconsider this
+					cursor.getInt(cursor.getColumnIndex(answerFactColumns[3]))
 			));
 			
 			cursor.moveToNext();
