@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ca.unbc.cpsc472.mynextphone.models.Fact;
@@ -66,4 +67,9 @@ public class ResultActivity extends Activity {
 		return ret;
 	}
 
+	public void startOver(View v) {
+		Intent intent = new Intent(this, QuestionActivity.class);
+		this.startActivity(intent);
+		this.finish();
+	}
 }

@@ -41,11 +41,7 @@ public class TileListAdapter extends BaseAdapter {
 	public View getView(int arg0, View arg1, ViewGroup arg2) {
 		View ret = null;
 
-		if(arg1 == null){
-			ret = answers.get(arg0).getView(context);
-		} else {
-			ret = arg1;
-		}
+		ret = answers.get(arg0).getView(context);
 		
 		return ret;
 	}
