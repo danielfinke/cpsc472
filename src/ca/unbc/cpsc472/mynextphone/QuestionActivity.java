@@ -34,6 +34,7 @@ public class QuestionActivity extends Activity {
 	public static Context appContext;
 
 	private final String QUESTION_ID = "QUESTION_ID";
+	private final String TYPE = "TYPE";
 	private final String QUESTION = "QUESTION_BODY";
 	private final String ANSWER_ID = "ANSWER_ID_";
 	private final String ANSWER = "ANSWER_";
@@ -85,6 +86,8 @@ public class QuestionActivity extends Activity {
 		if(this.questionReady()){
 			outState.putInt(this.QUESTION_ID, question.getId());
 			outState.putString(this.QUESTION, question.getText());
+			outState.putBoolean(this.TYPE, 
+					(this.question.getType() == QuestionAnswerType.TEXT));
 			outState.putInt(this.ANSWER_COUNT, question.getAnswers().size());
 			for(int i = 0; i < question.getAnswers().size(); i++){
 				outState.putInt(this.ANSWER_ID + i,
@@ -118,17 +121,18 @@ public class QuestionActivity extends Activity {
 	 */
 	public void restoreQuestion(Bundle savedState){
 		int questionId = savedState.getInt(this.QUESTION_ID);
+		QuestionAnswerType type = savedState.getBoolean(this.TYPE) ? 
+				QuestionAnswerType.TEXT : QuestionAnswerType.TILE;
 		String question_name = savedState.getString(this.QUESTION);
 		ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
 		for(int i = 0; i < savedState.getInt(this.ANSWER_COUNT); i++){
 			int id = savedState.getInt(this.ANSWER_ID + i);
 			String s = savedState.getString(this.ANSWER + i);
-			QuestionAnswer qa = QuestionAnswer.getInstance(id, s, 
-					QuestionAnswerType.TEXT);									//TODO: Proper Types
+			QuestionAnswer qa = QuestionAnswer.getInstance(id, s, type);
 			answers.add(qa);
 		}
 		this.question = new Question(questionId, question_name,
-				QuestionAnswerType.TEXT,	//TODO: Proper Types
+				type,
 				answers);
 	}
 
