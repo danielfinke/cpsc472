@@ -136,7 +136,7 @@ public class InferenceEngine {
 			while(iter.hasNext()) {
 				Fact f = iter.next();
 				if(f.isResult()) {
-					results.add(helper.getResultForFactId(f.getId()));
+					results.add(helper.getResultForFactId(f.getId(), workingMem));
 				}
 			}
 		}
@@ -180,7 +180,7 @@ public class InferenceEngine {
 		try {
 			while(iter.hasNext()) {
 				Fact f = iter.next();
-				Result res = helper.getResultForFactId(f.getId());
+				Result res = helper.getResultForFactId(f.getId(), workingMem);
 				results.add(res);
 			}
 		}
