@@ -34,7 +34,7 @@ public class ResultActivity extends Activity {
 		
 		int resID = getResources().getIdentifier(res.getImagePath(), "drawable",
 				this.getPackageName());
-		this.img.setImageResource(R.drawable.cell_phone_placeholder/*resID*/);
+		this.img.setImageResource(resID);
 		this.reasons.setText(
 				formatReasoning(res.getPhoneName(), 
 				res.getReasoning()));
