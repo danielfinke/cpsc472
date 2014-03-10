@@ -2,6 +2,7 @@ package ca.unbc.cpsc472.mynextphone.database;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -238,7 +239,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		return facts;
 	}
 	
-	public Result getResultForFactId(int factId) throws Exception {
+	public Result getResultForFactId(int factId, HashSet<Fact> workingMem) throws Exception {
 		if(!dbIsOpen()) {
 			throw new Exception();
 		}
@@ -247,7 +248,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		// NOT THE FACTS FROM THE WORKING MEM
 		Fact f = getFactForFactId(factId, 1); // Might have to reconsider the always-true
 		ArrayList<Fact> temp = new ArrayList<Fact>();
-		temp.add(f);
+		temp.addAll(workingMem);
 		Cursor cursor = getResultsCursorForResultId(f.getResultId());
 		cursor.moveToFirst();
 		if(!cursor.isAfterLast()) {
