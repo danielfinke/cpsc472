@@ -9,5 +9,6 @@
     <string name="place_holder_medium">This is a Medium String, just one run-on sentence long as it should be because I like runon sentences.</string>
     <string name="place_holder_short">This is a Short String</string>
     <string name="title_activity_result">ResultActivity</string>
+    <string name="restart">Restart?</string>
 
 </resources>

@@ -37,6 +37,7 @@
         android:id="@+id/result_phone_reasons"
         android:layout_width="match_parent"
         android:layout_height="0px"
+        android:layout_marginBottom="10sp"
         android:maxLines="14"
         android:scrollbars="vertical"
         android:layout_weight="4"
@@ -44,13 +45,15 @@
         android:textSize="20sp"
         android:padding="5sp"
         android:background="@drawable/question_bg" />
-
+    
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/restart"
         android:layout_width="match_parent"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:onClick="startOver"
         android:padding="5sp"
-        android:text="Start Over" />
-
+        android:background="@color/orange"
+        android:text="@string/restart" />
+    
 </LinearLayout>
