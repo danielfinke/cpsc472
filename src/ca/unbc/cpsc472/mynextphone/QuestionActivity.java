@@ -1,6 +1,7 @@
 package ca.unbc.cpsc472.mynextphone;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import ca.unbc.cpsc472.mynextphone.models.Question;
@@ -37,6 +39,7 @@ public class QuestionActivity extends Activity {
 	private final String ANSWER = "ANSWER_";
 	private final String ANSWER_COUNT = "ANSWER_COUNT";
 	private Question question;
+	private LinearLayout layout;
 	private TextView questionBody;
 	private ListView textAnswerView;
 	private GridView tileAnswerView;
@@ -52,22 +55,12 @@ public class QuestionActivity extends Activity {
 		//Get the component references
 		this.questionBody = (TextView) this.findViewById(
 				R.id.question_question_view);
-//		this.textAnswerView = (ListView) this.findViewById(
-//				R.id.question_text_answer_view);
+		this.textAnswerView = (ListView) this.findViewById(
+				R.id.question_text_answer_view);
 		this.tileAnswerView = (GridView) this.findViewById(
 				R.id.question_tile_answer_view);
-		
-		QuestionAnswer a1 = QuestionAnswer.getInstance(7, "apple_logo", QuestionAnswerType.TILE);
-		QuestionAnswer a2 = QuestionAnswer.getInstance(7, "windows_logo", QuestionAnswerType.TILE);
-		QuestionAnswer a3 = QuestionAnswer.getInstance(7, "blackberry_logo", QuestionAnswerType.TILE);
-		
-		ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
-		answers.add(a1);
-		answers.add(a2);
-		answers.add(a3);
-		
-		//Temporary, to test picture Questions
-		this.question = new Question(7, "Click on the Pretty Pictures!", QuestionAnswerType.TILE, answers);
+		this.layout = (LinearLayout) this.findViewById(
+				R.id.question_answer_view);
 		
 		//Set up the specific view for the question we are either remembering or
 		//want to grab; and then draw the view appropriately.
@@ -146,6 +139,13 @@ public class QuestionActivity extends Activity {
 		//Body of the Question goes here.
 		this.questionBody.setText(this.question.getText());
 		
+		//Give it the appropriate answer view.
+		layout.removeAllViews();
+		if(this.question.getType() == QuestionAnswerType.TEXT)
+			layout.addView(this.textAnswerView);
+		else
+			layout.addView(this.tileAnswerView);
+		
 		//The Answer View; when a user selects an answer it needs to remember
 		//what they selected and then fetch a new question. Changes dependent 
 		//upon the type of ui needed to display the question.
@@ -178,6 +178,11 @@ public class QuestionActivity extends Activity {
 				public void onItemClick(AdapterView<?> parent, View v,
 						int position, long id) {
 					answerQuestion(x.answerFor(position));
+					fetchNewQuestion();
+					if(questionReady())
+						drawQuestion();
+					else
+						gotoResult();
 				}
 			});
 		}
