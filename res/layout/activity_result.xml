@@ -41,4 +41,12 @@
         android:padding="5sp"
         android:background="@drawable/question_bg" />
 
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="startOver"
+        android:padding="5sp"
+        android:text="Start Over" />
+
 </LinearLayout>
