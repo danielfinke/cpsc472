@@ -251,11 +251,13 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		Cursor cursor = getResultsCursorForResultId(f.getResultId());
 		cursor.moveToFirst();
 		if(!cursor.isAfterLast()) {
-			return new Result(
+			Result r = new Result(
 					cursor.getString(cursor.getColumnIndex(resultColumns[1])),
 					cursor.getString(cursor.getColumnIndex(resultColumns[2])),
 					temp
 			);
+			cursor.close();
+			return r;
 		}
 		cursor.close();
 		
