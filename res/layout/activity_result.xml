@@ -29,7 +29,9 @@
         android:layout_weight="2"
         android:layout_marginBottom="10sp"
         android:src="@drawable/cell_phone_placeholder"
-        android:contentDescription="@string/place_holder_short"/>
+        android:contentDescription="@string/place_holder_short"
+        android:background="@drawable/question_bg"
+        android:padding="5sp"/>
     
     <TextView 
         android:id="@+id/result_phone_reasons"

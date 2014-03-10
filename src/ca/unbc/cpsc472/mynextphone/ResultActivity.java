@@ -31,7 +31,10 @@ public class ResultActivity extends Activity {
 		Intent x = this.getIntent();
 		Result res = (Result) x.getSerializableExtra("result");
 		this.name.setText(res.getPhoneName());
-		this.img.setImageResource(R.drawable.cell_phone_placeholder);
+		
+		int resID = getResources().getIdentifier(res.getImagePath(), "drawable",
+				this.getPackageName());
+		this.img.setImageResource(R.drawable.cell_phone_placeholder/*resID*/);
 		this.reasons.setText(
 				formatReasoning(res.getPhoneName(), 
 				res.getReasoning()));
