@@ -2,9 +2,13 @@ package ca.unbc.cpsc472.mynextphone.models;
 
 import java.io.IOException;
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
-import ca.unbc.cpsc472.mynextphone.QuestionActivity;
+import ca.unbc.cpsc472.mynextphone.R;
 
 /**
  * This is the model for an answer to questions as the user percieves them; an
@@ -71,7 +75,7 @@ public abstract class QuestionAnswer {
 	 * 
 	 * @return A view representing this Question Answer.
 	 */
-	public abstract View getView();
+	public abstract View getView(Context c);
 	
 	/**
 	 * @return This QuestionAnswer represented by a string value, either a 
@@ -93,10 +97,12 @@ public abstract class QuestionAnswer {
 		}
 		
 		@Override
-		public View getView() {
-			TextView tv = new TextView(QuestionActivity.appContext);
-			tv.setText(this.toString());
-			return tv;
+		public View getView(Context c) {
+			LayoutInflater inf = (LayoutInflater) 
+					c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View ret = inf.inflate(R.layout.item_answer_text, null);
+			((TextView) ret).setText(this.toString());
+			return ret;
 		}
 		
 	}
@@ -108,11 +114,17 @@ public abstract class QuestionAnswer {
 		}
 		
 		@Override
-		public View getView() {
-			//TODO: ONLY TEMPORARY; CONVERT TO RETURN AN APPROPRIATE IMAGEVIEW
-			TextView tv = new TextView(QuestionActivity.appContext);
-			tv.setText(this.toString());
-			return tv;
+		public View getView(Context c) {
+			LayoutInflater inf = (LayoutInflater) 
+					c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View ret = inf.inflate(R.layout.item_answer_image, null);
+			int id = c.getResources().getIdentifier(this.toString(), "drawable",
+					c.getPackageName());
+			((ImageView) ret).setImageResource(id);
+			((ImageView) ret).setLayoutParams(new GridView.LayoutParams(200, 200));
+			((ImageView) ret).setScaleType(ImageView.ScaleType.CENTER_CROP);
+			((ImageView) ret).setPadding(8, 8, 8, 8);
+			return ret;
 		}
 		
 	}

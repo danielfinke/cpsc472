@@ -27,13 +27,27 @@
         android:layout_width="match_parent"
         android:layout_height="0px" 
         android:layout_weight="3"
+        android:orientation="vertical"
         android:background="@color/black">
-        
+        <!-- 
 	    <ListView
-	        android:id="@+id/question_answer_view"
+	        android:id="@+id/question_text_answer_view"
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
 	        android:background="@color/white" />
+	    -->
+	    <GridView
+	        android:id="@+id/question_tile_answer_view"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:background="@color/light_blue" 
+	        android:numColumns="auto_fit"
+	        android:columnWidth="150dp"
+	        android:horizontalSpacing="10dp"
+	        android:verticalSpacing="10dp"
+	        android:stretchMode="columnWidth"
+	        android:gravity="center"
+	        />
     
     </LinearLayout>
 

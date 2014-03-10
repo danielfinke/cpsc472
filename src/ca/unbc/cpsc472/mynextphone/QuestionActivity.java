@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import ca.unbc.cpsc472.mynextphone.models.Question;
@@ -18,6 +19,7 @@ import ca.unbc.cpsc472.mynextphone.models.QuestionAnswer;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswerType;
 import ca.unbc.cpsc472.mynextphone.models.QuestionManager;
 import ca.unbc.cpsc472.mynextphone.models.Result;
+import ca.unbc.cpsc472.mynextphone.models.TileListAdapter;
 
 /**
  * The Activity responsible for displaying to a user a Question, and having the
@@ -36,7 +38,8 @@ public class QuestionActivity extends Activity {
 	private final String ANSWER_COUNT = "ANSWER_COUNT";
 	private Question question;
 	private TextView questionBody;
-	private ListView answerView;
+	private ListView textAnswerView;
+	private GridView tileAnswerView;
 	private QuestionManager qMan;
 	
 	@Override
@@ -49,14 +52,28 @@ public class QuestionActivity extends Activity {
 		//Get the component references
 		this.questionBody = (TextView) this.findViewById(
 				R.id.question_question_view);
-		this.answerView = (ListView) this.findViewById(
-				R.id.question_answer_view);
+//		this.textAnswerView = (ListView) this.findViewById(
+//				R.id.question_text_answer_view);
+		this.tileAnswerView = (GridView) this.findViewById(
+				R.id.question_tile_answer_view);
+		
+		QuestionAnswer a1 = QuestionAnswer.getInstance(7, "apple_logo", QuestionAnswerType.TILE);
+		QuestionAnswer a2 = QuestionAnswer.getInstance(7, "windows_logo", QuestionAnswerType.TILE);
+		QuestionAnswer a3 = QuestionAnswer.getInstance(7, "blackberry_logo", QuestionAnswerType.TILE);
+		
+		ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
+		answers.add(a1);
+		answers.add(a2);
+		answers.add(a3);
+		
+		//Temporary, to test picture Questions
+		this.question = new Question(7, "Click on the Pretty Pictures!", QuestionAnswerType.TILE, answers);
 		
 		//Set up the specific view for the question we are either remembering or
 		//want to grab; and then draw the view appropriately.
-		if(savedState == null)
+		if(savedState == null){
 			fetchNewQuestion();
-		else{
+		}else{
 			restoreQuestion(savedState);
 		}
 		drawQuestion();
@@ -128,26 +145,43 @@ public class QuestionActivity extends Activity {
 	public void drawQuestion(){
 		//Body of the Question goes here.
 		this.questionBody.setText(this.question.getText());
+		
 		//The Answer View; when a user selects an answer it needs to remember
-		//what they selected and then fetch a new question.
-		this.answerView.setOnItemClickListener(new OnItemClickListener(){
+		//what they selected and then fetch a new question. Changes dependent 
+		//upon the type of ui needed to display the question.
+		if(this.question.getType() == QuestionAnswerType.TEXT){
+			this.textAnswerView.setOnItemClickListener(new OnItemClickListener(){
 
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
-					long arg3) {
-				answerQuestion((QuestionAnswer)arg0.getItemAtPosition(pos));
-				fetchNewQuestion();
-				if(questionReady())
-					drawQuestion();
-				else{
-					gotoResult();
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
+						long arg3) {
+					answerQuestion((QuestionAnswer)arg0.getItemAtPosition(pos));
+					fetchNewQuestion();
+					if(questionReady())
+						drawQuestion();
+					else{
+						gotoResult();
+					}
 				}
-			}
-			
-		});
-		ArrayAdapter<QuestionAnswer> x = new ArrayAdapter<QuestionAnswer>(this, 
-				R.layout.item_question_answer, this.question.getAnswers());
-		this.answerView.setAdapter(x);
+				
+			});
+			ArrayAdapter<QuestionAnswer> x = new ArrayAdapter<QuestionAnswer>(
+					this, R.layout.item_answer_text, 
+					this.question.getAnswers());
+			this.textAnswerView.setAdapter(x);
+		} else {
+			final TileListAdapter x = new TileListAdapter(this, 
+					this.question.getAnswers());
+			this.tileAnswerView.setAdapter(x);
+			this.tileAnswerView.setOnItemClickListener(new OnItemClickListener() {
+				
+				public void onItemClick(AdapterView<?> parent, View v,
+						int position, long id) {
+					answerQuestion(x.answerFor(position));
+				}
+			});
+		}
+		
 	}
 	
 	public boolean questionReady(){
