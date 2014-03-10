@@ -158,6 +158,7 @@ public class QuestionActivity extends Activity {
 		Intent intent = new Intent(this,ResultActivity.class);
 		// Andrew: use qMan.getResults() and serialize as necessary
 		ArrayList<Result> res = qMan.getResults();
+		intent.putExtra("result", res.get(0));
 		this.startActivity(intent);
 		this.finish();
 	}

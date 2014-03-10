@@ -29,9 +29,7 @@ public class ResultActivity extends Activity {
 		
 		//Preset them
 		Intent x = this.getIntent();
-		Bundle b = x.getBundleExtra("result");
-		Result res = (Result) b.getSerializable("ca.unbc.cpsc472.mynextphone." +
-				"models.Result");
+		Result res = (Result) x.getSerializableExtra("result");
 		this.name.setText(res.getPhoneName());
 		this.img.setImageResource(R.drawable.cell_phone_placeholder);
 		this.reasons.setText(
