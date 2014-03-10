@@ -258,6 +258,9 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 					temp
 			);
 			cursor.close();
+			
+			Log.i("RESULT", r.getImagePath());
+			
 			return r;
 		}
 		cursor.close();

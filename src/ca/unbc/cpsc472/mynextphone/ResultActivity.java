@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,10 +33,14 @@ public class ResultActivity extends Activity {
 		Intent x = this.getIntent();
 		Result res = (Result) x.getSerializableExtra("result");
 		this.name.setText(res.getPhoneName());
-		this.img.setImageResource(R.drawable.cell_phone_placeholder);
+		
+		int resID = getResources().getIdentifier(res.getImagePath(), "drawable",
+				this.getPackageName());
+		this.img.setImageResource(resID);
 		this.reasons.setText(
 				formatReasoning(res.getPhoneName(), 
 				res.getReasoning()));
+		this.reasons.setMovementMethod(new ScrollingMovementMethod());
 	}
 
 	@Override
