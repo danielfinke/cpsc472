@@ -79,9 +79,10 @@ public class ResultActivity extends Activity{
 				hasFact += "\t\t\t-" + f.toString() + "\n";
 			else {
 				f.toggleTruthFlag();
-				if(reason.contains(f))
+				if(reason.contains(f)){
+					f.toggleTruthFlag();
 					oppositeFact += "\t\t\t-" + f.toString() + "\n";
-				else{
+				}else{
 					f.toggleTruthFlag();
 					leftOver += "\t\t\t-" + f.toString() + "\n";
 				}
