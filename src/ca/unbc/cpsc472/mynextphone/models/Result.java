@@ -18,8 +18,10 @@ public class Result implements Serializable {
 	// Andrew: message Daniel about this for why it's been changed to a file path
 	private String imgPath;
 	private ArrayList<Fact> reasoning;
+	public final int id;
 	
-	public Result(String phoneName, String imgPath, ArrayList<Fact> reasoning){
+	public Result(int id, String phoneName, String imgPath, ArrayList<Fact> reasoning){
+		this.id = id;
 		this.phoneName = phoneName;
 		this.imgPath = imgPath;
 		this.reasoning = reasoning;

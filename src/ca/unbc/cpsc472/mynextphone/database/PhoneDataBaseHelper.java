@@ -3,6 +3,7 @@ package ca.unbc.cpsc472.mynextphone.database;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -253,6 +254,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		cursor.moveToFirst();
 		if(!cursor.isAfterLast()) {
 			Result r = new Result(
+					cursor.getInt(cursor.getColumnIndex(resultColumns[0])),
 					cursor.getString(cursor.getColumnIndex(resultColumns[1])),
 					cursor.getString(cursor.getColumnIndex(resultColumns[2])),
 					temp
@@ -266,6 +268,36 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		cursor.close();
 		
 		throw new Exception();
+	}
+	
+	public HashSet<Fact> getFactsLeadingToResult(int resultId) throws Exception{
+		if(!dbIsOpen()) {
+			throw new Exception();
+		}
+		Cursor cursor = this.getFactsLeadingToResultCursor(resultId);
+		HashSet<Fact> facts = new HashSet<Fact>();
+		cursor.moveToFirst();
+		do{
+			int i = cursor.getInt(cursor.getColumnIndex(factColumns[0]));
+			facts.add(this.getFactForFactId(i, 1));
+		}while(cursor.moveToNext());
+		
+		while(facts.addAll(this.getFactIdsLeadingToFactId(facts)));
+		return facts;
+	}
+	
+	private HashSet<Fact> getFactIdsLeadingToFactId(Set<Fact> facts) throws Exception{
+		ArrayList<Rule> rules = this.getRules();
+		HashSet<Fact> output = new HashSet<Fact>();
+		for(Rule r: rules){
+			if(facts.containsAll(r.getRightSide()))
+				output.addAll(r.getLeftSide());
+		}
+		return output;
+	}
+	
+	private Cursor getFactsLeadingToResultCursor(int resultId){
+		return myDataBase.query("fact", factColumns, "result_id="+resultId, null, null, null, null);
 	}
 	
 	private Cursor getRulesCursor() {

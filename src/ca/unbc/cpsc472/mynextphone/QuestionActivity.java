@@ -1,8 +1,6 @@
 package ca.unbc.cpsc472.mynextphone;
 
 import java.util.ArrayList;
-import java.util.Random;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
