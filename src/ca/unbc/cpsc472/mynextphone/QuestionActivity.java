@@ -98,6 +98,11 @@ public class QuestionActivity extends Activity {
 		}
 	}
 	
+	public void onDestroy() {
+		super.onDestroy();
+		qMan.recycle();
+	}
+	
 	/**
 	 * This method grabs a brand new Question from our storage. 
 	 * 

@@ -281,6 +281,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 			int i = cursor.getInt(cursor.getColumnIndex(factColumns[0]));
 			facts.add(this.getFactForFactId(i, 1));
 		}while(cursor.moveToNext());
+		cursor.close();
 		
 		while(facts.addAll(this.getFactIdsLeadingToFactId(facts)));
 		return facts;

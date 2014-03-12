@@ -36,6 +36,10 @@ public class QuestionManager {
 		return engine;
 	}
 	
+	public void recycle() {
+		helper.close();
+	}
+	
 	/**
 	 * Generates a random question to display in this QuestionActivity.
 	 * 
@@ -143,6 +147,8 @@ public class QuestionManager {
 				// Fetch the facts from the db for their ids
 				facts.add(helper.getFactForFactId(workingMemIds[i], workingMemFlags[i] ? 1 : 0));
 			}
+			getEngine().addFactsToMem(facts);
+			getEngine().updateMem();
 		}
 		catch(Exception ex) {
 			Log.e(this.getClass().getName(), "Unable to restore working mem from saved state");
