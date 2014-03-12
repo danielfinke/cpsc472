@@ -3,7 +3,7 @@
     android:layout_width="145dp"
     android:layout_height="145dp"
     android:contentDescription="@string/place_holder_short"
-    android:background="@drawable/question_bg">
+    android:background="@drawable/result_img_bg">
     
     
 

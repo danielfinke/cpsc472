@@ -124,8 +124,8 @@ public abstract class QuestionAnswer {
 					BitmapScaler.decodeSampledBitmapFromResource(
 							c.getResources(), id, 200, 200));
 			((ImageView) ret).setLayoutParams(new GridView.LayoutParams(200, 200));
-			((ImageView) ret).setScaleType(ImageView.ScaleType.CENTER_CROP);
-			((ImageView) ret).setPadding(8, 8, 8, 8);
+			((ImageView) ret).setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+			((ImageView) ret).setPadding(10, 10, 10, 10);
 			
 			return ret;
 		}
