@@ -9,6 +9,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ca.unbc.cpsc472.mynextphone.R;
+import ca.unbc.cpsc472.mynextphone.helpers.BitmapScaler;
 
 /**
  * This is the model for an answer to questions as the user percieves them; an
@@ -108,7 +109,6 @@ public abstract class QuestionAnswer {
 	}
 	
 	private static class ImageAnswer extends QuestionAnswer{
-
 		private ImageAnswer(int id, String text) throws IOException{
 			super(id, text);
 		}
@@ -120,10 +120,13 @@ public abstract class QuestionAnswer {
 			View ret = inf.inflate(R.layout.item_answer_image, null);
 			int id = c.getResources().getIdentifier(this.toString(), "drawable",
 					c.getPackageName());
-			((ImageView) ret).setImageResource(id);
+			((ImageView) ret).setImageBitmap(
+					BitmapScaler.decodeSampledBitmapFromResource(
+							c.getResources(), id, 200, 200));
 			((ImageView) ret).setLayoutParams(new GridView.LayoutParams(200, 200));
 			((ImageView) ret).setScaleType(ImageView.ScaleType.CENTER_CROP);
 			((ImageView) ret).setPadding(8, 8, 8, 8);
+			
 			return ret;
 		}
 		

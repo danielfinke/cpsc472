@@ -1,8 +1,6 @@
 package ca.unbc.cpsc472.mynextphone;
 
 import java.util.ArrayList;
-import java.util.Random;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -68,7 +66,7 @@ public class QuestionActivity extends Activity {
 		if(savedState == null){
 			fetchNewQuestion();
 		}else{
-			restoreQuestion(savedState);
+			restoreQuestions(savedState);
 		}
 		drawQuestion();
 	}
@@ -95,6 +93,8 @@ public class QuestionActivity extends Activity {
 				outState.putString(this.ANSWER + i, 
 						question.getAnswers().get(i).toString());
 			}
+			
+			qMan.saveState(outState, question.getId());
 		}
 	}
 	
@@ -119,7 +119,7 @@ public class QuestionActivity extends Activity {
 	 * @param savedState The Bundle object that has all of the data for our old
 	 * question.
 	 */
-	public void restoreQuestion(Bundle savedState){
+	public void restoreQuestions(Bundle savedState){
 		int questionId = savedState.getInt(this.QUESTION_ID);
 		QuestionAnswerType type = savedState.getBoolean(this.TYPE) ? 
 				QuestionAnswerType.TEXT : QuestionAnswerType.TILE;
@@ -134,6 +134,8 @@ public class QuestionActivity extends Activity {
 		this.question = new Question(questionId, question_name,
 				type,
 				answers);
+		
+		qMan.restoreState(savedState);
 	}
 
 	/**

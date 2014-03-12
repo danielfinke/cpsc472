@@ -3,12 +3,9 @@ package ca.unbc.cpsc472.mynextphone.models;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import ca.unbc.cpsc472.mynextphone.R;
 
 public class TileListAdapter extends BaseAdapter {
 

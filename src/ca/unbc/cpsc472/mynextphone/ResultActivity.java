@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import ca.unbc.cpsc472.mynextphone.helpers.BitmapScaler;
 import ca.unbc.cpsc472.mynextphone.models.Fact;
 import ca.unbc.cpsc472.mynextphone.models.Result;
 
@@ -36,7 +37,7 @@ public class ResultActivity extends Activity {
 		
 		int resID = getResources().getIdentifier(res.getImagePath(), "drawable",
 				this.getPackageName());
-		this.img.setImageResource(resID);
+		this.img.setImageBitmap(BitmapScaler.decodeSampledBitmapFromResource(getResources(), resID, 100, 100));
 		this.reasons.setText(
 				formatReasoning(res.getPhoneName(), 
 				res.getReasoning()));
