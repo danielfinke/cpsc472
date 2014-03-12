@@ -8,7 +8,7 @@
     <string name="place_holder_long">This is a Long String with at least a line or two. The purpose of this string is to provide a significantly long string so that the developers can test to see areas where a lot of text will be placed. That cute girl just smiled at me. That\'s always nice.</string>
     <string name="place_holder_medium">This is a Medium String, just one run-on sentence long as it should be because I like runon sentences.</string>
     <string name="place_holder_short">This is a Short String</string>
-    <string name="title_activity_result">ResultActivity</string>
+    <string name="title_activity_result">Phone Results</string>
     <string name="restart">Restart?</string>
 
 </resources>
