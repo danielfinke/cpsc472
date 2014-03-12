@@ -6,8 +6,9 @@
     <color name="orange">#ffffa900</color>
     <color name="black">#ff000000</color>
     <color name="white">#ffffffff</color>
-    <color name="bg_blue">#ff6c8dd5</color>
+    <color name="bright_blue">#ff6c8dd5</color>
+    <color name="medium_blue">#ff4573d4</color>
     <color name="button_stroke">#ffa66e00</color>
-    <color name="light_blue">#ff1142aa</color>
+    <color name="dark_blue">#ff1142aa</color>
     
 </resources>

@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/light_blue"
+    android:background="@color/dark_blue"
     tools:context=".QuestionActivity" >
 
     <TextView
@@ -29,20 +29,25 @@
         android:layout_width="match_parent"
         android:layout_height="0px" 
         android:layout_weight="3"
-        android:orientation="vertical"
-        android:background="@color/black">
+        android:orientation="vertical">
         <!-- -->
 	    <ListView
 	        android:id="@+id/question_text_answer_view"
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
-	        android:background="@color/white" />
+	        android:divider="@color/bright_blue"
+	        android:paddingLeft="10sp"
+	        android:paddingRight="10sp"
+	        android:paddingTop="20sp"
+	        android:dividerHeight="10.0sp"
+	        android:background="@drawable/answers_container_bg" />
 	    <!--  -->
 	    <GridView
+	        android:paddingTop="20sp"
 	        android:id="@+id/question_tile_answer_view"
+	        android:background="@drawable/answers_container_bg"
 	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:background="@color/light_blue" 
+	        android:layout_height="match_parent" 
 	        android:numColumns="auto_fit"
 	        android:columnWidth="150dp"
 	        android:horizontalSpacing="10dp"

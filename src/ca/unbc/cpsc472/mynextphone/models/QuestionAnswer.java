@@ -103,6 +103,8 @@ public abstract class QuestionAnswer {
 					c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View ret = inf.inflate(R.layout.item_answer_text, null);
 			((TextView) ret).setText(this.toString());
+//			((TextView) ret).setBackgroundDrawable(c.getResources().getDrawable(
+//					R.drawable.question_bg));
 			return ret;
 		}
 		

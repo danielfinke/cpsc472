@@ -1,6 +1,7 @@
 package ca.unbc.cpsc472.mynextphone;
 
 import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +10,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -19,6 +19,7 @@ import ca.unbc.cpsc472.mynextphone.models.QuestionAnswer;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswerType;
 import ca.unbc.cpsc472.mynextphone.models.QuestionManager;
 import ca.unbc.cpsc472.mynextphone.models.Result;
+import ca.unbc.cpsc472.mynextphone.models.TextListAdapter;
 import ca.unbc.cpsc472.mynextphone.models.TileListAdapter;
 
 /**
@@ -156,12 +157,16 @@ public class QuestionActivity extends Activity {
 		//what they selected and then fetch a new question. Changes dependent 
 		//upon the type of ui needed to display the question.
 		if(this.question.getType() == QuestionAnswerType.TEXT){
+
+			final TextListAdapter x = new TextListAdapter(this, this.question.getAnswers());
+			this.textAnswerView.setAdapter(x);
 			this.textAnswerView.setOnItemClickListener(new OnItemClickListener(){
 
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
 						long arg3) {
-					answerQuestion((QuestionAnswer)arg0.getItemAtPosition(pos));
+					QuestionAnswer a = x.getAnswer(pos);
+					answerQuestion(a);
 					fetchNewQuestion();
 					if(questionReady())
 						drawQuestion();
@@ -171,10 +176,8 @@ public class QuestionActivity extends Activity {
 				}
 				
 			});
-			ArrayAdapter<QuestionAnswer> x = new ArrayAdapter<QuestionAnswer>(
-					this, R.layout.item_answer_text, 
-					this.question.getAnswers());
-			this.textAnswerView.setAdapter(x);
+			
+			
 		} else {
 			final TileListAdapter x = new TileListAdapter(this, 
 					this.question.getAnswers());

@@ -4,6 +4,9 @@
     android:id="@+id/item_question_answer_text"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:text="@string/place_holder_short"
+    android:textColor="@color/white"
+    android:background="@drawable/answer_bg"
     android:gravity="center"
     android:padding="5sp"
     android:textSize="24sp"/>
