@@ -33,9 +33,11 @@ public class ResultActivity extends Activity{
 		Result res = (Result) x.getSerializableExtra("result");
 		this.name.setText(res.getPhoneName());
 		
-		int resID = getResources().getIdentifier(res.getPrimaryImgPath(), "drawable",
+		// TODO Add asynchronous image fetch from URL in the img path
+		// Perhaps even scrolling through the 3-4 images the phone has online
+		/*int resID = getResources().getIdentifier(res.getPrimaryImgPath(), "drawable",
 				this.getPackageName());
-		this.img.setImageBitmap(BitmapScaler.decodeSampledBitmapFromResource(getResources(), resID, 100, 100));
+		this.img.setImageBitmap(BitmapScaler.decodeSampledBitmapFromResource(getResources(), resID, 100, 100));*/
 		PhoneDataBaseHelper helper = new PhoneDataBaseHelper(this);
 		helper.openDataBase();
 		try{

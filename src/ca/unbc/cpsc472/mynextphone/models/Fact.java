@@ -83,7 +83,12 @@ public class Fact implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Fact [name=" + name + ", lingValAvg=" + getLinguisticVarAvg() + "]";
+		if(getLinguisticValueCount() == 1) {
+			return "Fact [name=" + name + ", lingVal=" + lingVals.get(0) + "]";
+		}
+		else {
+			return "Fact [name=" + name + ", lingValAvg=" + getLinguisticVarAvg() + "]";
+		}
 	}
 
 	@Override
@@ -109,5 +114,15 @@ public class Fact implements Serializable {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+	
+	public boolean meetsCriteria(Fact other) {
+		if(getLinguisticValueCount() == 1) {
+			return name.equals(other.name) && lingVals.get(0).equals(other.lingVals.get(0));
+		}
+		else {
+			return name.equals(other.name) &&
+					getLinguisticVarAvg().equals(other.getLinguisticVarAvg());
+		}
 	}
 }

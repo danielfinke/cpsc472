@@ -22,7 +22,7 @@ public class InferenceEngine {
 		}
 		double denom = 0;
 		for(int i = 0; i < 2; i++) {
-			num += 1; // Again, the value is always 1
+			denom += 1; // Again, the value is always 1
 		}
 		return num / denom;
 	}
@@ -200,7 +200,11 @@ public class InferenceEngine {
 		Iterator<Fact> leftIter = leftSide.iterator();
 		while(leftIter.hasNext()) {
 			Fact condFact = leftIter.next();
-			if(!workingMem.contains(condFact)) {
+			boolean condMet = false;
+			for(Fact wmf : workingMem) {
+				condMet = condMet || wmf.meetsCriteria(condFact);
+			}
+			if(!condMet) {
 				return false;
 			}
 		}

@@ -20,11 +20,26 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
     private static String[] questionColumns = {"_id", "question", "type"};
     private static String[] answerColumns = {"_id", "question_id", "answer", "facts"};
     private static String[] ruleColumns = {"_id", "rule"};
+    
+    private static final int DATABASE_VERSION = 2;
 
 	public PhoneDataBaseHelper(Context context) {
 		super(context);
 		DB_PATH = context.getFilesDir().getParent() + "/databases/";
 		DB_NAME = "db.sqlite";
+		
+		if(checkDatabase()) {
+			openDataBase();
+		}
+		else {
+			try {
+				createDataBase();
+				openDataBase();
+			} catch(IOException ex) {
+				Log.e(this.getClass().getName(), ex.getMessage());
+			}
+		}
+		
 	}
     
     /*
@@ -173,23 +188,35 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 	private boolean dbIsOpen() {
 		return myDataBase.isOpen();
 	}
-
+	
+	public boolean checkDatabase() {
+		return super.checkDataBase();
+	}
+	
+	public void openDataBase() throws SQLException {
+    	super.openDataBase();
+    	int old = myDataBase.getVersion();
+    	Log.d(this.getClass().getName(), "Old db version: " + old);
+    	
+    	if(old < DATABASE_VERSION) {
+    		onUpgrade(myDataBase, old, DATABASE_VERSION);
+    	}
+    }
 	public void openWriteableDataBase() throws SQLException {
         String myPath = DB_PATH + DB_NAME;
     	myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
     }
 	
-	public void openDataBase() {
-		if(checkDataBase()) {
-			super.openDataBase();
-		}
-		else {
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		if(checkDatabase()) {
+			myDataBase.close();
 			try {
-				createDataBase();
+				this.copyDataBase();
 				openWriteableDataBase();
+				myDataBase.setVersion(newVersion);
 				myDataBase.close();
-				super.openDataBase();
-			} catch(IOException ex) {
+				openDataBase();
+			} catch (IOException e) {
 				Log.e(this.getClass().getName(), "Unable to create SQLite database");
 			}
 		}
