@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.util.Log;
 import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
 
@@ -13,7 +12,7 @@ import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
  * can and probably should be re-purposed to grab questions from out Question
  * table in the database in final versions of the app.
  * 
- * @author Andrew J Toms II
+ * @author Daniel Finke
  */
 public class QuestionManager {
 	private ArrayList<Question> questions;
@@ -55,6 +54,15 @@ public class QuestionManager {
 			}
 		}
 		
+		// Quit if the InferenceEngine says it does not need more info
+		try {
+			if(getEngine().isMemSufficientForDecision()) {
+				return null;
+			}
+		} catch (Exception e) {
+			Log.e(this.getClass().getName(), "DB helper not instantiated");
+		}
+		
 		Random r = new Random();
 		int q;
 		try{
@@ -69,7 +77,7 @@ public class QuestionManager {
 	public void submitAnswer(QuestionAnswer qa) {
 		try {
 			InferenceEngine e = getEngine();
-			e.addFactsToMem(this.helper.getFactsForAnswerId(qa.getId()));
+			e.addFactsToMem(qa.getFacts());
 			e.updateMem();
 		} catch (Exception e) {
 			Log.e(this.getClass().getName(), "Unable to submit answer");
@@ -88,7 +96,7 @@ public class QuestionManager {
 	/*
 	 * Save the state of the working memory and the remaining questions
 	 */
-	public void saveState(Bundle outState, int curQuestionId) {
+	/*public void saveState(Bundle outState, int curQuestionId) {
 		// Store the question ids
 		int[] questionIds = new int[questions.size()];
 		int questionId;
@@ -114,12 +122,12 @@ public class QuestionManager {
 		catch(Exception ex) {
 			Log.e(this.getClass().getName(), "Unable to save working mem state");
 		}
-	}
+	}*/
 	
 	/*
 	 * Reload the working memory and list of remaining questions
 	 */
-	public void restoreState(Bundle savedState) {
+	/*public void restoreState(Bundle savedState) {
 		try {
 			// Fetch all questions from the database
 			ArrayList<Question> temp = helper.getQuestions();
@@ -153,12 +161,12 @@ public class QuestionManager {
 		catch(Exception ex) {
 			Log.e(this.getClass().getName(), "Unable to restore working mem from saved state");
 		}
-	}
+	}*/
 	
 	/*
 	 * Returns true if the question id is in the list of ids
 	 */
-	private boolean isQuestionInBundle(Question q, int[] questionIds) {
+	/*private boolean isQuestionInBundle(Question q, int[] questionIds) {
 		int qId = q.getId();
 		for(int i = 0; i < questionIds.length; i++) {
 			if(qId == questionIds[i]) {
@@ -167,5 +175,5 @@ public class QuestionManager {
 		}
 		
 		return false;
-	}
+	}*/
 }

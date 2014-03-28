@@ -1,58 +1,96 @@
 package ca.unbc.cpsc472.mynextphone.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class Fact implements Serializable {
+	public static enum FACT_TYPE {standby_time, talk_time, capacity, camera_flash,
+		camcorder, camera, frontfacing_camera, camera_features, connectivity, rugged,
+		weight, width, length, height, colours, touchscreen, features, size,
+		resolution_height, resolution_width, pixel_density, cores, storage_expansion,
+		built_in_storage, system_memory, processor_speed, builtin_online_services,
+		multimedia, sensors, notifications, untitled, hearing_aid_compatibility};
 	
 	//Eclipse is whining at me, had to make facts serializable to pass them as 
 	//objects to the Results View and convention says this is a required field.
 	public final static long serialVersionUID = 0;	
-												
 	
-	private int id;
-	private int resultId;
 	private String name;
-	private boolean truthFlag;
+	private ArrayList<String> lingVals;
 	
-	public Fact(int id, String name, int truthVal, int resultId) {
-		this.id = id;
-		this.name = name;
-		this.truthFlag = truthVal == 1;
-		this.resultId = resultId;
+	public static ArrayList<Fact> parseFactsToList(String facts) {
+		ArrayList<Fact> list = new ArrayList<Fact>();
+		StringTokenizer tok = new StringTokenizer(facts, "&");
+		while(tok.hasMoreTokens()) {
+			String part = tok.nextToken();
+			StringTokenizer tok2 = new StringTokenizer(part, " ");
+			String factName = tok2.nextToken();
+			String linguistic = tok2.nextToken();
+			
+			Fact f = new Fact(factName);
+			f.addLinguisticValue(linguistic);
+			list.add(f);
+		}
+		return list;
 	}
 	
-	public int getId() {
-		return id;
+	public static int totalFactTypes() {
+		return FACT_TYPE.values().length;
+	}
+	
+	public static ArrayList<Fact> allFactTypes() {
+		ArrayList<Fact> allFactTypes = new ArrayList<Fact>();
+		for(FACT_TYPE type : FACT_TYPE.values()) {
+			allFactTypes.add(new Fact(type.name()));
+		}
+		return allFactTypes;
+	}
+	
+	public Fact(String name) {
+		this.name = name;
+		this.lingVals = new ArrayList<String>();
 	}
 	
 	public String getName() {
 		return name;
 	}
 	
-	public boolean getTruthFlag() {
-		return truthFlag;
+	public ArrayList<String> getLinguisticValues() {
+		return lingVals;
 	}
 	
-	public int getResultId() {
-		return resultId;
+	public int getLinguisticValueCount() {
+		return lingVals.size();
 	}
 	
-	public boolean isResult() {
-		return resultId != -1;
+	public void addLinguisticValue(String val) {
+		lingVals.add(val);
 	}
 	
-	public void toggleTruthFlag() {
-		truthFlag = !truthFlag;
+	public void addLinguisticValues(ArrayList<String> vals) {
+		lingVals.addAll(vals);
+	}
+	
+	public String getLinguisticVarAvg() {
+		double avg = 0;
+		for(String s : lingVals) {
+			avg += InferenceEngine.defuzzify(s);
+		}
+		avg /= getLinguisticValueCount();
+		return InferenceEngine.fuzzify(avg);
+	}
+
+	@Override
+	public String toString() {
+		return "Fact [name=" + name + ", lingValAvg=" + getLinguisticVarAvg() + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + resultId;
-		result = prime * result + (truthFlag ? 1231 : 1237);
 		return result;
 	}
 
@@ -65,22 +103,11 @@ public class Fact implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Fact other = (Fact) obj;
-		if (id != other.id)
-			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (resultId != other.resultId)
-			return false;
-		if (truthFlag != other.truthFlag)
-			return false;
 		return true;
-	}
-	
-	@Override
-	public String toString(){
-		return (truthFlag?"":"not ")+this.getName();
 	}
 }

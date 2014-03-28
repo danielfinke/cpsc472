@@ -1,6 +1,7 @@
 package ca.unbc.cpsc472.mynextphone.models;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -24,15 +25,17 @@ import ca.unbc.cpsc472.mynextphone.helpers.BitmapScaler;
 public abstract class QuestionAnswer {
 	private int id;
 	private String stringValue;
+	private ArrayList<Fact> facts;
 	
 	/**
 	 * Constructor is private to force the use of the GetInstance method.
 	 * 
 	 * @param val The String representing the data of the QuestionAnswer.
 	 */
-	private QuestionAnswer(int id, String val) {
+	private QuestionAnswer(int id, String val, String facts) {
 		this.id = id;
 		this.stringValue = val;
+		this.facts = Fact.parseFactsToList(facts);
 	}
 	
 	/**
@@ -46,14 +49,14 @@ public abstract class QuestionAnswer {
 	 * TEXT.
 	 * @return An instance of QuestionAnswer generated from the passed values. 
 	 */
-	public static QuestionAnswer getInstance(int id, String value, 
-			QuestionAnswerType type) {
+	public static QuestionAnswer getInstance(int id, String value,
+			String facts, QuestionAnswerType type) {
 		switch(type){
 			case TEXT:
-				return new StringAnswer(id, value);
+				return new StringAnswer(id, value, facts);
 			case TILE:
 				try{
-					return new ImageAnswer(id, value);
+					return new ImageAnswer(id, value, facts);
 				}catch(IOException ioe){
 					throw new IllegalArgumentException("Encountered an  error" +
 							" trying to generate Tile Answer from String: " +
@@ -67,6 +70,10 @@ public abstract class QuestionAnswer {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public ArrayList<Fact> getFacts() {
+		return facts;
 	}
 	
 	/**
@@ -93,8 +100,8 @@ public abstract class QuestionAnswer {
 	
 	private static class StringAnswer extends QuestionAnswer{
 
-		private StringAnswer(int id, String text){
-			super(id, text);
+		private StringAnswer(int id, String text, String facts){
+			super(id, text, facts);
 		}
 		
 		@Override
@@ -111,8 +118,8 @@ public abstract class QuestionAnswer {
 	}
 	
 	private static class ImageAnswer extends QuestionAnswer{
-		private ImageAnswer(int id, String text) throws IOException{
-			super(id, text);
+		private ImageAnswer(int id, String text, String facts) throws IOException{
+			super(id, text, facts);
 		}
 		
 		@Override

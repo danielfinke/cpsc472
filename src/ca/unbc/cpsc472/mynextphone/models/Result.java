@@ -3,6 +3,8 @@ package ca.unbc.cpsc472.mynextphone.models;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import android.util.Log;
+
 /**
  * The model for a result. This will allow us to throw what we need from the 
  * inference engine into a nice, simple cohesive object to read out in the 
@@ -15,15 +17,15 @@ public class Result implements Serializable {
 	final static long serialVersionUID = 0;
 	
 	private String phoneName;
-	// Andrew: message Daniel about this for why it's been changed to a file path
-	private String imgPath;
+	private String phoneDesc;
+	private ArrayList<String> imgPaths;
 	private ArrayList<Fact> reasoning;
 	public final int id;
 	
-	public Result(int id, String phoneName, String imgPath, ArrayList<Fact> reasoning){
+	public Result(int id, String phoneName, String phoneDesc, ArrayList<Fact> reasoning){
 		this.id = id;
 		this.phoneName = phoneName;
-		this.imgPath = imgPath;
+		this.phoneDesc = phoneDesc;
 		this.reasoning = reasoning;
 	}
 
@@ -34,8 +36,22 @@ public class Result implements Serializable {
 		return phoneName;
 	}
 	
-	public String getImagePath() {
-		return imgPath;
+	public String getPhoneDesc() {
+		return phoneDesc;
+	}
+	
+	public ArrayList<String> getImgPaths() {
+		return imgPaths;
+	}
+	
+	public String getPrimaryImgPath() {
+		try {
+			return imgPaths.get(0);
+		}
+		catch(IndexOutOfBoundsException ex) {
+			Log.e(this.getClass().getName(), "No image available for phone: " + phoneName);
+			return null;
+		}
 	}
 
 	/**

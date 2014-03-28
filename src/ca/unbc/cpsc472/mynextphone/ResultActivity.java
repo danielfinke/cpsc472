@@ -1,8 +1,5 @@
 package ca.unbc.cpsc472.mynextphone;
 
-import java.util.ArrayList;
-import java.util.Set;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,9 +8,8 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ca.unbc.cpsc472.mynextphone.helpers.BitmapScaler;
 import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
-import ca.unbc.cpsc472.mynextphone.models.Fact;
+import ca.unbc.cpsc472.mynextphone.helpers.BitmapScaler;
 import ca.unbc.cpsc472.mynextphone.models.Result;
 
 public class ResultActivity extends Activity{
@@ -37,16 +33,17 @@ public class ResultActivity extends Activity{
 		Result res = (Result) x.getSerializableExtra("result");
 		this.name.setText(res.getPhoneName());
 		
-		int resID = getResources().getIdentifier(res.getImagePath(), "drawable",
+		int resID = getResources().getIdentifier(res.getPrimaryImgPath(), "drawable",
 				this.getPackageName());
 		this.img.setImageBitmap(BitmapScaler.decodeSampledBitmapFromResource(getResources(), resID, 100, 100));
 		PhoneDataBaseHelper helper = new PhoneDataBaseHelper(this);
 		helper.openDataBase();
 		try{
-			this.reasons.setText(
+			// TODO getFactsLeadingToResult
+			/*this.reasons.setText(
 					formatReasoning(res.getPhoneName(), 
 					res.getReasoning(),
-					helper.getFactsLeadingToResult(res.id)));
+					helper.getFactsLeadingToResult(res.id)));*/
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
@@ -65,12 +62,13 @@ public class ResultActivity extends Activity{
 	 * Takes the name of the phone and the list of facts that generated the 
 	 * result and composes them into a description string describing the 
 	 * reasoning.
+	 * TODO Re-add this
 	 *  
 	 * @param name The name of the phone itself.
 	 * @param reasoning The list of facts.
 	 * @return A description-of-reasoning string.
 	 */
-	private String formatReasoning(String name, ArrayList<Fact> reasoning, Set<Fact> reason){
+	/*private String formatReasoning(String name, ArrayList<Fact> reasoning, Set<Fact> reason){
 		String ret = "Why should you get the " + name + "?\n\n";
 		String hasFact = "";
 		String oppositeFact = "";
@@ -97,7 +95,7 @@ public class ResultActivity extends Activity{
 		if(!leftOver.equals(""))
 			ret = ret.concat("These are left over:\n"+leftOver);
 		return ret;
-	}
+	}*/
 
 	public void startOver(View v) {
 		Intent intent = new Intent(this, QuestionActivity.class);

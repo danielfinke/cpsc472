@@ -67,7 +67,8 @@ public class QuestionActivity extends Activity {
 		if(savedState == null){
 			fetchNewQuestion();
 		}else{
-			restoreQuestions(savedState);
+			// TODO Restore questions
+			//restoreQuestions(savedState);
 		}
 		drawQuestion();
 	}
@@ -95,7 +96,8 @@ public class QuestionActivity extends Activity {
 						question.getAnswers().get(i).toString());
 			}
 			
-			qMan.saveState(outState, question.getId());
+			// TODO save question manager state
+			//qMan.saveState(outState, question.getId());
 		}
 	}
 	
@@ -110,7 +112,7 @@ public class QuestionActivity extends Activity {
 	 * //FOR_DANIEL: However we end up storing all of our questions will be here
 	 * so if you're going to touch that; here's where to do it.
 	 */
-	public void fetchNewQuestion(){
+	public void fetchNewQuestion() {
 		this.question = qMan.getQuestion();
 	}
 	
@@ -125,7 +127,7 @@ public class QuestionActivity extends Activity {
 	 * @param savedState The Bundle object that has all of the data for our old
 	 * question.
 	 */
-	public void restoreQuestions(Bundle savedState){
+	/*public void restoreQuestions(Bundle savedState){
 		int questionId = savedState.getInt(this.QUESTION_ID);
 		QuestionAnswerType type = savedState.getBoolean(this.TYPE) ? 
 				QuestionAnswerType.TEXT : QuestionAnswerType.TILE;
@@ -142,7 +144,7 @@ public class QuestionActivity extends Activity {
 				answers);
 		
 		qMan.restoreState(savedState);
-	}
+	}*/
 
 	/**
 	 * A void method that draws this Activity's question.
