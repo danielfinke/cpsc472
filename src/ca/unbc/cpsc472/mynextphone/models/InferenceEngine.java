@@ -3,6 +3,7 @@ package ca.unbc.cpsc472.mynextphone.models;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import android.os.Bundle;
 import android.util.Log;
 import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
 
@@ -66,6 +67,43 @@ public class InferenceEngine {
 		} catch (Exception e) {
 			Log.e(this.getClass().getName(), "Unable to fetch rules from database");
 		}
+	}
+	
+	public void saveState(Bundle bundle, String bundlePrefix) {
+		// Store the working memory
+		ArrayList<String> memKeys = new ArrayList<String>();
+		for(Fact f : getWorkingMem()) {
+			f.saveState(bundle, "mem" + f.getName() + "_");
+			memKeys.add(f.getName());
+		}
+		bundle.putStringArrayList(bundlePrefix + "memKeys", memKeys);
+		
+		// Store the un-evaluated rules
+		int[] ruleKeys = new int[rules.size()];
+		for(int i = 0; i < rules.size(); i++) {
+			Rule r = rules.get(i);
+			r.saveState(bundle, "rule" + r.getRuleId() + "_");
+			ruleKeys[i] = r.getRuleId();
+		}
+		bundle.putIntArray(bundlePrefix + "ruleKeys", ruleKeys);
+	}
+	
+	public void restoreState(Bundle bundle, String bundlePrefix) {
+		// First load the working memory
+		ArrayList<Fact> facts = new ArrayList<Fact>();
+		ArrayList<String> memKeys = bundle.getStringArrayList(bundlePrefix + "memKeys");
+		for(String key : memKeys) {
+			facts.add(new Fact(bundle, bundlePrefix + "mem" + key + "_"));
+		}
+		this.workingMem = facts;
+		
+		// Load previously un-evaluated rules
+		ArrayList<Rule> rules = new ArrayList<Rule>();
+		int[] ruleKeys = bundle.getIntArray(bundlePrefix + "ruleKeys");
+		for(int i = 0; i < ruleKeys.length; i++) {
+			rules.add(new Rule(bundle, bundlePrefix + "rule" + ruleKeys[i] + "_"));
+		}
+		this.rules = rules;
 	}
 	
 	public ArrayList<Fact> getWorkingMem() {

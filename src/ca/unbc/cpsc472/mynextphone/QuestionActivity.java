@@ -35,8 +35,6 @@ public class QuestionActivity extends Activity {
 	private final String QUESTION_ID = "QUESTION_ID";
 	private final String TYPE = "TYPE";
 	private final String QUESTION = "QUESTION_BODY";
-	private final String ANSWER_ID = "ANSWER_ID_";
-	private final String ANSWER = "ANSWER_";
 	private final String ANSWER_COUNT = "ANSWER_COUNT";
 	private Question question;
 	private LinearLayout layout;
@@ -67,8 +65,7 @@ public class QuestionActivity extends Activity {
 		if(savedState == null){
 			fetchNewQuestion();
 		}else{
-			// TODO Restore questions
-			//restoreQuestions(savedState);
+			restoreQuestions(savedState);
 		}
 		drawQuestion();
 	}
@@ -81,23 +78,24 @@ public class QuestionActivity extends Activity {
 	}
 	
 	@Override
-	public void onSaveInstanceState(Bundle outState){
-		//Need to remember our question
+	public void onSaveInstanceState(Bundle bundle){
+		// Need to remember our question
 		if(this.questionReady()){
-			outState.putInt(this.QUESTION_ID, question.getId());
-			outState.putString(this.QUESTION, question.getText());
-			outState.putBoolean(this.TYPE, 
-					(this.question.getType() == QuestionAnswerType.TEXT));
-			outState.putInt(this.ANSWER_COUNT, question.getAnswers().size());
-			for(int i = 0; i < question.getAnswers().size(); i++){
-				outState.putInt(this.ANSWER_ID + i,
-						question.getAnswers().get(i).getId());
-				outState.putString(this.ANSWER + i, 
-						question.getAnswers().get(i).toString());
-			}
+			bundle.putInt(this.QUESTION_ID, question.getId());
+			bundle.putString(this.QUESTION, question.getText());
+			bundle.putInt(this.TYPE, question.getType().ordinal());
+			bundle.putInt(this.ANSWER_COUNT, question.getAnswers().size());
 			
-			// TODO save question manager state
-			//qMan.saveState(outState, question.getId());
+			// Save the possible answers
+			int[] keys = new int[question.getAnswers().size()];
+			for(int i = 0; i < question.getAnswers().size(); i++) {
+				QuestionAnswer qa = question.getAnswers().get(i);
+				qa.saveState(bundle, "questionAnswer" + qa.getId() + "_");
+				keys[i] = qa.getId();
+			}
+			bundle.putIntArray("answersKeys", keys);
+			
+			qMan.saveState(bundle, question.getId());
 		}
 	}
 	
@@ -124,27 +122,31 @@ public class QuestionActivity extends Activity {
 	 * This method will restore to this activity the old Question this view had
 	 * in the event it is lost by pausing or re-orienting the screen.
 	 * 
-	 * @param savedState The Bundle object that has all of the data for our old
+	 * @param bundle The Bundle object that has all of the data for our old
 	 * question.
 	 */
-	/*public void restoreQuestions(Bundle savedState){
-		int questionId = savedState.getInt(this.QUESTION_ID);
-		QuestionAnswerType type = savedState.getBoolean(this.TYPE) ? 
-				QuestionAnswerType.TEXT : QuestionAnswerType.TILE;
-		String question_name = savedState.getString(this.QUESTION);
+	public void restoreQuestions(Bundle bundle){
+		int questionId = bundle.getInt(this.QUESTION_ID);
+		String question_name = bundle.getString(this.QUESTION);
+		QuestionAnswerType type = QuestionAnswerType.values()[
+		     bundle.getInt(this.TYPE)
+		];
+		
 		ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
-		for(int i = 0; i < savedState.getInt(this.ANSWER_COUNT); i++){
-			int id = savedState.getInt(this.ANSWER_ID + i);
-			String s = savedState.getString(this.ANSWER + i);
-			QuestionAnswer qa = QuestionAnswer.getInstance(id, s, type);
+		int[] keys = bundle.getIntArray("answerKeys");
+		for(int i = 0; i < bundle.getInt(this.ANSWER_COUNT); i++) {
+			QuestionAnswer qa = QuestionAnswer.getInstance(bundle,
+					"questionAnswer" + keys[i] + "_",
+					type);
 			answers.add(qa);
 		}
+		
 		this.question = new Question(questionId, question_name,
 				type,
 				answers);
 		
-		qMan.restoreState(savedState);
-	}*/
+		qMan.restoreState(bundle);
+	}
 
 	/**
 	 * A void method that draws this Activity's question.

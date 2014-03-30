@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridView;
@@ -38,6 +39,18 @@ public abstract class QuestionAnswer {
 		this.facts = Fact.parseFactsToList(facts);
 	}
 	
+	private QuestionAnswer(Bundle bundle, String bundlePrefix) {
+		this.id = bundle.getInt(bundlePrefix + "id");
+		this.stringValue = bundle.getString(bundlePrefix + "stringValue");
+		
+		ArrayList<Fact> facts = new ArrayList<Fact>();
+		ArrayList<String> keys = bundle.getStringArrayList(bundlePrefix + "keys");
+		for(String key : keys) {
+			facts.add(new Fact(bundlePrefix + "fact" + key + "_"));
+		}
+		this.facts = facts;
+	}
+	
 	/**
 	 * This is the method used to get Question Answer instances. The type of 
 	 * the desired answer is specified, and then the appropriate behaviors are 
@@ -66,6 +79,38 @@ public abstract class QuestionAnswer {
 				throw new IllegalArgumentException(type + " is an undefined A" +
 						"nswer Type.");
 		}
+	}
+	
+	public static QuestionAnswer getInstance(Bundle bundle, String bundlePrefix,
+			QuestionAnswerType type) {
+		switch(type){
+		case TEXT:
+			return new StringAnswer(bundle, bundlePrefix);
+		case TILE:
+			try {
+				return new ImageAnswer(bundle, bundlePrefix);
+			}
+			catch(IOException ioe) {
+				throw new IllegalArgumentException("Encountered an  error" +
+						" trying to generate Tile Answer from Bundle: " +
+						bundle.describeContents());
+			}
+		default:
+			throw new IllegalArgumentException(type + " is an undefined A" +
+					"nswer Type.");
+		}
+	}
+	
+	public void saveState(Bundle bundle, String bundlePrefix) {
+		bundle.putInt(bundlePrefix + "id", getId());
+		bundle.putString(bundlePrefix + "stringValue", stringValue);
+		
+		ArrayList<String> keys = new ArrayList<String>();
+		for(Fact f : facts) {
+			f.saveState(bundle, "fact" + f.getName() + "_");
+			keys.add(f.getName());
+		}
+		bundle.putStringArrayList(bundlePrefix + "keys", keys);
 	}
 	
 	public int getId() {
@@ -104,6 +149,10 @@ public abstract class QuestionAnswer {
 			super(id, text, facts);
 		}
 		
+		private StringAnswer(Bundle bundle, String bundlePrefix) {
+			super(bundle, bundlePrefix);
+		}
+		
 		@Override
 		public View getView(Context c) {
 			LayoutInflater inf = (LayoutInflater) 
@@ -120,6 +169,10 @@ public abstract class QuestionAnswer {
 	private static class ImageAnswer extends QuestionAnswer{
 		private ImageAnswer(int id, String text, String facts) throws IOException{
 			super(id, text, facts);
+		}
+		
+		private ImageAnswer(Bundle bundle, String bundlePrefix) throws IOException {
+			super(bundle, bundlePrefix);
 		}
 		
 		@Override

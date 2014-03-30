@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import android.os.Bundle;
+
 public class Fact implements Serializable {
 	public static enum FACT_TYPE {standby_time, talk_time, capacity, camera_flash,
 		camcorder, camera, frontfacing_camera, camera_features, connectivity, rugged,
@@ -50,6 +52,16 @@ public class Fact implements Serializable {
 	public Fact(String name) {
 		this.name = name;
 		this.lingVals = new ArrayList<String>();
+	}
+	
+	public Fact(Bundle bundle, String bundlePrefix) {
+		this.name = bundle.getString(bundlePrefix + "name");
+		this.lingVals = bundle.getStringArrayList(bundlePrefix + "lingVals");
+	}
+	
+	public void saveState(Bundle bundle, String bundlePrefix) {
+		bundle.putString(bundlePrefix + "name", getName());
+		bundle.putStringArrayList(bundlePrefix + "lingVals", getLinguisticValues());
 	}
 	
 	public String getName() {
