@@ -141,7 +141,7 @@ public class InferenceEngine {
 				lookups.add(resF);
 			}
 			
-			ArrayList<Result> results = PhoneDataBaseHelper.getInstance(null).getResultsWithFacts(lookups);
+			ArrayList<Result> results = PhoneDataBaseHelper.getInstance(null).getResultsWithFacts(lookups, workingMem);
 		
 			if(results.isEmpty()) {
 				return getNearestResults(lookups);
@@ -159,7 +159,7 @@ public class InferenceEngine {
 	 */
 	private ArrayList<Result> getNearestResults(ArrayList<Fact> facts) {
 		try {
-			return PhoneDataBaseHelper.getInstance(null).getNearestResults(facts);
+			return PhoneDataBaseHelper.getInstance(null).getNearestResults(facts, workingMem);
 		}
 		catch(Exception e) {
 			Log.e(this.getClass().getName(), "Unable to get nearest results");

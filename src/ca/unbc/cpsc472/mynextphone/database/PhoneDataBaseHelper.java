@@ -147,7 +147,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		return rules;
 	}
 	
-	public ArrayList<Result> getResultsWithFacts(ArrayList<Fact> facts) throws Exception {
+	public ArrayList<Result> getResultsWithFacts(ArrayList<Fact> facts, ArrayList<Fact> reasoning) throws Exception {
 		if(!dbIsOpen()) {
 			throw new Exception();
 		}
@@ -160,6 +160,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 					cursor.getInt(cursor.getColumnIndex("_id")),
 					cursor.getString(cursor.getColumnIndex("name")),
 					cursor.getString(cursor.getColumnIndex("description")),
+					//reasoning
 					facts
 			));
 			cursor.moveToNext();
@@ -169,7 +170,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		return results;
 	}
 	
-	public ArrayList<Result> getNearestResults(ArrayList<Fact> facts) throws Exception {
+	public ArrayList<Result> getNearestResults(ArrayList<Fact> facts, ArrayList<Fact> reasoning) throws Exception {
 		if(!dbIsOpen()) {
 			throw new Exception();
 		}
@@ -182,6 +183,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 					cursor.getInt(cursor.getColumnIndex("_id")),
 					cursor.getString(cursor.getColumnIndex("name")),
 					cursor.getString(cursor.getColumnIndex("description")),
+					//reasoning
 					facts
 			));
 			cursor.moveToNext();
