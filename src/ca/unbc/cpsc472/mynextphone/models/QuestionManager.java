@@ -109,7 +109,6 @@ public class QuestionManager {
 		
 		// Quit if the InferenceEngine says it does not need more info
 		try {
-			// TODO early quit
 			if(getEngine().isMemSufficientForDecision()) {
 				return null;
 			}

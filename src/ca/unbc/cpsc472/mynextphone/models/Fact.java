@@ -96,28 +96,6 @@ public class Fact implements Serializable {
 		return tuples.size();
 	}
 	
-	// TODO getLinguisticVarAvg
-	/*public String getLinguisticVarAvg() {
-		double avg = 0;
-		for(String s : lingVals) {
-			avg += InferenceEngine.defuzzify(s);
-		}
-		avg /= getTupleCount();
-		return InferenceEngine.fuzzify(avg);
-	}*/
-	
-	// TODO getLinguisticVarString
-	/*public String getLinguisticVarString() {
-		String ret = "";
-		for(String s : getTuples()) {
-			ret += s;
-			if(s != getTuples().get(getTuples().size()-1)) {
-				ret += ",";
-			}
-		}
-		return ret;
-	}*/
-	
 	public boolean isEmptySet() {
 		for(int i = 0; i < tuples.size(); i++) {
 			if((Double)tuples.get(i).getObject(2) != 0) {

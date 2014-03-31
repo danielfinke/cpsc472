@@ -153,7 +153,29 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		}
 
 		ArrayList<Result> results = new ArrayList<Result>();
-		Cursor cursor = getResultsCursor(getQueryStringFromLingVars(facts));
+		Cursor cursor = getResultsCursor(getQueryStringFromLingVars(facts), getOrderByString(facts));
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast()) {
+			results.add(new Result(
+					cursor.getInt(cursor.getColumnIndex("_id")),
+					cursor.getString(cursor.getColumnIndex("name")),
+					cursor.getString(cursor.getColumnIndex("description")),
+					facts
+			));
+			cursor.moveToNext();
+		}
+		cursor.close();
+		
+		return results;
+	}
+	
+	public ArrayList<Result> getNearestResults(ArrayList<Fact> facts) throws Exception {
+		if(!dbIsOpen()) {
+			throw new Exception();
+		}
+
+		ArrayList<Result> results = new ArrayList<Result>();
+		Cursor cursor = getResultsCursor(null, getOrderByString(facts));
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
 			results.add(new Result(
@@ -202,6 +224,19 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		return query;
 	}
 	
+	private String getOrderByString(ArrayList<Fact> facts) throws Exception {
+		String query = "";
+		for(Fact f : facts) {
+			query += "abs(" + f.getName() + "_value - " +
+					InferenceEngine.defuzzify(f) + ")";
+			if(f != facts.get(facts.size()-1)) {
+				query += " + ";
+			}
+		}
+		query += " ASC";
+		return query;
+	}
+	
 	private Cursor getQuestionsCursor() {
 		return myDataBase.query("question", questionColumns, null, null, null, null, null);
 	}
@@ -215,8 +250,12 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		return myDataBase.query("rule", ruleColumns, null, null, null, null, null);
 	}
 	
-	private Cursor getResultsCursor(String whereClause) {
+	/*private Cursor getResultsCursor(String whereClause) {
 		return myDataBase.query("data", null, whereClause, null, null, null, null);
+	}*/
+	
+	private Cursor getResultsCursor(String whereClause, String orderBy) {
+		return myDataBase.query("data", null, whereClause, null, null, null, orderBy, "10");
 	}
 	
 	private Cursor getLinguisticTuplesCursor(String lingName) {

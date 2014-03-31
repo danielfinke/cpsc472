@@ -140,59 +140,32 @@ public class InferenceEngine {
 				resF.addTuples(PhoneDataBaseHelper.getInstance(null).getLinguisticTuples(resSet));
 				lookups.add(resF);
 			}
-		
-			// TODO getNearestResults
-			/*if(results.isEmpty()) {
-				return getNearestResults();
-			}*/
 			
-			return PhoneDataBaseHelper.getInstance(null).getResultsWithFacts(lookups);
+			ArrayList<Result> results = PhoneDataBaseHelper.getInstance(null).getResultsWithFacts(lookups);
+		
+			if(results.isEmpty()) {
+				return getNearestResults(lookups);
+			}
+			
+			return results;
 		} catch (Exception e) {
 			Log.e(this.getClass().getName(), "Unable to get inferred results");
 		}
 		return null;
 	}
 	
-	/* TODO Get closest results in case of no matching ones
-	 * Find the collection of the closest results that match to what
+	/* Find the collection of the closest results that match to what
 	 * the user chose for the questions
 	 */
-	/*private ArrayList<Result> getNearestResults() {
-		ArrayList<Rule> resultRules;
+	private ArrayList<Result> getNearestResults(ArrayList<Fact> facts) {
 		try {
-			resultRules = helper.getResultRules();
-		} catch (Exception e) {
-			Log.e(this.getClass().getName(), "Unable to get nearest results (rules step)");
-			return null;
-		}
-		
-		// Calculate all the rule's score based on current working mem
-		for(int i = 0; i < resultRules.size(); i++) {
-			Rule r = resultRules.get(i);
-			r.setClosenessScore(resultScore(r));
-		}
-		// Sort them by their scores
-		Collections.sort(resultRules);
-		
-		// Return the list of best results
-		// CURRENTLY ONLY CONSIDERING THE LAST ONE EVEN IF THERE ARE TIES!
-		ArrayList<Result> results = new ArrayList<Result>();
-		Rule best = resultRules.get(resultRules.size()-1);
-		HashSet<Fact> producedFacts = best.getRightSide();
-		Iterator<Fact> iter = producedFacts.iterator();
-		try {
-			while(iter.hasNext()) {
-				Fact f = iter.next();
-				Result res = helper.getResultForFactId(f.getId(), workingMem);
-				results.add(res);
-			}
+			return PhoneDataBaseHelper.getInstance(null).getNearestResults(facts);
 		}
 		catch(Exception e) {
-			Log.e(this.getClass().getName(), "Unable to get nearest results (results step)");
-			return null;
+			Log.e(this.getClass().getName(), "Unable to get nearest results");
 		}
-		return results;
-	}*/
+		return null;
+	}
 	
 	public void addFactToMem(Fact f) {
 		Fact oldF = getFact(f.getName());
@@ -333,11 +306,18 @@ public class InferenceEngine {
 	 * Returns true if enough information has been collected in the working memory
 	 * to make a decision
 	 */
+	// TODO improve with freq/scaling in fact merges
 	public boolean isMemSufficientForDecision() {
 		ArrayList<Fact> allTypes = Fact.allFactTypes();
 		for(Fact type : allTypes) {
-			if(!workingMem.contains(type) ||
-					workingMem.get(workingMem.indexOf(type)).getTupleCount() < 2) {
+			boolean found = false;
+			for(int i = 0; i < workingMem.size(); i++) {
+				if(workingMem.get(i).getName().equals(type.getName())) {
+					found = true;
+					break;
+				}
+			}
+			if(!found) {
 				return false;
 			}
 		}

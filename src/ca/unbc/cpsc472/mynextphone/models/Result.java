@@ -60,4 +60,17 @@ public class Result implements Serializable {
 	public ArrayList<Fact> getReasoning() {
 		return reasoning;
 	}
+	
+	@Override
+	public String toString() {
+		String ret = "Result [phoneName=" + phoneName + ", reasoning={";
+		for(Fact f : reasoning) {
+			ret += f.toString();
+			if(f != reasoning.get(reasoning.size() - 1)) {
+				ret += ", ";
+			}
+		}
+		ret += "}]";
+		return ret;
+	}
 }
