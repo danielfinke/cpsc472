@@ -80,7 +80,9 @@ public class QuestionManager {
 			getEngine().restoreState(savedState, "inference_");
 		}
 		catch(Exception ex) {
-			Log.e(this.getClass().getName(), "Unable to restore working inference engine from saved state");
+			Log.e(this.getClass().getName(),
+					"Unable to restore working inference engine from saved state: "
+					+ ex.getMessage());
 		}
 	}
 	

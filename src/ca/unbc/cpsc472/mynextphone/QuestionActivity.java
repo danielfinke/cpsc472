@@ -93,7 +93,7 @@ public class QuestionActivity extends Activity {
 				qa.saveState(bundle, "questionAnswer" + qa.getId() + "_");
 				keys[i] = qa.getId();
 			}
-			bundle.putIntArray("answersKeys", keys);
+			bundle.putIntArray("answerKeys", keys);
 			
 			qMan.saveState(bundle, question.getId());
 		}

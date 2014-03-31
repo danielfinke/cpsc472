@@ -47,15 +47,15 @@ public class Rule implements Comparable<Rule> {
 		
 		ArrayList<String> leftKeys = new ArrayList<String>();
 		for(Fact f : leftSide) {
-			f.saveState(bundle, "leftSide" + f.getName() + "_");
-			leftKeys.add(f.getName());
+			f.saveState(bundle, bundlePrefix + "leftSide" + f.getName() + f.getLinguisticVarString() + "_");
+			leftKeys.add(f.getName() + f.getLinguisticVarString());
 		}
 		bundle.putStringArrayList(bundlePrefix + "leftKeys", leftKeys);
 		
 		ArrayList<String> rightKeys = new ArrayList<String>();
 		for(Fact f : rightSide) {
-			f.saveState(bundle, "rightSide" + f.getName() + "_");
-			rightKeys.add(f.getName());
+			f.saveState(bundle, bundlePrefix + "rightSide" + f.getName() + f.getLinguisticVarString() + "_");
+			rightKeys.add(f.getName() + f.getLinguisticVarString());
 		}
 		bundle.putStringArrayList(bundlePrefix + "rightKeys", rightKeys);
 	}

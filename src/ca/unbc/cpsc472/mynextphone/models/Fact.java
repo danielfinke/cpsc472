@@ -76,14 +76,6 @@ public class Fact implements Serializable {
 		return lingVals.size();
 	}
 	
-	public void addLinguisticValue(String val) {
-		lingVals.add(val);
-	}
-	
-	public void addLinguisticValues(ArrayList<String> vals) {
-		lingVals.addAll(vals);
-	}
-	
 	public String getLinguisticVarAvg() {
 		double avg = 0;
 		for(String s : lingVals) {
@@ -92,14 +84,33 @@ public class Fact implements Serializable {
 		avg /= getLinguisticValueCount();
 		return InferenceEngine.fuzzify(avg);
 	}
+	
+	public String getLinguisticVarString() {
+		String ret = "";
+		for(String s : getLinguisticValues()) {
+			ret += s;
+			if(s != getLinguisticValues().get(getLinguisticValues().size()-1)) {
+				ret += ",";
+			}
+		}
+		return ret;
+	}
+	
+	public void addLinguisticValue(String val) {
+		lingVals.add(val);
+	}
+	
+	public void addLinguisticValues(ArrayList<String> vals) {
+		lingVals.addAll(vals);
+	}
 
 	@Override
 	public String toString() {
 		if(getLinguisticValueCount() == 1) {
-			return "Fact [name=" + name + ", lingVal=" + lingVals.get(0) + "]";
+			return "Fact [name=" + name + ", lingVals=" + lingVals.get(0) + "]";
 		}
 		else {
-			return "Fact [name=" + name + ", lingValAvg=" + getLinguisticVarAvg() + "]";
+			return "Fact [name=" + name + ", lingVals=" + getLinguisticVarString() + "]";
 		}
 	}
 

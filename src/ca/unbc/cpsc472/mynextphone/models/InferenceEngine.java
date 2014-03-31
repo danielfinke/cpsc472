@@ -73,7 +73,7 @@ public class InferenceEngine {
 		// Store the working memory
 		ArrayList<String> memKeys = new ArrayList<String>();
 		for(Fact f : getWorkingMem()) {
-			f.saveState(bundle, "mem" + f.getName() + "_");
+			f.saveState(bundle, bundlePrefix + "mem" + f.getName() + "_");
 			memKeys.add(f.getName());
 		}
 		bundle.putStringArrayList(bundlePrefix + "memKeys", memKeys);
@@ -82,7 +82,7 @@ public class InferenceEngine {
 		int[] ruleKeys = new int[rules.size()];
 		for(int i = 0; i < rules.size(); i++) {
 			Rule r = rules.get(i);
-			r.saveState(bundle, "rule" + r.getRuleId() + "_");
+			r.saveState(bundle, bundlePrefix + "rule" + r.getRuleId() + "_");
 			ruleKeys[i] = r.getRuleId();
 		}
 		bundle.putIntArray(bundlePrefix + "ruleKeys", ruleKeys);
