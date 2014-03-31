@@ -184,6 +184,8 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 				values.add(f.getName());
 		}while(cursor.moveToNext());
 		
+		cursor.close();
+		
 		return new ArrayList<String>(values);
 	}
 	
