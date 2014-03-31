@@ -18,15 +18,13 @@ import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
 public class QuestionManager {
 	private ArrayList<Question> questions;
 	private InferenceEngine engine;
-	private PhoneDataBaseHelper helper;
 	
 	public QuestionManager(Context c) {
-		this.helper = new PhoneDataBaseHelper(c);
-		this.helper.openDataBase();
+		PhoneDataBaseHelper.getInstance(c).openDataBase();
 	}
 	
 	public void recycle() {
-		helper.close();
+		PhoneDataBaseHelper.getInstance(null).close();
 	}
 	
 	/*
@@ -59,7 +57,7 @@ public class QuestionManager {
 	public void restoreState(Bundle savedState) {
 		try {
 			// Fetch all questions from the database
-			ArrayList<Question> temp = helper.getQuestions();
+			ArrayList<Question> temp = PhoneDataBaseHelper.getInstance(null).getQuestions();
 			questions = new ArrayList<Question>();
 			// Fetch the question ids that should be restored
 			int[] questionIds = savedState.getIntArray("questions");
@@ -80,18 +78,17 @@ public class QuestionManager {
 			getEngine().restoreState(savedState, "inference_");
 		}
 		catch(Exception ex) {
-			Log.e(this.getClass().getName(), "Unable to restore working inference engine from saved state");
+			Log.e(this.getClass().getName(),
+					"Unable to restore working inference engine from saved state: "
+					+ ex.getMessage());
 		}
 	}
 	
-	private InferenceEngine getEngine() throws Exception {
+	private InferenceEngine getEngine() {
 		if(engine != null) {
 			return engine;
 		}
-		if(this.helper == null) {
-			throw new Exception();
-		}
-		engine = new InferenceEngine(this.helper);
+		engine = new InferenceEngine();
 		return engine;
 	}
 	
@@ -103,7 +100,7 @@ public class QuestionManager {
 	public Question getQuestion() {
 		if(questions == null) {
 			try {
-				questions = this.helper.getQuestions();
+				questions = PhoneDataBaseHelper.getInstance(null).getQuestions();
 			} catch (Exception e) {
 				Log.e(this.getClass().getName(), "Unable to load questions from database");
 				return null;

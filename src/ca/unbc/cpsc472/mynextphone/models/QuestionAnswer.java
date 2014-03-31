@@ -46,7 +46,7 @@ public abstract class QuestionAnswer {
 		ArrayList<Fact> facts = new ArrayList<Fact>();
 		ArrayList<String> keys = bundle.getStringArrayList(bundlePrefix + "keys");
 		for(String key : keys) {
-			facts.add(new Fact(bundlePrefix + "fact" + key + "_"));
+			facts.add(new Fact(bundle, bundlePrefix + "fact" + key + "_"));
 		}
 		this.facts = facts;
 	}
@@ -117,17 +117,18 @@ public abstract class QuestionAnswer {
 		}
 	}
 	
-	public void saveState(Bundle bundle, String bundlePrefix) {
+	// TODO save question answer state
+	/*public void saveState(Bundle bundle, String bundlePrefix) {
 		bundle.putInt(bundlePrefix + "id", getId());
 		bundle.putString(bundlePrefix + "stringValue", stringValue);
 		
 		ArrayList<String> keys = new ArrayList<String>();
 		for(Fact f : facts) {
-			f.saveState(bundle, "fact" + f.getName() + "_");
-			keys.add(f.getName());
+			f.saveState(bundle, bundlePrefix + "fact" + f.getName() + f.getLinguisticVarString() + "_");
+			keys.add(f.getName() + f.getLinguisticVarString());
 		}
 		bundle.putStringArrayList(bundlePrefix + "keys", keys);
-	}
+	}*/
 	
 	public int getId() {
 		return id;

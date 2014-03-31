@@ -1,15 +1,21 @@
 package ca.unbc.cpsc472.mynextphone;
 
+import java.util.ArrayList;
+import java.util.Set;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
 import ca.unbc.cpsc472.mynextphone.helpers.BitmapScaler;
+import ca.unbc.cpsc472.mynextphone.models.Fact;
+import ca.unbc.cpsc472.mynextphone.models.InferenceEngine;
 import ca.unbc.cpsc472.mynextphone.models.Result;
 
 public class ResultActivity extends Activity{
@@ -42,10 +48,9 @@ public class ResultActivity extends Activity{
 		helper.openDataBase();
 		try{
 			// TODO getFactsLeadingToResult
-			/*this.reasons.setText(
+			this.reasons.setText(
 					formatReasoning(res.getPhoneName(), 
-					res.getReasoning(),
-					helper.getFactsLeadingToResult(res.id)));*/
+					res.getReasoning()));
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
@@ -64,40 +69,28 @@ public class ResultActivity extends Activity{
 	 * Takes the name of the phone and the list of facts that generated the 
 	 * result and composes them into a description string describing the 
 	 * reasoning.
-	 * TODO Re-add this
 	 *  
 	 * @param name The name of the phone itself.
 	 * @param reasoning The list of facts.
 	 * @return A description-of-reasoning string.
 	 */
-	/*private String formatReasoning(String name, ArrayList<Fact> reasoning, Set<Fact> reason){
+	private String formatReasoning(String name, ArrayList<Fact> reasoning) {
 		String ret = "Why should you get the " + name + "?\n\n";
 		String hasFact = "";
-		String oppositeFact = "";
-		String leftOver = "";
-		for(Fact f : reasoning){
-			if(reason.contains(f))
-				hasFact += "\t\t\t-" + f.toString() + "\n";
-			else {
-				f.toggleTruthFlag();
-				if(reason.contains(f)){
-					f.toggleTruthFlag();
-					oppositeFact += "\t\t\t-" + f.toString() + "\n";
-				}else{
-					f.toggleTruthFlag();
-					leftOver += "\t\t\t-" + f.toString() + "\n";
-				}
+		try {
+			for(Fact f : reasoning) {
+				hasFact += "\t\t\t-" + f.getName() + "\t\t\t" +
+						InferenceEngine.fuzzify(InferenceEngine.defuzzify(f)) + "\n";
 			}
+		}
+		catch(Exception ex) {
+			Log.e(this.getClass().getName(), "Unable to format reasoning");
 		}
 		 
 		if(!hasFact.equals(""))
-			ret = ret.concat("These facts matched the phone:\n"+hasFact);
-		if(!oppositeFact.equals(""))
-			ret = ret.concat("These facts are not found in the phone:\n"+oppositeFact);
-		if(!leftOver.equals(""))
-			ret = ret.concat("These are left over:\n"+leftOver);
+			ret = ret.concat("The phone scored the following:\n" + hasFact);
 		return ret;
-	}*/
+	}
 
 	public void startOver(View v) {
 		Intent intent = new Intent(this, QuestionActivity.class);
