@@ -36,13 +36,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/central_image"
+        android:layout_alignParentLeft = "true"
         android:layout_centerHorizontal="true"
         android:padding="3sp"
         android:layout_margin="20sp"
         android:text="@string/start"
-        android:onClick="go"
+        android:onClick="begin"
         android:textColor="@color/white"
         android:textSize="26sp"
+        android:background="@drawable/button_shape"/>
+    
+    <Button 
+        android:id="@+id/change_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/central_image"
+        android:layout_alignParentRight = "true"
+        android:layout_centerHorizontal="true"
+        android:padding="3sp"
+        android:layout_margin="20sp"
+        android:text="@string/change_definitions"
+        android:onClick="changeDefinitions"
+        android:textColor="@color/white"
+        android:textSize="16sp"
         android:background="@drawable/button_shape"/>
 
 </RelativeLayout>

@@ -21,9 +21,13 @@ public class StartupActivity extends Activity {
 		return true;
 	}
 	
-	public void go(View v){
+	public void begin(View v){
 		Intent i = new Intent(this, QuestionActivity.class);
 		this.startActivity(i);
 	}
 
+	public void changeDefinitions(View v){
+		Intent i = new Intent(this, ChangeDefinitionsActivity.class);
+		this.startActivity(i);
+	}
 }

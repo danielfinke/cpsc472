@@ -2,6 +2,7 @@ package ca.unbc.cpsc472.mynextphone.database;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -155,6 +156,22 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		cursor.close();
 		
 		return results;
+	}
+	
+	public ArrayList<String> getValueNames(){
+		TreeSet<String> values = new TreeSet<String>();
+		
+		Cursor cursor = this.getRulesCursor();
+		cursor.moveToFirst();
+		do{
+			String[] split = cursor.getString(cursor.getColumnIndex("rule")).split(">");
+			for(Fact f:Fact.parseFactsToList(split[0]))
+				values.add(f.getName());
+			for(Fact f:Fact.parseFactsToList(split[1]))
+				values.add(f.getName());
+		}while(cursor.moveToNext());
+		
+		return new ArrayList<String>(values);
 	}
 	
 	private String getQueryStringFromLingVars(ArrayList<Fact> facts) {
