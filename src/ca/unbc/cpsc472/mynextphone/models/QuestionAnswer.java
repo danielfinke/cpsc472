@@ -101,7 +101,8 @@ public abstract class QuestionAnswer {
 		}
 	}
 	
-	public void saveState(Bundle bundle, String bundlePrefix) {
+	// TODO save question answer state
+	/*public void saveState(Bundle bundle, String bundlePrefix) {
 		bundle.putInt(bundlePrefix + "id", getId());
 		bundle.putString(bundlePrefix + "stringValue", stringValue);
 		
@@ -111,7 +112,7 @@ public abstract class QuestionAnswer {
 			keys.add(f.getName() + f.getLinguisticVarString());
 		}
 		bundle.putStringArrayList(bundlePrefix + "keys", keys);
-	}
+	}*/
 	
 	public int getId() {
 		return id;

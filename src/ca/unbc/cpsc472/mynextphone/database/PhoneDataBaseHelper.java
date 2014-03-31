@@ -10,18 +10,30 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import ca.unbc.cpsc472.mynextphone.models.Fact;
+import ca.unbc.cpsc472.mynextphone.models.InferenceEngine;
 import ca.unbc.cpsc472.mynextphone.models.Question;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswer;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswerType;
 import ca.unbc.cpsc472.mynextphone.models.Result;
 import ca.unbc.cpsc472.mynextphone.models.Rule;
+import ca.unbc.cpsc472.mynextphone.models.Tuple;
 
 public class PhoneDataBaseHelper extends DataBaseHelper {
     private static String[] questionColumns = {"_id", "question", "type"};
     private static String[] answerColumns = {"_id", "question_id", "answer", "facts"};
     private static String[] ruleColumns = {"_id", "rule"};
+    private static String[] linguisticColumns = {"_id", "\"set\"", "min", "max", "value"};
     
     private static final int DATABASE_VERSION = 2;
+    
+    private static PhoneDataBaseHelper helper = null;
+    
+    public static PhoneDataBaseHelper getInstance(Context context) {
+    	if(helper == null) {
+    		helper = new PhoneDataBaseHelper(context);
+    	}
+    	return helper;
+    }
 
 	public PhoneDataBaseHelper(Context context) {
 		super(context);
@@ -157,10 +169,32 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		return results;
 	}
 	
-	private String getQueryStringFromLingVars(ArrayList<Fact> facts) {
+	public ArrayList<Tuple> getLinguisticTuples(String lingName) throws Exception {
+		if(!dbIsOpen()) {
+			throw new Exception();
+		}
+
+		ArrayList<Tuple> tuples = new ArrayList<Tuple>();
+		Cursor cursor = getLinguisticTuplesCursor(lingName);
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast()) {
+			tuples.add(new Tuple(new Object[] {
+					cursor.getDouble(cursor.getColumnIndex("min")),
+					cursor.getDouble(cursor.getColumnIndex("max")),
+					cursor.getDouble(cursor.getColumnIndex("value"))
+			}));
+			cursor.moveToNext();
+		}
+		cursor.close();
+		
+		return tuples;
+	}
+	
+	private String getQueryStringFromLingVars(ArrayList<Fact> facts) throws Exception {
 		String query = "";
 		for(Fact f : facts) {
-			query += f.getName() + "_linguistic = '" + f.getLinguisticValues().get(0) + "'";
+			query += f.getName() + "_linguistic = '" +
+					InferenceEngine.fuzzify(InferenceEngine.defuzzify(f)) + "'";
 			if(f != facts.get(facts.size()-1)) {
 				query += " AND ";
 			}
@@ -183,6 +217,11 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 	
 	private Cursor getResultsCursor(String whereClause) {
 		return myDataBase.query("data", null, whereClause, null, null, null, null);
+	}
+	
+	private Cursor getLinguisticTuplesCursor(String lingName) {
+		return myDataBase.query("linguistic", linguisticColumns, "\"set\" = '" + lingName + "'",
+				null, null, null, null);
 	}
 	
 	private boolean dbIsOpen() {

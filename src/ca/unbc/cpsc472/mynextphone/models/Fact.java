@@ -4,7 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
+
 import android.os.Bundle;
+import android.util.Log;
 
 public class Fact implements Serializable {
 	public static enum FACT_TYPE {standby_time, talk_time, capacity, camera_flash,
@@ -16,10 +19,10 @@ public class Fact implements Serializable {
 	
 	//Eclipse is whining at me, had to make facts serializable to pass them as 
 	//objects to the Results View and convention says this is a required field.
-	public final static long serialVersionUID = 0;	
+	public final static long serialVersionUID = 0;
 	
 	private String name;
-	private ArrayList<String> lingVals;
+	private ArrayList<Tuple> tuples;
 	
 	public static ArrayList<Fact> parseFactsToList(String facts) {
 		ArrayList<Fact> list = new ArrayList<Fact>();
@@ -30,15 +33,30 @@ public class Fact implements Serializable {
 			String factName = tok2.nextToken();
 			String linguistic = tok2.nextToken();
 			
-			Fact f = new Fact(factName);
-			f.addLinguisticValue(linguistic);
-			list.add(f);
+			try {
+				Fact f = new Fact(factName);
+				f.addTuples(PhoneDataBaseHelper.getInstance(null).getLinguisticTuples(linguistic));
+				list.add(f);
+			}
+			catch(Exception ex) {
+				Log.e("Fact", "Unable to get linguistic tuples for fact: " + factName);
+			}
 		}
 		return list;
 	}
 	
 	public static int totalFactTypes() {
 		return FACT_TYPE.values().length;
+	}
+	
+	public static boolean isLinguisticVariable(String lingVar) {
+		try {
+			FACT_TYPE.valueOf(lingVar);
+			return true;
+		}
+		catch(IllegalArgumentException ex) {
+		}
+		return false;
 	}
 	
 	public static ArrayList<Fact> allFactTypes() {
@@ -51,101 +69,82 @@ public class Fact implements Serializable {
 	
 	public Fact(String name) {
 		this.name = name;
-		this.lingVals = new ArrayList<String>();
+		this.tuples = new ArrayList<Tuple>();
 	}
 	
 	public Fact(Bundle bundle, String bundlePrefix) {
 		this.name = bundle.getString(bundlePrefix + "name");
-		this.lingVals = bundle.getStringArrayList(bundlePrefix + "lingVals");
+		this.tuples = new ArrayList<Tuple>();
+		// TODO restore fact tuples from bundle
 	}
 	
 	public void saveState(Bundle bundle, String bundlePrefix) {
 		bundle.putString(bundlePrefix + "name", getName());
-		bundle.putStringArrayList(bundlePrefix + "lingVals", getLinguisticValues());
+		//bundle.putStringArrayList(bundlePrefix + "lingVals", getTuples());
+		// TODO save fact state
 	}
 	
 	public String getName() {
 		return name;
 	}
 	
-	public ArrayList<String> getLinguisticValues() {
-		return lingVals;
+	public ArrayList<Tuple> getTuples() {
+		return tuples;
 	}
 	
-	public int getLinguisticValueCount() {
-		return lingVals.size();
+	public int getTupleCount() {
+		return tuples.size();
 	}
 	
-	public String getLinguisticVarAvg() {
+	// TODO getLinguisticVarAvg
+	/*public String getLinguisticVarAvg() {
 		double avg = 0;
 		for(String s : lingVals) {
 			avg += InferenceEngine.defuzzify(s);
 		}
-		avg /= getLinguisticValueCount();
+		avg /= getTupleCount();
 		return InferenceEngine.fuzzify(avg);
-	}
+	}*/
 	
-	public String getLinguisticVarString() {
+	// TODO getLinguisticVarString
+	/*public String getLinguisticVarString() {
 		String ret = "";
-		for(String s : getLinguisticValues()) {
+		for(String s : getTuples()) {
 			ret += s;
-			if(s != getLinguisticValues().get(getLinguisticValues().size()-1)) {
+			if(s != getTuples().get(getTuples().size()-1)) {
 				ret += ",";
 			}
 		}
 		return ret;
+	}*/
+	
+	public boolean isEmptySet() {
+		for(int i = 0; i < tuples.size(); i++) {
+			if((Double)tuples.get(i).getObject(2) != 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
-	public void addLinguisticValue(String val) {
-		lingVals.add(val);
+	public void addTuple(Tuple tuple) {
+		tuples.add(tuple);
 	}
 	
-	public void addLinguisticValues(ArrayList<String> vals) {
-		lingVals.addAll(vals);
+	public void addTuples(ArrayList<Tuple> tuples) {
+		this.tuples.addAll(tuples);
 	}
 
 	@Override
 	public String toString() {
-		if(getLinguisticValueCount() == 1) {
-			return "Fact [name=" + name + ", lingVals=" + lingVals.get(0) + "]";
+		String ret = "Fact [name=" + name + ", tuples={";
+		for(Tuple t : tuples) {
+			ret += t.toString();
+			if(t != tuples.get(tuples.size() - 1)) {
+				ret += ", ";
+			}
 		}
-		else {
-			return "Fact [name=" + name + ", lingVals=" + getLinguisticVarString() + "]";
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Fact other = (Fact) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
-	}
-	
-	public boolean meetsCriteria(Fact other) {
-		if(getLinguisticValueCount() == 1) {
-			return name.equals(other.name) && lingVals.get(0).equals(other.lingVals.get(0));
-		}
-		else {
-			return name.equals(other.name) &&
-					getLinguisticVarAvg().equals(other.getLinguisticVarAvg());
-		}
+		ret += "}]";
+		return ret;
 	}
 }
