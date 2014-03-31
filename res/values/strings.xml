@@ -12,5 +12,10 @@
     <string name="title_activity_result">Phone Results</string>
     <string name="restart">Restart?</string>
     <string name="title_activity_startup">My Next Phone</string>
+    <string name="very_low">Very Low</string>
+    <string name="low">Low</string>
+    <string name="medium">Medium</string>
+    <string name="high">High</string>
+    <string name="very_high">Very High</string>
 
 </resources>

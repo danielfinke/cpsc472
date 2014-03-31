@@ -55,6 +55,16 @@
 	        android:stretchMode="columnWidth"
 	        android:gravity="center"
 	        />
+	    <!--  -->
+	    <ListView
+	        android:id="@+id/question_slider_answer_view"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:divider="@color/bright_blue"
+	        android:paddingLeft="10sp"
+	        android:paddingRight="10sp"
+	        android:paddingTop="20sp"
+	        android:background="@drawable/answers_container_bg" />
     
     </LinearLayout>
 

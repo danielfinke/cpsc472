@@ -75,6 +75,14 @@ public abstract class QuestionAnswer {
 							" trying to generate Tile Answer from String: " +
 							value);
 				}
+			case SLIDER:
+				try {
+					return new SliderAnswer(id, value, "");	//TODO: Figure out what's going on here.
+				} catch (IOException e) {
+					throw new IllegalArgumentException("Encountered an  error" +
+							" trying to generate Slider Answer from String: " +
+							value);
+				}
 			default:
 				throw new IllegalArgumentException(type + " is an undefined A" +
 						"nswer Type.");
@@ -93,6 +101,14 @@ public abstract class QuestionAnswer {
 			catch(IOException ioe) {
 				throw new IllegalArgumentException("Encountered an  error" +
 						" trying to generate Tile Answer from Bundle: " +
+						bundle.describeContents());
+			}
+		case SLIDER:
+			try {
+				return new SliderAnswer(bundle, bundlePrefix);
+			} catch (IOException e) {
+				throw new IllegalArgumentException("Encountered an  error" +
+						" trying to generate Slider Answer from Bundle: " +
 						bundle.describeContents());
 			}
 		default:
@@ -159,8 +175,6 @@ public abstract class QuestionAnswer {
 					c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View ret = inf.inflate(R.layout.item_answer_text, null);
 			((TextView) ret).setText(this.toString());
-//			((TextView) ret).setBackgroundDrawable(c.getResources().getDrawable(
-//					R.drawable.question_bg));
 			return ret;
 		}
 		
@@ -189,6 +203,27 @@ public abstract class QuestionAnswer {
 			((ImageView) ret).setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 			((ImageView) ret).setPadding(10, 10, 10, 10);
 			
+			return ret;
+		}
+		
+	}
+	
+	private static class SliderAnswer extends QuestionAnswer {
+
+		private SliderAnswer(int id, String text, String facts) throws IOException{
+			super(id, text, facts);
+		}
+		
+		private SliderAnswer(Bundle bundle, String bundlePrefix) throws IOException {
+			super(bundle, bundlePrefix);
+		}
+		
+		@Override
+		public View getView(Context c) {
+			LayoutInflater inf = (LayoutInflater) 
+					c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View ret = inf.inflate(R.layout.item_answer_slider, null);
+//			((TextView) ret).setText(this.toString());
 			return ret;
 		}
 		
