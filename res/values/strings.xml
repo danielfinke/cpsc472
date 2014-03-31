@@ -19,5 +19,10 @@
     <string name="is_string">is</string>
     <string name="and_symbol">&amp;</string>
     <string name="add_rule">Add Rule</string>
+    <string name="very_low">Very Low</string>
+    <string name="low">Low</string>
+    <string name="medium">Medium</string>
+    <string name="high">High</string>
+    <string name="very_high">Very High</string>
 
 </resources>

@@ -8,23 +8,29 @@ import android.util.Log;
 import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
 
 public class InferenceEngine {
-	private static enum LING_VAR {VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH};
 	private ArrayList<Fact> workingMem;
 	private ArrayList<Rule> rules;
-	private PhoneDataBaseHelper helper;
 	
-	public static double defuzzify(String lingVar) {
-		double sVal = LING_VAR.valueOf(lingVar).ordinal() * 0.2;
-		// Perhaps one day we would have non-boxy ranges for our linguistic vars
-		// Only then, could the hero change this for loop
-		double num = 0;
-		for(int i = 0; i < 2; i++) {
-			num += (sVal + i * 0.2) * 1; // Because the value is always 1 in our boxy situation
+	public static double defuzzify(Fact f) throws Exception {
+		// Get min value of first tuple
+		double tMin = (Double)f.getTuples().get(0).getObject(0);
+		double tMinVal = (Double)f.getTuples().get(0).getObject(2);
+		double num = tMin * tMinVal;
+		double denom = tMinVal;
+		
+		// Begin adding max value of all tuples
+		for(int i = 0; i < f.getTuples().size(); i++) {
+			double tMax = (Double)f.getTuples().get(i).getObject(0);
+			double tMaxVal = (Double)f.getTuples().get(i).getObject(2);
+			num += tMax * tMaxVal;
+			denom += tMaxVal;
+			if(tMaxVal != 0) {
+				double tMax2 = (Double)f.getTuples().get(i).getObject(1);
+				num += tMax2 * tMaxVal;
+				denom += tMaxVal;
+			}
 		}
-		double denom = 0;
-		for(int i = 0; i < 2; i++) {
-			denom += 1; // Again, the value is always 1
-		}
+		
 		return num / denom;
 	}
 	
@@ -48,22 +54,20 @@ public class InferenceEngine {
 		return null;
 	}
 	
-	public InferenceEngine(PhoneDataBaseHelper dbHelper) {
+	public InferenceEngine() {
 		workingMem = new ArrayList<Fact>();
-		helper = dbHelper;
 		try {
-			rules = helper.getRules();
+			rules = PhoneDataBaseHelper.getInstance(null).getRules();
 		} catch (Exception e) {
 			Log.e(this.getClass().getName(), "Unable to fetch rules from database");
 		}
 	}
 	
-	public InferenceEngine(ArrayList<Fact> initialMem, PhoneDataBaseHelper dbHelper) {
+	public InferenceEngine(ArrayList<Fact> initialMem) {
 		workingMem = new ArrayList<Fact>();
 		addFactsToMem(initialMem);
-		helper = dbHelper;
 		try {
-			rules = helper.getRules();
+			rules = PhoneDataBaseHelper.getInstance(null).getRules();
 		} catch (Exception e) {
 			Log.e(this.getClass().getName(), "Unable to fetch rules from database");
 		}
@@ -73,7 +77,7 @@ public class InferenceEngine {
 		// Store the working memory
 		ArrayList<String> memKeys = new ArrayList<String>();
 		for(Fact f : getWorkingMem()) {
-			f.saveState(bundle, "mem" + f.getName() + "_");
+			f.saveState(bundle, bundlePrefix + "mem" + f.getName() + "_");
 			memKeys.add(f.getName());
 		}
 		bundle.putStringArrayList(bundlePrefix + "memKeys", memKeys);
@@ -82,7 +86,8 @@ public class InferenceEngine {
 		int[] ruleKeys = new int[rules.size()];
 		for(int i = 0; i < rules.size(); i++) {
 			Rule r = rules.get(i);
-			r.saveState(bundle, "rule" + r.getRuleId() + "_");
+			// TODO save rule state
+			//r.saveState(bundle, bundlePrefix + "rule" + r.getRuleId() + "_");
 			ruleKeys[i] = r.getRuleId();
 		}
 		bundle.putIntArray(bundlePrefix + "ruleKeys", ruleKeys);
@@ -110,83 +115,62 @@ public class InferenceEngine {
 		return workingMem;
 	}
 	
-	public ArrayList<Result> getResultsForWorkingMem() {
-		// First calculate the fuzzy sets of the facts in the memory
-		ArrayList<Fact> allFacts = Fact.allFactTypes();
-		ArrayList<Fact> resultLingVars = new ArrayList<Fact>();
-		for(Fact f : workingMem) {
-			// Ignore those without any linguistic vars set, or those that
-			// are not part of the phone linguistic variables
-			if(f.getLinguisticValueCount() == 0 ||
-					!allFacts.contains(f)) {
-				continue;
+	public Fact getFact(String lingVar) {
+		for(int i = 0; i < workingMem.size(); i++) {
+			if(workingMem.get(i).getName().equals(lingVar)) {
+				return workingMem.get(i);
 			}
-			
-			double avg = 0;
-			for(int i = 0; i < f.getLinguisticValueCount(); i++) {
-				avg += defuzzify(f.getLinguisticValues().get(i));
-			}
-			avg /= f.getLinguisticValueCount();
-			Fact res = new Fact(f.getName());
-			res.addLinguisticValue(fuzzify(avg));
-			resultLingVars.add(res);
 		}
-		
-		/*if(results.isEmpty()) {
-			return getNearestResults();
-		}*/
-		try {
-			return helper.getResultsWithFacts(resultLingVars);
-		} catch (Exception e) {
-			Log.e(this.getClass().getName(), "Unable to get inferred results");
-			return null;
-		}
+		return null;
 	}
 	
-	/* TODO Get closest results in case of no matching ones
-	 * Find the collection of the closest results that match to what
+	public ArrayList<Result> getResultsForWorkingMem() {
+		try {
+			ArrayList<Fact> lookups = new ArrayList<Fact>();
+			for(Fact f : workingMem) {
+				// Not a part of our where clause
+				if(!Fact.isLinguisticVariable(f.getName())) {
+					continue;
+				}
+				
+				double dVal = defuzzify(f);
+				String resSet = fuzzify(dVal);
+				
+				Fact resF = new Fact(f.getName());
+				resF.addTuples(PhoneDataBaseHelper.getInstance(null).getLinguisticTuples(resSet));
+				lookups.add(resF);
+			}
+			
+			ArrayList<Result> results = PhoneDataBaseHelper.getInstance(null).getResultsWithFacts(lookups, workingMem);
+		
+			if(results.isEmpty()) {
+				return getNearestResults(lookups);
+			}
+			
+			return results;
+		} catch (Exception e) {
+			Log.e(this.getClass().getName(), "Unable to get inferred results");
+		}
+		return null;
+	}
+	
+	/* Find the collection of the closest results that match to what
 	 * the user chose for the questions
 	 */
-	/*private ArrayList<Result> getNearestResults() {
-		ArrayList<Rule> resultRules;
+	private ArrayList<Result> getNearestResults(ArrayList<Fact> facts) {
 		try {
-			resultRules = helper.getResultRules();
-		} catch (Exception e) {
-			Log.e(this.getClass().getName(), "Unable to get nearest results (rules step)");
-			return null;
-		}
-		
-		// Calculate all the rule's score based on current working mem
-		for(int i = 0; i < resultRules.size(); i++) {
-			Rule r = resultRules.get(i);
-			r.setClosenessScore(resultScore(r));
-		}
-		// Sort them by their scores
-		Collections.sort(resultRules);
-		
-		// Return the list of best results
-		// CURRENTLY ONLY CONSIDERING THE LAST ONE EVEN IF THERE ARE TIES!
-		ArrayList<Result> results = new ArrayList<Result>();
-		Rule best = resultRules.get(resultRules.size()-1);
-		HashSet<Fact> producedFacts = best.getRightSide();
-		Iterator<Fact> iter = producedFacts.iterator();
-		try {
-			while(iter.hasNext()) {
-				Fact f = iter.next();
-				Result res = helper.getResultForFactId(f.getId(), workingMem);
-				results.add(res);
-			}
+			return PhoneDataBaseHelper.getInstance(null).getNearestResults(facts, workingMem);
 		}
 		catch(Exception e) {
-			Log.e(this.getClass().getName(), "Unable to get nearest results (results step)");
-			return null;
+			Log.e(this.getClass().getName(), "Unable to get nearest results");
 		}
-		return results;
-	}*/
+		return null;
+	}
 	
 	public void addFactToMem(Fact f) {
-		if(workingMem.contains(f)) {
-			workingMem.get(workingMem.indexOf(f)).addLinguisticValues(f.getLinguisticValues());
+		Fact oldF = getFact(f.getName());
+		if(oldF != null) {
+			workingMem.set(workingMem.indexOf(oldF), calculateAggregate(f, oldF));
 		}
 		else {
 			workingMem.add(f);
@@ -208,13 +192,13 @@ public class InferenceEngine {
 		int i = 0;
 		while(i < rules.size()) {
 			try {
-				// Attempt to evaluate rule and continue to next one
-				if(evaluateRule(rules.get(i))) {
-					i = 0;
+				if(isAntecedentInMem(rules.get(i))) {
+					if(evaluateRule(rules.get(i))) {
+						i = 0;
+						continue;
+					}
 				}
-				else {
-					i++;
-				}
+				i++;
 			// Don't die if rules don't work for some reason
 			} catch (Exception e) {
 				Log.e(this.getClass().getName(), "Unable to evaluate rule with rule id: " + rules.get(i).getRuleId());
@@ -233,23 +217,24 @@ public class InferenceEngine {
 	 * to the working memory and discards the rule for future iterations
 	 */
 	private boolean evaluateRule(Rule rule) throws Exception {
-		// Load up the conditions
-		ArrayList<Fact> leftSide = rule.getLeftSide();
-		Iterator<Fact> leftIter = leftSide.iterator();
-		while(leftIter.hasNext()) {
-			Fact condFact = leftIter.next();
-			boolean condMet = false;
-			for(Fact wmf : workingMem) {
-				condMet = condMet || wmf.meetsCriteria(condFact);
-			}
-			if(!condMet) {
-				return false;
-			}
+		// Calculate left side (with ANDs)
+		Fact comp = calculateCompoundLeft(rule.getLeftSide());
+		
+		// No point in going on
+		if(comp.isEmptySet()) {
+			return false;
 		}
 		
-		// Add the new facts
-		ArrayList<Fact> rightSide = rule.getRightSide();
-		addFactsToMem(rightSide);
+		// Update working memory
+		for(Fact f : rule.getRightSide()) {
+			// Create implication relation matrix
+			double[][] implMtx = calculateImplOperMtx(comp, f);
+			// Apply just one fact since we compounded earlier
+			Fact applied = applyFactToMtx(getFact(comp.getName()), implMtx, f);
+			if(!applied.isEmptySet()) {
+				addFactToMem(applied);
+			}
+		}
 		
 		// Remove the used rule from the rule set
 		rules.remove(rule);
@@ -257,19 +242,102 @@ public class InferenceEngine {
 		return true;
 	}
 	
+	private Fact calculateCompoundLeft(ArrayList<Fact> left) {
+		Fact wFact = left.get(0);
+		if(left.size() == 1) {
+			return wFact;
+		}
+		for(int i = 1; i < left.size(); i++) {
+			double[][] mtx = calculateImplOperMtx(wFact, left.get(i));
+			wFact = applyFactToMtx(getFact(wFact.getName()), mtx, left.get(i));
+		}
+		return wFact;
+	}
+	
+	// Assumption that tuple dimensions and min/maxs are equivalent
+	private Fact calculateAggregate(Fact f1, Fact f2) {
+		Fact ret = new Fact(f1.getName());
+		for(int i = 0; i < f1.getTupleCount(); i++) {
+			Tuple f1T = f1.getTuples().get(i);
+			Tuple f2T = f2.getTuples().get(i);
+			double min = (Double)f1T.getObject(0);
+			double max = (Double)f1T.getObject(1);
+			double val = Math.max((Double)f1T.getObject(2), (Double)f2T.getObject(2));
+			Tuple t = new Tuple(new Object[] {min, max, val});
+			ret.addTuple(t);
+		}
+		return ret;
+	}
+	
+	private double[][] calculateImplOperMtx(Fact f1, Fact f2) {
+		double[][] res = new double[f1.getTupleCount()][f2.getTupleCount()];
+		for(int i = 0; i < f1.getTupleCount(); i++) {
+			for(int j = 0; j < f2.getTupleCount(); j++) {
+				double f1Val = (Double)f1.getTuples().get(i).getObject(2);
+				double f2Val = (Double)f2.getTuples().get(j).getObject(2);
+				res[i][j] = Math.min(f1Val, f2Val);
+			}
+		}
+		return res;
+	}
+	
+	private Fact applyFactToMtx(Fact f, double[][] mtx, Fact resultType) {
+		Fact res = new Fact(resultType.getName());
+		for(int i = 0; i < mtx[0].length; i++) {
+			double max = 0;
+			for(int j = 0; j < mtx.length; j++) {
+				Tuple t = f.getTuples().get(j);
+				max = Math.max(Math.min((Double)t.getObject(2), mtx[j][i]), max);
+			}
+			Tuple resultT = resultType.getTuples().get(i);
+			double resultTMinVal = (Double)resultT.getObject(0);
+			double resultTMaxVal = (Double)resultT.getObject(1);
+			Tuple keep = new Tuple(new Object[] {
+					resultTMinVal,
+					resultTMaxVal,
+					max
+			});
+			res.addTuple(keep);
+		}
+		return res;
+	}
+	
 	/*
 	 * Returns true if enough information has been collected in the working memory
 	 * to make a decision
 	 */
+	// TODO improve with freq/scaling in fact merges
 	public boolean isMemSufficientForDecision() {
 		ArrayList<Fact> allTypes = Fact.allFactTypes();
 		for(Fact type : allTypes) {
-			if(!workingMem.contains(type) ||
-					workingMem.get(workingMem.indexOf(type)).getLinguisticValueCount() < 2) {
+			boolean found = false;
+			for(int i = 0; i < workingMem.size(); i++) {
+				if(workingMem.get(i).getName().equals(type.getName())) {
+					found = true;
+					break;
+				}
+			}
+			if(!found) {
 				return false;
 			}
 		}
 
+		return true;
+	}
+	
+	public boolean isAntecedentInMem(Rule r) {
+		for(Fact f : r.getLeftSide()) {
+			boolean inMem = false;
+			for(int i = 0; i < workingMem.size(); i++) {
+				if(f.getName().equals(workingMem.get(i).getName())) {
+					inMem = true;
+					break;
+				}
+			}
+			if(!inMem) {
+				return false;
+			}
+		}
 		return true;
 	}
 	

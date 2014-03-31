@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,12 +15,16 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import ca.unbc.cpsc472.mynextphone.models.Question;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswer;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswerType;
 import ca.unbc.cpsc472.mynextphone.models.QuestionManager;
 import ca.unbc.cpsc472.mynextphone.models.Result;
+import ca.unbc.cpsc472.mynextphone.models.SliderListAdapter;
 import ca.unbc.cpsc472.mynextphone.models.TextListAdapter;
 import ca.unbc.cpsc472.mynextphone.models.TileListAdapter;
 
@@ -41,6 +47,7 @@ public class QuestionActivity extends Activity {
 	private TextView questionBody;
 	private ListView textAnswerView;
 	private GridView tileAnswerView;
+	private ListView sldrAnswerView;
 	private QuestionManager qMan;
 	
 	@Override
@@ -57,6 +64,8 @@ public class QuestionActivity extends Activity {
 				R.id.question_text_answer_view);
 		this.tileAnswerView = (GridView) this.findViewById(
 				R.id.question_tile_answer_view);
+		this.sldrAnswerView = (ListView) this.findViewById(
+				R.id.question_slider_answer_view);
 		this.layout = (LinearLayout) this.findViewById(
 				R.id.question_answer_view);
 		
@@ -90,10 +99,11 @@ public class QuestionActivity extends Activity {
 			int[] keys = new int[question.getAnswers().size()];
 			for(int i = 0; i < question.getAnswers().size(); i++) {
 				QuestionAnswer qa = question.getAnswers().get(i);
-				qa.saveState(bundle, "questionAnswer" + qa.getId() + "_");
+				// TODO save question answer state
+				//qa.saveState(bundle, "questionAnswer" + qa.getId() + "_");
 				keys[i] = qa.getId();
 			}
-			bundle.putIntArray("answersKeys", keys);
+			bundle.putIntArray("answerKeys", keys);
 			
 			qMan.saveState(bundle, question.getId());
 		}
@@ -106,12 +116,15 @@ public class QuestionActivity extends Activity {
 	
 	/**
 	 * This method grabs a brand new Question from our storage. 
-	 * 
-	 * //FOR_DANIEL: However we end up storing all of our questions will be here
-	 * so if you're going to touch that; here's where to do it.
 	 */
 	public void fetchNewQuestion() {
 		this.question = qMan.getQuestion();
+		
+		//Stuff for slider questions
+//		ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
+//		answers.add(QuestionAnswer.getInstance(-1, "The Answer", null, QuestionAnswerType.SLIDER));
+//		this.question = new Question(-1, "Answer my damn slider question.", 
+//				QuestionAnswerType.SLIDER, answers);
 	}
 	
 	public void answerQuestion(QuestionAnswer qa) {
@@ -159,6 +172,8 @@ public class QuestionActivity extends Activity {
 		layout.removeAllViews();
 		if(this.question.getType() == QuestionAnswerType.TEXT)
 			layout.addView(this.textAnswerView);
+		else if(this.question.getType() == QuestionAnswerType.SLIDER)
+			layout.addView(this.sldrAnswerView);
 		else
 			layout.addView(this.tileAnswerView);
 		
@@ -187,7 +202,62 @@ public class QuestionActivity extends Activity {
 			});
 			
 			
-		} else {
+		} else if (this.question.getType() == QuestionAnswerType.SLIDER){
+			
+			//We'll need an inflater.
+			LayoutInflater inf =  (LayoutInflater) 
+					this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			
+			final SliderListAdapter x = new SliderListAdapter(this, 
+					this.question.getAnswers());
+			this.sldrAnswerView.setAdapter(x);
+			RelativeLayout sliderView = (RelativeLayout) x.getView(0, null, null);
+			SeekBar skbr = null;
+			final TextView text = (TextView) sliderView.getChildAt(1);
+			skbr = (SeekBar) sliderView.getChildAt(0);
+			skbr.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){
+
+				@Override
+				public void onProgressChanged(SeekBar skbr, int progress,
+						boolean fromUser) {
+					Log.i("Andrew Debug", "LolWut!");
+					
+					if(fromUser){
+						if(progress < 20){
+							text.setText("Very Low");
+							text.setTextColor(getResources().getColor(R.color.red));
+						} else if (progress < 40){
+							text.setText("Low");
+							text.setTextColor(getResources().getColor(R.color.orange));
+						} else if (progress < 60){
+							text.setText("Medium");
+							text.setTextColor(getResources().getColor(R.color.yellow));
+						} else if (progress < 80){
+							text.setText("High");
+							text.setTextColor(getResources().getColor(R.color.lime_green));
+						} else {
+							text.setText("Very High");
+							text.setTextColor(getResources().getColor(R.color.green));
+						}
+					}
+					
+				}
+
+				@Override
+				public void onStartTrackingTouch(SeekBar arg0) {
+					Log.i("Andrew Debug", "Hello!");
+					
+				}
+
+				@Override
+				public void onStopTrackingTouch(SeekBar arg0) {
+					Log.i("Andrew Debug", "Goodbye!");
+					
+				}
+				
+			});
+			
+		}else {
 			final TileListAdapter x = new TileListAdapter(this, 
 					this.question.getAnswers());
 			this.tileAnswerView.setAdapter(x);
@@ -205,6 +275,10 @@ public class QuestionActivity extends Activity {
 			});
 		}
 		
+	}
+	
+	public void hello(View v){
+		Log.i("Andrew", "Herro!");
 	}
 	
 	public boolean questionReady(){
