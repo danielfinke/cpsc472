@@ -42,7 +42,7 @@ public class Rule implements Comparable<Rule> {
 		this.rightSide = rightSide;
 	}
 	
-	// TODO save rule state
+	// TODO daniel save rule state
 	/*public void saveState(Bundle bundle, String bundlePrefix) {
 		bundle.putInt(bundlePrefix + "id", getRuleId());
 		

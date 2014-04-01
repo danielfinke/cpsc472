@@ -117,7 +117,7 @@ public abstract class QuestionAnswer {
 		}
 	}
 	
-	// TODO save question answer state
+	// TODO daniel save question answer state
 	/*public void saveState(Bundle bundle, String bundlePrefix) {
 		bundle.putInt(bundlePrefix + "id", getId());
 		bundle.putString(bundlePrefix + "stringValue", stringValue);

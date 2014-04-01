@@ -116,7 +116,7 @@ public class ResultActivity extends Activity{
 		PhoneDataBaseHelper helper = PhoneDataBaseHelper.getInstance(this);
 		helper.openDataBase();
 		try{
-			// TODO getFactsLeadingToResult
+			// TODO daniel getFactsLeadingToResult
 			this.reasons.setText(
 					formatReasoning(res.getPhoneName(), 
 					res.getReasoning()));

@@ -108,7 +108,7 @@ public class QuestionActivity extends Activity {
 			int[] keys = new int[question.getAnswers().size()];
 			for(int i = 0; i < question.getAnswers().size(); i++) {
 				QuestionAnswer qa = question.getAnswers().get(i);
-				// TODO save question answer state
+				// TODO daniel save question answer state
 				//qa.saveState(bundle, "questionAnswer" + qa.getId() + "_");
 				keys[i] = qa.getId();
 			}
