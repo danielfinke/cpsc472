@@ -23,13 +23,13 @@ public class ResultActivity extends Activity{
 	private ImageView img;
 	private TextView reasons;
 	private ArrayList<Result> resultSet;
+	private boolean[] answered;
 	private int resultIndex;
 	
 	private ImageButton next;
 	private ImageButton prev;
 	private ImageButton approve;
 	private ImageButton disapprove;
-	private ImageButton restart;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -46,7 +46,6 @@ public class ResultActivity extends Activity{
 		this.prev = (ImageButton) this.findViewById(R.id.prev);
 		this.approve = (ImageButton) this.findViewById(R.id.approve);
 		this.disapprove = (ImageButton) this.findViewById(R.id.disapprove);
-		this.restart = (ImageButton) this.findViewById(R.id.restart);
 		
 		//Preset them
 		Intent x = this.getIntent();
@@ -57,6 +56,13 @@ public class ResultActivity extends Activity{
 			resultSet.add(r);
 		}
 		resultIndex = 0;
+		
+		//Remember whether or not the given phone has been approved or 
+		//disapproved
+		this.answered = new boolean[count];
+		for(int i = 0; i < count; i++){
+			this.answered[i] = false;
+		}
 		
 		this.drawResult(); 
 		
@@ -151,7 +157,17 @@ public class ResultActivity extends Activity{
 			}
 		}
 			
+		//Set up the visibility of the approve and disapprove buttons.
+		if(this.answered[resultIndex]){
+			this.approve.setVisibility(View.INVISIBLE);
+			this.disapprove.setVisibility(View.INVISIBLE);
+		} else {
+			this.approve.setVisibility(View.VISIBLE);
+			this.disapprove.setVisibility(View.VISIBLE);
+		}
 		
+		if(this.prev.getVisibility() ==  View.INVISIBLE)
+			this.prev.setVisibility(View.VISIBLE);
 		
 		this.drawResult();
 	}
@@ -166,7 +182,20 @@ public class ResultActivity extends Activity{
 			this.resultIndex--;
 			if(this.resultIndex == 0)
 				this.prev.setVisibility(View.INVISIBLE);
+			
+			//Set up the visibility of the approve and disapprove buttons.
+			if(this.answered[resultIndex]){
+				this.approve.setVisibility(View.INVISIBLE);
+				this.disapprove.setVisibility(View.INVISIBLE);
+			} else {
+				this.approve.setVisibility(View.VISIBLE);
+				this.disapprove.setVisibility(View.VISIBLE);
+			}
 		}
+		
+		if(this.next.getVisibility() ==  View.INVISIBLE)
+			this.next.setVisibility(View.VISIBLE);
+		
 		this.drawResult();
 	}
 	
@@ -176,6 +205,9 @@ public class ResultActivity extends Activity{
 	 * @param v The button pressed.
 	 */
 	public void approve(View v) {
+		this.approve.setVisibility(View.INVISIBLE);
+		this.disapprove.setVisibility(View.INVISIBLE);
+		this.answered[this.resultIndex] = true;
 		//TODO: This.
 	}
 	
@@ -185,6 +217,9 @@ public class ResultActivity extends Activity{
 	 * @param v The button pressed.
 	 */
 	public void disapprove(View v) {
+		this.approve.setVisibility(View.INVISIBLE);
+		this.disapprove.setVisibility(View.INVISIBLE);
+		this.answered[this.resultIndex] = true;
 		//TODO: This.
 	}
 }
