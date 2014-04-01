@@ -22,7 +22,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 
-public class ChangeDefinitionsActivity extends Activity {
+public class AddRuleActivity extends Activity {
 	
 	@SuppressLint("UseSparseArrays")
 	private HashMap<Integer, Integer> ifOrThen = new HashMap<Integer, Integer>();
@@ -31,7 +31,7 @@ public class ChangeDefinitionsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.activity_change_definitions);
+		setContentView(R.layout.activity_add_rule);
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
@@ -129,7 +129,7 @@ public class ChangeDefinitionsActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.change_definitions, menu);
+		getMenuInflater().inflate(R.menu.add_rule, menu);
 		return true;
 	}
 

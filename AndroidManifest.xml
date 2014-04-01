@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ca.unbc.cpsc472.mynextphone.ChangeDefinitionsActivity"
+            android:name="ca.unbc.cpsc472.mynextphone.AddRuleActivity"
             android:label="@string/title_activity_change_definitions"
             android:parentActivityName="ca.unbc.cpsc472.mynextphone.StartupActivity" >
             <meta-data

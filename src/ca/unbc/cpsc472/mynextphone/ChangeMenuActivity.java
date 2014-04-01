@@ -22,7 +22,7 @@ public class ChangeMenuActivity extends Activity {
 	}
 	
 	public void addRule(View v){
-		Intent i = new Intent(this, ChangeDefinitionsActivity.class);
+		Intent i = new Intent(this, AddRuleActivity.class);
 		this.startActivity(i);
 	}
 
