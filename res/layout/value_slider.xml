@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="3dp"
+    android:background="@drawable/result_img_bg"
+    android:padding="4sp">
+    
+    <SeekBar 
+        android:id="@+id/slider_bar"
+        android:tag="std_slider_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_centerHorizontal="true"
+        android:max="100"
+        android:progress="0"
+        />
+
+    <TextView
+        android:id="@+id/slider_percentage"
+        android:tag="std_slider_percentage"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/slider_bar"
+        android:layout_alignParentRight="true" 
+        android:padding="5sp"
+        android:text="@string/percentage"
+        android:textSize="24sp"/>
+
+</RelativeLayout>

@@ -237,13 +237,13 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 	public ArrayList<String> getLinguisticNames(int grouping){
 		ArrayList<String> names = new ArrayList<String>();
 		Cursor cursor = getLinguisticTuplesCursor(grouping);
-		cursor.moveToFirst();
-		do{
-			String name = cursor.getString(cursor.getColumnIndex("set"));
-			if(names.isEmpty() || !names.get(names.size()-1).equals(name)){
-				names.add(name);
-			}
-		}while(cursor.moveToNext());
+		if(cursor.moveToFirst())
+			do{
+				String name = cursor.getString(cursor.getColumnIndex("set"));
+				if(names.isEmpty() || !names.get(names.size()-1).equals(name)){
+					names.add(name);
+				}
+			}while(cursor.moveToNext());
 		cursor.close();
 		
 		return names;
@@ -341,6 +341,21 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		catch(Exception ex) {
 			Log.e(this.getClass().getName(), "Unable to apply learning");
 		}
+	}
+		
+	public void addSet(String name, int grouping, double... value){
+		this.openWriteableDataBase();
+		ContentValues values = new ContentValues();
+		for(int i = 0; i<value.length; i++){
+			values.put("\"set\"", name);
+			values.put("min", i/value.length);
+			values.put("max", i/value.length+1/value.length);
+			values.put("value", value[i]);
+			values.put("grouping", grouping);
+			
+		}
+		this.myDataBase.insert("linguistic", null, values);
+		this.openDataBase();
 	}
 	
 	private String getQueryStringFromLingVars(ArrayList<Fact> facts) throws Exception {

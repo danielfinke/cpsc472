@@ -27,7 +27,8 @@ public class ChangeMenuActivity extends Activity {
 	}
 	
 	public void addSet(View v){
-		//TODO joel addSet
+		Intent i = new Intent(this, AddSetActivity.class);
+		this.startActivity(i);
 	}
 
 	public void addValue(View v){
