@@ -9,7 +9,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
@@ -25,11 +25,11 @@ public class ResultActivity extends Activity{
 	private ArrayList<Result> resultSet;
 	private int resultIndex;
 	
-	private Button next;
-	private Button prev;
-	private Button approve;
-	private Button disapprove;
-	private Button restart;
+	private ImageButton next;
+	private ImageButton prev;
+	private ImageButton approve;
+	private ImageButton disapprove;
+	private ImageButton restart;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -42,11 +42,11 @@ public class ResultActivity extends Activity{
 		this.reasons = (TextView) this.findViewById(R.id.result_phone_reasons);
 		
 		//Set up our buttons
-		this.next = (Button) this.findViewById(R.id.next);
-		this.prev = (Button) this.findViewById(R.id.prev);
-		this.approve = (Button) this.findViewById(R.id.approve);
-		this.disapprove = (Button) this.findViewById(R.id.disapprove);
-		this.restart = (Button) this.findViewById(R.id.restart);
+		this.next = (ImageButton) this.findViewById(R.id.next);
+		this.prev = (ImageButton) this.findViewById(R.id.prev);
+		this.approve = (ImageButton) this.findViewById(R.id.approve);
+		this.disapprove = (ImageButton) this.findViewById(R.id.disapprove);
+		this.restart = (ImageButton) this.findViewById(R.id.restart);
 		
 		//Preset them
 		Intent x = this.getIntent();
@@ -144,10 +144,15 @@ public class ResultActivity extends Activity{
 	 * @param v The button pressed.
 	 */
 	public void loadNextResult(View v) {
-		this.resultIndex++;
-		if(resultIndex == this.resultSet.size()){
-//			this.next.setAlpha(0.5);
+		if(resultIndex < this.resultSet.size() - 1){
+			this.resultIndex++;
+			if(resultIndex == this.resultSet.size() - 1){
+				this.next.setVisibility(View.INVISIBLE);
+			}
 		}
+			
+		
+		
 		this.drawResult();
 	}
 	
@@ -157,9 +162,10 @@ public class ResultActivity extends Activity{
 	 * @param v The button pressed.
 	 */
 	public void loadPrevResult(View v) {
-		this.resultIndex--;
-		if(resultIndex < 0){
-//			this.prev.setAlpha(0.5f);
+		if(resultIndex > 0){
+			this.resultIndex--;
+			if(this.resultIndex == 0)
+				this.prev.setVisibility(View.INVISIBLE);
 		}
 		this.drawResult();
 	}
