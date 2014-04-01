@@ -48,15 +48,77 @@
         android:padding="5sp"
         android:background="@drawable/question_bg" />
     
-    <Button
-        android:id="@+id/restart"
+    <LinearLayout
+        android:id="@+id/result_button_bar"
         android:layout_width="match_parent"
-        android:layout_weight="1"
         android:layout_height="0sp"
-        android:onClick="startOver"
-        android:textColor="@color/white"
-        android:padding="5sp"
-        android:background="@drawable/button_shape"
-        android:text="@string/restart" />
+        android:layout_weight="1"
+        android:orientation="horizontal">
+        
+        <ImageButton
+            android:id="@+id/prev"
+            android:layout_width="0sp"
+	        android:layout_weight="1"
+	        android:layout_height="match_parent"
+	        android:onClick="startOver"
+	        android:textColor="@color/white"
+	        android:padding="5sp"
+	        android:background="@drawable/button_shape"
+	        android:src="@drawable/back_arrow"
+	        android:scaleType="fitCenter"
+	        android:contentDescription="@string/place_holder_short" />
+        
+        <ImageButton
+            android:id="@+id/approve"
+            android:layout_width="0sp"
+	        android:layout_weight="1"
+	        android:layout_height="match_parent"
+	        android:onClick="startOver"
+	        android:textColor="@color/white"
+	        android:padding="5sp"
+	        android:background="@drawable/button_shape"
+	        android:src="@drawable/approve"
+	        android:scaleType="fitCenter"
+	        android:contentDescription="@string/place_holder_short" />
+    
+	    <ImageButton
+	        android:id="@+id/restart"
+	        android:layout_width="0sp"
+	        android:layout_weight="1"
+	        android:layout_height="match_parent"
+	        android:onClick="startOver"
+	        android:textColor="@color/white"
+	        android:padding="5sp"
+	        android:background="@drawable/button_shape"
+	        android:src="@drawable/restart"
+	        android:scaleType="fitCenter"
+	        android:contentDescription="@string/place_holder_short" />
+	    
+	    <ImageButton
+            android:id="@+id/disapprove"
+            android:layout_width="0sp"
+	        android:layout_weight="1"
+	        android:layout_height="match_parent"
+	        android:onClick="startOver"
+	        android:textColor="@color/white"
+	        android:padding="5sp"
+	        android:background="@drawable/button_shape"
+	        android:src="@drawable/disapprove"
+	        android:scaleType="fitCenter"
+	        android:contentDescription="@string/place_holder_short" />
+	    
+	    <ImageButton
+            android:id="@+id/next"
+            android:layout_width="0sp"
+	        android:layout_weight="1"
+	        android:layout_height="match_parent"
+	        android:onClick="startOver"
+	        android:padding="5sp"
+	        android:background="@drawable/button_shape"
+	        android:src="@drawable/next_arrow"
+	        android:scaleType="fitCenter"
+	        android:contentDescription="@string/place_holder_short" />
+    
+    </LinearLayout>
     
 </LinearLayout>

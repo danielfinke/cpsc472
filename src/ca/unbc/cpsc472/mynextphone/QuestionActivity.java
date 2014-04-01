@@ -123,12 +123,6 @@ public class QuestionActivity extends Activity {
 	 */
 	public void fetchNewQuestion() {
 		this.question = qMan.getQuestion();
-		//Creates a Slider question with null facts. Only use to take a look-see
-		//at it. Leaving it here for that purpose.
-//		ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
-//		answers.add(QuestionAnswer.getInstance(-1, "The Answer", null, QuestionAnswerType.SLIDER));
-//		this.question = new Question(-1, "Answer my damn slider question.", 
-//				QuestionAnswerType.SLIDER, answers);
 	}
 	
 	public void answerQuestion(QuestionAnswer qa) {
