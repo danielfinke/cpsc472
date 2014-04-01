@@ -23,7 +23,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
     private static String[] questionColumns = {"_id", "question", "type"};
     private static String[] answerColumns = {"_id", "question_id", "answer", "facts"};
     private static String[] ruleColumns = {"_id", "rule"};
-    private static String[] linguisticColumns = {"_id", "\"set\"", "min", "max", "value"};
+    private static String[] linguisticColumns = {"_id", "\"set\"", "min", "max", "value", "grouping"};
     
     private static final int DATABASE_VERSION = 2;
     
@@ -36,7 +36,7 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
     	return helper;
     }
 
-	public PhoneDataBaseHelper(Context context) {
+	protected PhoneDataBaseHelper(Context context) {
 		super(context);
 		DB_PATH = context.getFilesDir().getParent() + "/databases/";
 		DB_NAME = "db.sqlite";
@@ -233,6 +233,43 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		return tuples;
 	}
 	
+	public ArrayList<String> getLinguisticNames(int grouping){
+		ArrayList<String> names = new ArrayList<String>();
+		Cursor cursor = getLinguisticTuplesCursor(grouping);
+		cursor.moveToFirst();
+		do{
+			String name = cursor.getString(cursor.getColumnIndex("set"));
+			if(names.isEmpty() || !names.get(names.size()-1).equals(name)){
+				names.add(name);
+			}
+		}while(cursor.moveToNext());
+		cursor.close();
+		
+		return names;
+	}
+	
+	public int getSetGroupingByValueName(String name){
+		Cursor cursor = this.getRulesCursor();
+		cursor.moveToFirst();
+		do{
+			String[] split = cursor.getString(cursor.getColumnIndex("rule")).split(">");
+			for(Fact f:Fact.parseFactsToList(split[0]))
+				if(name.equals(f.getName())){
+					Cursor c = getLinguisticTuplesCursor(f.getSet());
+					c.moveToFirst();
+					return c.getInt(c.getColumnIndex("grouping"));
+				}
+			for(Fact f:Fact.parseFactsToList(split[1]))
+				if(name.equals(f.getName())){
+					Cursor c = getLinguisticTuplesCursor(f.getSet());
+					c.moveToFirst();
+					return c.getInt(c.getColumnIndex("grouping"));
+				}
+		}while(cursor.moveToNext());
+		//if the name has not been used => no set applies yet
+		return -1;
+	}
+	
 	private String getQueryStringFromLingVars(ArrayList<Fact> facts) throws Exception {
 		String query = "";
 		for(Fact f : facts) {
@@ -282,6 +319,10 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 	private Cursor getLinguisticTuplesCursor(String lingName) {
 		return myDataBase.query("linguistic", linguisticColumns, "\"set\" = '" + lingName + "'",
 				null, null, null, null);
+	}
+	
+	private Cursor getLinguisticTuplesCursor(int grouping){
+		return myDataBase.query("linguistic", linguisticColumns, grouping==-1?null:"grouping = "+grouping, null, null, null, null);
 	}
 	
 	private boolean dbIsOpen() {

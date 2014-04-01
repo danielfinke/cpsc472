@@ -2,10 +2,10 @@ package ca.unbc.cpsc472.mynextphone.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
-
 import android.os.Bundle;
 import android.util.Log;
 
@@ -22,6 +22,7 @@ public class Fact implements Serializable {
 	public final static long serialVersionUID = 0;
 	
 	private String name;
+	private String set;
 	private ArrayList<Tuple> tuples;
 	
 	public static ArrayList<Fact> parseFactsToList(String facts) {
@@ -35,10 +36,12 @@ public class Fact implements Serializable {
 			
 			try {
 				Fact f = new Fact(factName);
+				f.setSet(linguistic);
 				f.addTuples(PhoneDataBaseHelper.getInstance(null).getLinguisticTuples(linguistic));
 				list.add(f);
 			}
 			catch(Exception ex) {
+				Log.e("fact", Arrays.toString(ex.getStackTrace()));
 				Log.e("Fact", "Unable to get linguistic tuples for fact: " + factName);
 			}
 		}
@@ -124,5 +127,13 @@ public class Fact implements Serializable {
 		}
 		ret += "}]";
 		return ret;
+	}
+
+	public String getSet() {
+		return set;
+	}
+
+	private void setSet(String set) {
+		this.set = set;
 	}
 }

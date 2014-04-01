@@ -3,6 +3,7 @@ package ca.unbc.cpsc472.mynextphone;
 import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,18 +20,19 @@ import android.content.Intent;
 import android.os.Build;
 
 public class ChangeDefinitionsActivity extends Activity {
-
-	private PhoneDataBaseHelper helper;
+	
+	private int numIfs = 0;
+	private int numThens = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.helper = new PhoneDataBaseHelper(this);
-		this.helper.openDataBase();
 		
 		setContentView(R.layout.activity_change_definitions);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		
+		
 		
 		loadIfStatement();
 		loadThenStatement();
@@ -45,17 +47,23 @@ public class ChangeDefinitionsActivity extends Activity {
 	}
 	
 	private void loadStatement(int body){
+		final PhoneDataBaseHelper helper = PhoneDataBaseHelper.getInstance(this);
 		ViewGroup parent = (ViewGroup) findViewById(body);
 		View statement = LayoutInflater.from(getBaseContext()).inflate(R.layout.value_is_set,
                 parent, true);
-		Spinner valueSpinner = (Spinner)statement.findViewById(R.id.value_spinner);
-		final Spinner setSpinner = (Spinner)statement.findViewById(R.id.set_spinner);
+		Spinner valueSpinner = (Spinner)statement.findViewWithTag("std_value_spinner");
+		final Spinner setSpinner = (Spinner)statement.findViewWithTag("std_set_spinner");
 		final Context me = this;
+		
+		valueSpinner.setTag("value_spinner");
+		setSpinner.setTag("complete_value_spinner");
+		
 		valueSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 		    @Override
 		    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+		    	
 		    	ArrayAdapter<String> adapter = new ArrayAdapter<String>(me, android.R.layout.simple_spinner_item,
-						helper.getValueNames());
+						helper.getLinguisticNames(helper.getSetGroupingByValueName((String)parentView.getItemAtPosition(position))));
 				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 				setSpinner.setAdapter(adapter);
 		    }
@@ -74,7 +82,8 @@ public class ChangeDefinitionsActivity extends Activity {
 	}
 	
 	public void addAnother(View v){
-		//TODO: add another value_is_set under the one pressed.
+		this.loadStatement(((View)v.getParent().getParent()).getId());
+		((ViewGroup)v.getParent()).removeView(v);
 	}
 	
 	public void addRule(View v){

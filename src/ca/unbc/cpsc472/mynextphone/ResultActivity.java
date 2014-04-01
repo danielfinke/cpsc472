@@ -44,7 +44,7 @@ public class ResultActivity extends Activity{
 		/*int resID = getResources().getIdentifier(res.getPrimaryImgPath(), "drawable",
 				this.getPackageName());
 		this.img.setImageBitmap(BitmapScaler.decodeSampledBitmapFromResource(getResources(), resID, 100, 100));*/
-		PhoneDataBaseHelper helper = new PhoneDataBaseHelper(this);
+		PhoneDataBaseHelper helper = PhoneDataBaseHelper.getInstance(this);
 		helper.openDataBase();
 		try{
 			// TODO getFactsLeadingToResult
