@@ -33,5 +33,9 @@
     <string name="delete_rule">Delete Rule</string>
     <string name="delete_set">Delete Set</string>
     <string name="delete_question">Delete Question</string>
+    <string name="title_activity_add_set">Add a Set</string>
+    <string name="which_group">Which Group:</string>
+    <string name="name">Name:</string>
+    <string name="size_of_mtx">Size of Matrix:</string>
 
 </resources>

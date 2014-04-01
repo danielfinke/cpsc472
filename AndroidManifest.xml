@@ -42,6 +42,10 @@
             android:name="ca.unbc.cpsc472.mynextphone.ChangeMenuActivity"
             android:label="@string/title_activity_change_menu" >
         </activity>
+        <activity
+            android:name="ca.unbc.cpsc472.mynextphone.AddSetActivity"
+            android:label="@string/title_activity_add_set" >
+        </activity>
     </application>
 
 </manifest>
