@@ -13,7 +13,7 @@
     <string name="title_activity_result">Phone Results</string>
     <string name="restart">Restart?</string>
     <string name="title_activity_startup">My Next Phone</string>
-    <string name="title_activity_change_definitions">Change Rule Definitions</string>
+    <string name="title_activity_change_definitions">Add Rule</string>
     <string name="if_string">If:</string>
     <string name="then_string">Then:</string>
     <string name="is_string">is</string>
@@ -26,6 +26,12 @@
     <string name="very_high">Very High</string>
     <string name="submit">Submit</string>
     <string name="percentage">(0.50)</string>
-    <string name="title_activity_change_menu">ChangeMenuActivity</string>
+    <string name="title_activity_change_menu">Change Definitions</string>
+    <string name="add_set">Add Set</string>
+    <string name="add_value">Add Value</string>
+    <string name="add_question">Add Question</string>
+    <string name="delete_rule">Delete Rule</string>
+    <string name="delete_set">Delete Set</string>
+    <string name="delete_question">Delete Question</string>
 
 </resources>

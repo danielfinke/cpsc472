@@ -12,7 +12,7 @@
 
     <Button 
         android:id="@+id/add_rule_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:padding="3sp"
@@ -20,7 +20,90 @@
         android:text="@string/add_rule"
         android:onClick="addRule"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="24sp"
         android:background="@drawable/button_shape"/>
-
+    
+	<Button 
+        android:id="@+id/add_set_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/add_rule_button"
+        android:padding="3sp"
+        android:layout_margin="20sp"
+        android:text="@string/add_set"
+        android:onClick="addSet"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:background="@drawable/button_shape"/>
+	
+	<Button 
+        android:id="@+id/add_value_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/add_set_button"
+        android:padding="3sp"
+        android:layout_margin="20sp"
+        android:text="@string/add_value"
+        android:onClick="addValue"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:background="@drawable/button_shape"/>
+	
+	<Button 
+        android:id="@+id/add_question_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/add_value_button"
+        android:padding="3sp"
+        android:layout_margin="20sp"
+        android:text="@string/add_question"
+        android:onClick="addQuestion"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:background="@drawable/button_shape"/>
+	
+	<Button 
+        android:id="@+id/delete_rule_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/add_question_button"
+        android:padding="3sp"
+        android:layout_margin="20sp"
+        android:text="@string/delete_rule"
+        android:onClick="deleteRule"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:background="@drawable/button_shape"/>
+	
+	<Button 
+        android:id="@+id/delete_set_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/delete_rule_button"
+        android:padding="3sp"
+        android:layout_margin="20sp"
+        android:text="@string/delete_set"
+        android:onClick="deleteSet"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:background="@drawable/button_shape"/>
+	
+	<Button 
+        android:id="@+id/delete_question_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/delete_set_button"
+        android:padding="3sp"
+        android:layout_margin="20sp"
+        android:text="@string/delete_question"
+        android:onClick="deleteQuestion"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:background="@drawable/button_shape"/>
 </RelativeLayout>

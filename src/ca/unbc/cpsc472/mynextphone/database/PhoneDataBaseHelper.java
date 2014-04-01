@@ -344,13 +344,15 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 	}
 	
 	public void openDataBase() throws SQLException {
-    	super.openDataBase();
-    	int old = myDataBase.getVersion();
-    	Log.d(this.getClass().getName(), "Old db version: " + old);
-    	
-    	if(old < DATABASE_VERSION) {
-    		onUpgrade(myDataBase, old, DATABASE_VERSION);
-    	}
+		if(myDataBase == null || !myDataBase.isOpen()){
+	    	super.openDataBase();
+	    	int old = myDataBase.getVersion();
+	    	Log.d(this.getClass().getName(), "Old db version: " + old);
+	    	
+	    	if(old < DATABASE_VERSION) {
+	    		onUpgrade(myDataBase, old, DATABASE_VERSION);
+	    	}
+		}
     }
 	public void openWriteableDataBase() throws SQLException {
         String myPath = DB_PATH + DB_NAME;

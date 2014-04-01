@@ -25,5 +25,28 @@ public class ChangeMenuActivity extends Activity {
 		Intent i = new Intent(this, AddRuleActivity.class);
 		this.startActivity(i);
 	}
+	
+	public void addSet(View v){
+		//TODO joel addSet
+	}
 
+	public void addValue(View v){
+		//TODO joel addValue
+	}
+	
+	public void addQuestion(View v){
+		//TODO joel addQuestion
+	}
+	
+	public void deleteRule(View v){
+		//TODO joel deleteRule
+	}
+	
+	public void deleteSet(View v){
+		//TODO joel deleteSet
+	}
+	
+	public void deleteQuestion(View v){
+		//TODO joel deleteQuestion
+	}
 }
