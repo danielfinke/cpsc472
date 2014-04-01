@@ -3,7 +3,9 @@ package ca.unbc.cpsc472.mynextphone.models;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
 import android.os.Bundle;
@@ -20,6 +22,13 @@ public class Fact implements Serializable {
 	//Eclipse is whining at me, had to make facts serializable to pass them as 
 	//objects to the Results View and convention says this is a required field.
 	public final static long serialVersionUID = 0;
+	
+	public static final TreeSet<String> allNames;
+	static{
+		allNames = new TreeSet<String>(PhoneDataBaseHelper.getInstance(null).getValueNames());
+		for(FACT_TYPE f:FACT_TYPE.values())
+			allNames.add(f.toString());
+	}
 	
 	private String name;
 	private String set;

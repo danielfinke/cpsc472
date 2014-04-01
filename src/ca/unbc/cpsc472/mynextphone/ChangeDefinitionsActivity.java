@@ -1,7 +1,10 @@
 package ca.unbc.cpsc472.mynextphone;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+
 import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
+import ca.unbc.cpsc472.mynextphone.models.Fact;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -87,7 +90,7 @@ public class ChangeDefinitionsActivity extends Activity {
 		});
 		
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
-				helper.getValueNames());
+				new ArrayList<String>(Fact.allNames));
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		valueSpinner.setAdapter(adapter);
 	}
