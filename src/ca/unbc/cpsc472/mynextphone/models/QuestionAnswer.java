@@ -26,7 +26,7 @@ import ca.unbc.cpsc472.mynextphone.helpers.BitmapScaler;
 public abstract class QuestionAnswer {
 	private int id;
 	private String stringValue;
-	private ArrayList<Fact> facts;
+	protected ArrayList<Fact> facts;
 	
 	/**
 	 * Constructor is private to force the use of the GetInstance method.
@@ -77,7 +77,7 @@ public abstract class QuestionAnswer {
 				}
 			case SLIDER:
 				try {
-					return new SliderAnswer(id, value, "");	//TODO: Figure out what's going on here.
+					return new SliderAnswer(id, value, facts);
 				} catch (IOException e) {
 					throw new IllegalArgumentException("Encountered an  error" +
 							" trying to generate Slider Answer from String: " +
@@ -209,7 +209,7 @@ public abstract class QuestionAnswer {
 		
 	}
 	
-	private static class SliderAnswer extends QuestionAnswer {
+	public static class SliderAnswer extends QuestionAnswer {
 
 		private SliderAnswer(int id, String text, String facts) throws IOException{
 			super(id, text, facts);
@@ -226,6 +226,28 @@ public abstract class QuestionAnswer {
 			View ret = inf.inflate(R.layout.item_answer_slider, null);
 //			((TextView) ret).setText(this.toString());
 			return ret;
+		}
+		
+		public void applySliderValue(double value) {
+			ArrayList<Fact> newFacts = new ArrayList<Fact>();
+			for(int i = 0; i < facts.size(); i++) {
+				Fact old = facts.get(i);
+				Fact newF = new Fact(old.getName());
+				for(int j = 0; j < old.getTupleCount(); j++) {
+					Tuple oldT = old.getTuples().get(j);
+					double oldMin = (Double)oldT.getObject(0);
+					double oldMax = (Double)oldT.getObject(1);
+					double oldVal = (Double)oldT.getObject(2);
+					Tuple newT = new Tuple(new Object[] {
+							oldMin,
+							oldMax,
+							oldVal * value
+					});
+					newF.addTuple(newT);
+				}
+				newFacts.add(newF);
+			}
+			this.facts = newFacts;
 		}
 		
 	}
