@@ -86,7 +86,7 @@ public class InferenceEngine {
 		int[] ruleKeys = new int[rules.size()];
 		for(int i = 0; i < rules.size(); i++) {
 			Rule r = rules.get(i);
-			// TODO save rule state
+			// TODO daniel save rule state
 			//r.saveState(bundle, bundlePrefix + "rule" + r.getRuleId() + "_");
 			ruleKeys[i] = r.getRuleId();
 		}
@@ -306,7 +306,7 @@ public class InferenceEngine {
 	 * Returns true if enough information has been collected in the working memory
 	 * to make a decision
 	 */
-	// TODO improve with freq/scaling in fact merges
+	// TODO daniel improve with freq/scaling in fact merges
 	public boolean isMemSufficientForDecision() {
 		ArrayList<Fact> allTypes = Fact.allFactTypes();
 		for(Fact type : allTypes) {

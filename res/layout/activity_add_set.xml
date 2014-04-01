@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context=".AddSetActivity" 
+    android:background="@color/dark_blue">
+
+    <TextView
+        android:id="@+id/which_group_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/which_group"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/white"/>
+    
+    <Spinner 
+        android:id="@+id/group_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <TextView
+		android:id="@+id/name_text"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/name"
+		android:textStyle="bold"
+		android:textSize="16sp"
+		android:textColor="@color/white"/>
+    
+    <EditText
+	    android:id="@+id/name_field"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:inputType="text"/>
+    
+    <LinearLayout 
+        android:id="@+id/mtx_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"/>
+    
+    <LinearLayout 
+        android:id="@+id/sliders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"/>
+    
+    <Button 
+        android:id="@+id/add_set_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="3sp"
+        android:layout_margin="20sp"
+        android:text="@string/add_set"
+        android:onClick="addSet"
+        android:textColor="@color/white"
+        android:textSize="26sp"
+        android:background="@drawable/button_shape"/>
+
+</LinearLayout>
