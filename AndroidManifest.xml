@@ -38,6 +38,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ca.unbc.cpsc472.mynextphone.StartupActivity" />
         </activity>
+        <activity
+            android:name="ca.unbc.cpsc472.mynextphone.ChangeMenuActivity"
+            android:label="@string/title_activity_change_menu" >
+        </activity>
     </application>
 
 </manifest>

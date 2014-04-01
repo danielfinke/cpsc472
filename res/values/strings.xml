@@ -26,5 +26,6 @@
     <string name="very_high">Very High</string>
     <string name="submit">Submit</string>
     <string name="percentage">(0.50)</string>
+    <string name="title_activity_change_menu">ChangeMenuActivity</string>
 
 </resources>

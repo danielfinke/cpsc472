@@ -27,7 +27,7 @@ public class StartupActivity extends Activity {
 	}
 
 	public void changeDefinitions(View v){
-		Intent i = new Intent(this, ChangeDefinitionsActivity.class);
+		Intent i = new Intent(this, ChangeMenuActivity.class);
 		this.startActivity(i);
 	}
 }
