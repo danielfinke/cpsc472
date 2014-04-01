@@ -1,5 +1,6 @@
 package ca.unbc.cpsc472.mynextphone;
 
+import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ public class StartupActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_startup);
+		PhoneDataBaseHelper.getInstance(this);
 	}
 
 	@Override
@@ -21,9 +23,13 @@ public class StartupActivity extends Activity {
 		return true;
 	}
 	
-	public void go(View v){
+	public void begin(View v){
 		Intent i = new Intent(this, QuestionActivity.class);
 		this.startActivity(i);
 	}
 
+	public void changeDefinitions(View v){
+		Intent i = new Intent(this, ChangeDefinitionsActivity.class);
+		this.startActivity(i);
+	}
 }
