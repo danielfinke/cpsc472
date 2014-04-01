@@ -327,7 +327,10 @@ public class QuestionActivity extends Activity {
 		Intent intent = new Intent(this,ResultActivity.class);
 		// Andrew: use qMan.getResults() and serialize as necessary
 		ArrayList<Result> res = qMan.getResults();
-		intent.putExtra("result", res.get(0));
+		intent.putExtra("result_count", res.size());
+		for(int i = 0; i < res.size(); i++){
+			intent.putExtra("result_" + i, res.get(i));
+		}
 		this.startActivity(intent);
 		this.finish();
 	}
