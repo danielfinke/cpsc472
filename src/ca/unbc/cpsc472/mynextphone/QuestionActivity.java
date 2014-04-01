@@ -108,7 +108,7 @@ public class QuestionActivity extends Activity {
 			int[] keys = new int[question.getAnswers().size()];
 			for(int i = 0; i < question.getAnswers().size(); i++) {
 				QuestionAnswer qa = question.getAnswers().get(i);
-				// TODO save question answer state
+				// TODO daniel save question answer state
 				//qa.saveState(bundle, "questionAnswer" + qa.getId() + "_");
 				keys[i] = qa.getId();
 			}
@@ -123,12 +123,6 @@ public class QuestionActivity extends Activity {
 	 */
 	public void fetchNewQuestion() {
 		this.question = qMan.getQuestion();
-		//Creates a Slider question with null facts. Only use to take a look-see
-		//at it. Leaving it here for that purpose.
-//		ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
-//		answers.add(QuestionAnswer.getInstance(-1, "The Answer", null, QuestionAnswerType.SLIDER));
-//		this.question = new Question(-1, "Answer my damn slider question.", 
-//				QuestionAnswerType.SLIDER, answers);
 	}
 	
 	public void answerQuestion(QuestionAnswer qa) {
@@ -333,7 +327,10 @@ public class QuestionActivity extends Activity {
 		Intent intent = new Intent(this,ResultActivity.class);
 		// Andrew: use qMan.getResults() and serialize as necessary
 		ArrayList<Result> res = qMan.getResults();
-		intent.putExtra("result", res.get(0));
+		intent.putExtra("result_count", res.size());
+		for(int i = 0; i < res.size(); i++){
+			intent.putExtra("result_" + i, res.get(i));
+		}
 		this.startActivity(intent);
 		this.finish();
 	}

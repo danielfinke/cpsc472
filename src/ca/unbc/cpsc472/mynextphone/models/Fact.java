@@ -87,13 +87,13 @@ public class Fact implements Serializable {
 	public Fact(Bundle bundle, String bundlePrefix) {
 		this.name = bundle.getString(bundlePrefix + "name");
 		this.tuples = new ArrayList<Tuple>();
-		// TODO restore fact tuples from bundle
+		// TODO daniel restore fact tuples from bundle
 	}
 	
 	public void saveState(Bundle bundle, String bundlePrefix) {
 		bundle.putString(bundlePrefix + "name", getName());
 		//bundle.putStringArrayList(bundlePrefix + "lingVals", getTuples());
-		// TODO save fact state
+		// TODO daniel save fact state
 	}
 	
 	public String getName() {
