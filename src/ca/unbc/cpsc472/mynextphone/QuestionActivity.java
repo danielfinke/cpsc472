@@ -23,6 +23,7 @@ import android.widget.TextView;
 import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
 import ca.unbc.cpsc472.mynextphone.models.Question;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswer;
+import ca.unbc.cpsc472.mynextphone.models.QuestionAnswer.SliderAnswer;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswerType;
 import ca.unbc.cpsc472.mynextphone.models.QuestionManager;
 import ca.unbc.cpsc472.mynextphone.models.Result;
@@ -210,15 +211,13 @@ public class QuestionActivity extends Activity {
 					this.question.getAnswers());
 			this.sldrAnswerView.setAdapter(x);
 			RelativeLayout sliderView = (RelativeLayout) x.getView(0, null, null);
-			SeekBar skbr = null;
-			sliderView = (RelativeLayout) sliderView.getChildAt(0);
-			
 			//Grab the button on this layer
 			Button b =(Button) sliderView.getChildAt(1);
+			sliderView = (RelativeLayout) sliderView.getChildAt(0);
 			
 			//Drop to the next layer to get the seek bar and text fields. Then
 			//write the update code to those.
-			skbr = (SeekBar) sliderView.getChildAt(0);
+			final SeekBar skbr = (SeekBar) sliderView.getChildAt(0);
 			final TextView text = (TextView) sliderView.getChildAt(1);
 			final TextView perc = (TextView) sliderView.getChildAt(2);
 			skbr.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){
@@ -288,8 +287,9 @@ public class QuestionActivity extends Activity {
 
 				@Override
 				public void onClick(View arg0) {
-					//Okay. Do facts how you will here sir	//TODO Daniel
-					answerQuestion(null);
+					SliderAnswer sa = (SliderAnswer)question.getAnswers().get(0);
+					sa.applySliderValue(skbr.getProgress() / 100.0);
+					answerQuestion(question.getAnswers().get(0));
 					fetchNewQuestion();
 					if(questionReady())
 						drawQuestion();
