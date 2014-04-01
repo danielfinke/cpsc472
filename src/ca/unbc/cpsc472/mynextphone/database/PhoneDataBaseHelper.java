@@ -280,6 +280,69 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		this.openDataBase();
 	}
 	
+	public void applyLearning(Result r, boolean approve) {
+		try {
+			// Calculate the values based on working memory
+			ArrayList<Fact> reasoning = r.getReasoning();
+			double[] decV = new double[Fact.totalFactTypes()];
+			for(int i = 0; i < reasoning.size(); i++) {
+				Fact f = reasoning.get(i);
+				decV[Fact.FACT_TYPE.valueOf(f.getName()).ordinal()] =
+						InferenceEngine.defuzzify(f);
+			}
+	
+			// Fetch the current value for phone from db
+			Cursor cursor = this.getResult(r.id);
+			cursor.moveToFirst();
+			ArrayList<Fact> allFacts = Fact.allFactTypes();
+			double[] dbV = new double[Fact.totalFactTypes()];
+			for(int i = 0; i < Fact.totalFactTypes(); i++) {
+				String column = allFacts.get(i).getName() + "_value";
+				dbV[i] = cursor.getDouble(cursor.getColumnIndex(column));
+			}
+			
+			// Calculate new value for phone
+			ContentValues cv = new ContentValues();
+			for(int i = 0; i < Fact.totalFactTypes(); i++) {
+				double diff = Math.abs(dbV[i] - decV[i]) * 0.10;
+				if(approve) {
+					if(dbV[i] > decV[i]) {
+						cv.put(allFacts.get(i).getName() + "_value", dbV[i] - diff);
+					}
+					else if(dbV[i] < decV[i]) {
+						cv.put(allFacts.get(i).getName() + "_value", dbV[i] + diff);
+					}
+					else {
+						cv.put(allFacts.get(i).getName() + "_value", dbV[i]);
+					}
+				}
+				else {
+					if(dbV[i] > decV[i]) {
+						cv.put(allFacts.get(i).getName() + "_value", dbV[i] + diff);
+					}
+					else if(dbV[i] < decV[i]) {
+						cv.put(allFacts.get(i).getName() + "_value", dbV[i] - diff);
+					}
+					else {
+						cv.put(allFacts.get(i).getName() + "_value", dbV[i] + diff);
+					}
+				}
+			}
+			
+			// Finally update the database
+			int upRes = myDataBase.update("data", cv, "_id = " + r.id, null);
+			if(upRes > 1) {
+				Log.e(this.getClass().getName(), "More than one row was affected by learning. There are probably multiple phones with the same id.");
+			}
+			else if(upRes < 1) {
+				Log.e(this.getClass().getName(), "No rows were updated by learning.");
+			}
+		}
+		catch(Exception ex) {
+			Log.e(this.getClass().getName(), "Unable to apply learning");
+		}
+	}
+	
 	private String getQueryStringFromLingVars(ArrayList<Fact> facts) throws Exception {
 		String query = "";
 		for(Fact f : facts) {
@@ -324,6 +387,10 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 	
 	private Cursor getResultsCursor(String whereClause, String orderBy) {
 		return myDataBase.query("data", null, whereClause, null, null, null, orderBy, "10");
+	}
+	
+	private Cursor getResult(int id) {
+		return myDataBase.query("data", null, "_id = " + id, null, null, null, null);
 	}
 	
 	private Cursor getLinguisticTuplesCursor(String lingName) {

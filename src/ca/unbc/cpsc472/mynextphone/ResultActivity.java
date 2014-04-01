@@ -35,6 +35,7 @@ public class ResultActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_result);
+		PhoneDataBaseHelper.getInstance(this).openDataBase();
 		
 		//Set up our views
 		this.name = (TextView) this.findViewById(R.id.result_phone_name);
@@ -60,6 +61,12 @@ public class ResultActivity extends Activity{
 		
 		this.drawResult(); 
 		
+	}
+	
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		PhoneDataBaseHelper.getInstance(this).close();
 	}
 
 	@Override
@@ -113,8 +120,6 @@ public class ResultActivity extends Activity{
 		/*int resID = getResources().getIdentifier(res.getPrimaryImgPath(), "drawable",
 				this.getPackageName());
 		this.img.setImageBitmap(BitmapScaler.decodeSampledBitmapFromResource(getResources(), resID, 100, 100));*/
-		PhoneDataBaseHelper helper = PhoneDataBaseHelper.getInstance(this);
-		helper.openDataBase();
 		try{
 			// TODO daniel getFactsLeadingToResult
 			this.reasons.setText(
@@ -123,7 +128,6 @@ public class ResultActivity extends Activity{
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
-		helper.close();
 		this.reasons.setMovementMethod(new ScrollingMovementMethod());
 	}
 
@@ -176,7 +180,9 @@ public class ResultActivity extends Activity{
 	 * @param v The button pressed.
 	 */
 	public void approve(View v) {
-		//TODO: This.
+		PhoneDataBaseHelper.getInstance(null).openWriteableDataBase();
+		PhoneDataBaseHelper.getInstance(null).applyLearning(
+				this.resultSet.get(resultIndex), true);
 	}
 	
 	/**
@@ -185,6 +191,8 @@ public class ResultActivity extends Activity{
 	 * @param v The button pressed.
 	 */
 	public void disapprove(View v) {
-		//TODO: This.
+		PhoneDataBaseHelper.getInstance(null).openWriteableDataBase();
+		PhoneDataBaseHelper.getInstance(null).applyLearning(
+				this.resultSet.get(resultIndex), false);
 	}
 }

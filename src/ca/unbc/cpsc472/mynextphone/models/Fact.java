@@ -3,13 +3,12 @@ package ca.unbc.cpsc472.mynextphone.models;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
-import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
 import android.os.Bundle;
 import android.util.Log;
+import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
 
 public class Fact implements Serializable {
 	public static enum FACT_TYPE {standby_time, talk_time, capacity, camera_flash,
