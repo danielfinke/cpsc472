@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -119,8 +121,8 @@ public class QuestionActivity extends Activity {
 	 */
 	public void fetchNewQuestion() {
 		this.question = qMan.getQuestion();
-		
-		//Stuff for slider questions
+		//Creates a Slider question with null facts. Only use to take a look-see
+		//at it. Leaving it here for that purpose.
 //		ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
 //		answers.add(QuestionAnswer.getInstance(-1, "The Answer", null, QuestionAnswerType.SLIDER));
 //		this.question = new Question(-1, "Answer my damn slider question.", 
@@ -203,57 +205,98 @@ public class QuestionActivity extends Activity {
 			
 			
 		} else if (this.question.getType() == QuestionAnswerType.SLIDER){
-			
-			//We'll need an inflater.
-			LayoutInflater inf =  (LayoutInflater) 
-					this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			
 			final SliderListAdapter x = new SliderListAdapter(this, 
 					this.question.getAnswers());
 			this.sldrAnswerView.setAdapter(x);
 			RelativeLayout sliderView = (RelativeLayout) x.getView(0, null, null);
 			SeekBar skbr = null;
-			final TextView text = (TextView) sliderView.getChildAt(1);
+			sliderView = (RelativeLayout) sliderView.getChildAt(0);
+			
+			//Grab the button on this layer
+			Button b =(Button) sliderView.getChildAt(1);
+			
+			//Drop to the next layer to get the seek bar and text fields. Then
+			//write the update code to those.
 			skbr = (SeekBar) sliderView.getChildAt(0);
+			final TextView text = (TextView) sliderView.getChildAt(1);
+			final TextView perc = (TextView) sliderView.getChildAt(2);
 			skbr.setOnSeekBarChangeListener(new OnSeekBarChangeListener(){
 
 				@Override
 				public void onProgressChanged(SeekBar skbr, int progress,
 						boolean fromUser) {
-					Log.i("Andrew Debug", "LolWut!");
-					
 					if(fromUser){
-						if(progress < 20){
+						
+						//Get our concrete value and print it nicely
+						if(progress == 100)
+							perc.setText("(1.00)");
+						else if(progress < 10)
+							perc.setText("(0.0" + progress + ")");
+						else
+							perc.setText("(0." + progress + ")");
+						
+						//Get our linguistic variable and display it.
+						if(progress < 20){			//[0,20)
 							text.setText("Very Low");
-							text.setTextColor(getResources().getColor(R.color.red));
-						} else if (progress < 40){
+							text.setTextColor(getResources().getColor(
+									R.color.red));
+							perc.setTextColor(getResources().getColor(
+									R.color.red));
+						} else if (progress < 40){	//[20,40)
 							text.setText("Low");
-							text.setTextColor(getResources().getColor(R.color.orange));
-						} else if (progress < 60){
+							text.setTextColor(getResources().getColor(
+									R.color.orange));
+							perc.setTextColor(getResources().getColor(
+									R.color.orange));
+						} else if (progress < 60){	//[40,60)
 							text.setText("Medium");
-							text.setTextColor(getResources().getColor(R.color.yellow));
-						} else if (progress < 80){
+							text.setTextColor(getResources().getColor(
+									R.color.yellow));
+							perc.setTextColor(getResources().getColor(
+									R.color.yellow));
+						} else if (progress < 80){	//[60,80)
 							text.setText("High");
-							text.setTextColor(getResources().getColor(R.color.lime_green));
-						} else {
+							text.setTextColor(getResources().getColor(
+									R.color.lime_green));
+							perc.setTextColor(getResources().getColor(
+									R.color.lime_green));
+						} else { //[80,100]
 							text.setText("Very High");
-							text.setTextColor(getResources().getColor(R.color.green));
+							text.setTextColor(getResources().getColor(
+									R.color.green));
+							perc.setTextColor(getResources().getColor(
+									R.color.green));
 						}
 					}
-					
 				}
 
 				@Override
 				public void onStartTrackingTouch(SeekBar arg0) {
-					Log.i("Andrew Debug", "Hello!");
-					
+					//Not pertinent to our intended purpose
 				}
 
 				@Override
 				public void onStopTrackingTouch(SeekBar arg0) {
-					Log.i("Andrew Debug", "Goodbye!");
-					
+					//Not pertinent to our intended purpose
 				}
+				
+			});
+			
+			//Now set up the button's onItemClick listener
+			b.setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View arg0) {
+					//Okay. Do facts how you will here sir	//TODO Daniel
+					answerQuestion(null);
+					fetchNewQuestion();
+					if(questionReady())
+						drawQuestion();
+					else
+						gotoResult();
+				}
+				
+				
 				
 			});
 			
