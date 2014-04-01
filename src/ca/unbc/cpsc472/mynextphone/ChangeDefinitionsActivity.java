@@ -1,9 +1,9 @@
 package ca.unbc.cpsc472.mynextphone;
 
+import java.util.HashMap;
 import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
 import android.os.Bundle;
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,15 +14,15 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.support.v4.app.NavUtils;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 
 public class ChangeDefinitionsActivity extends Activity {
 	
-	private int numIfs = 0;
-	private int numThens = 0;
+	@SuppressLint("UseSparseArrays")
+	private HashMap<Integer, Integer> ifOrThen = new HashMap<Integer, Integer>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +32,16 @@ public class ChangeDefinitionsActivity extends Activity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
-		
+		PhoneDataBaseHelper.getInstance(this).openDataBase();
 		
 		loadIfStatement();
 		loadThenStatement();
+	}
+	
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		PhoneDataBaseHelper.getInstance(this).close();
 	}
 	
 	private void loadIfStatement(){
@@ -55,8 +61,13 @@ public class ChangeDefinitionsActivity extends Activity {
 		final Spinner setSpinner = (Spinner)statement.findViewWithTag("std_set_spinner");
 		final Context me = this;
 		
-		valueSpinner.setTag("value_spinner");
-		setSpinner.setTag("complete_value_spinner");
+		if(ifOrThen.get(body) == null)
+			ifOrThen.put(body, 1);
+		else 
+			ifOrThen.put(body, ifOrThen.get(body)+1);
+		
+		valueSpinner.setTag("value_spinner"+ifOrThen.get(body));
+		setSpinner.setTag("set_spinner"+ifOrThen.get(body));
 		
 		valueSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 		    @Override
@@ -87,7 +98,19 @@ public class ChangeDefinitionsActivity extends Activity {
 	}
 	
 	public void addRule(View v){
-		//TODO: add the rule to the database go back.
+		String rule = "";
+		for(Integer i:ifOrThen.keySet()){
+			for(int j = 1; j<=ifOrThen.get(i); j++){
+				rule += ((Spinner)super.findViewById(i).findViewWithTag("value_spinner"+j)).getSelectedItem()+" "+
+						((Spinner)super.findViewById(i).findViewWithTag("set_spinner"+j)).getSelectedItem();
+				if(j!=ifOrThen.get(i))
+					rule+="&";
+			}
+			if(!rule.contains(">"))
+				rule+=">";
+		}
+		PhoneDataBaseHelper.getInstance(this).addRule(rule);
+		this.finish();
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package ca.unbc.cpsc472.mynextphone;
 
-import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ public class StartupActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_startup);
-		PhoneDataBaseHelper.getInstance(this);
 	}
 
 	@Override

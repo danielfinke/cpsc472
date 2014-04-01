@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
 import ca.unbc.cpsc472.mynextphone.models.Question;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswer;
 import ca.unbc.cpsc472.mynextphone.models.QuestionAnswerType;
@@ -80,6 +80,12 @@ public class QuestionActivity extends Activity {
 		}
 		drawQuestion();
 	}
+	
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		PhoneDataBaseHelper.getInstance(this).close();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,11 +115,6 @@ public class QuestionActivity extends Activity {
 			
 			qMan.saveState(bundle, question.getId());
 		}
-	}
-	
-	public void onDestroy() {
-		super.onDestroy();
-		qMan.recycle();
 	}
 	
 	/**

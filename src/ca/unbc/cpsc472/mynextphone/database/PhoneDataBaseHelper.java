@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -266,8 +267,17 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 					return c.getInt(c.getColumnIndex("grouping"));
 				}
 		}while(cursor.moveToNext());
+		cursor.close();
 		//if the name has not been used => no set applies yet
 		return -1;
+	}
+	
+	public void addRule(String rule){
+		this.openWriteableDataBase();
+		ContentValues values = new ContentValues();
+		values.put("rule", rule);
+		this.myDataBase.insert("rule", null, values);
+		this.openDataBase();
 	}
 	
 	private String getQueryStringFromLingVars(ArrayList<Fact> facts) throws Exception {
