@@ -15,15 +15,18 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="ca.unbc.cpsc472.mynextphone.QuestionActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="ca.unbc.cpsc472.mynextphone.ResultActivity"
-            android:label="@string/title_activity_result" >
+            android:label="@string/title_activity_result"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="ca.unbc.cpsc472.mynextphone.StartupActivity"
-            android:label="@string/title_activity_startup" >
+            android:label="@string/title_activity_startup"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,18 +36,21 @@
         <activity
             android:name="ca.unbc.cpsc472.mynextphone.AddRuleActivity"
             android:label="@string/title_activity_change_definitions"
-            android:parentActivityName="ca.unbc.cpsc472.mynextphone.StartupActivity" >
+            android:parentActivityName="ca.unbc.cpsc472.mynextphone.StartupActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ca.unbc.cpsc472.mynextphone.StartupActivity" />
         </activity>
         <activity
             android:name="ca.unbc.cpsc472.mynextphone.ChangeMenuActivity"
-            android:label="@string/title_activity_change_menu" >
+            android:label="@string/title_activity_change_menu"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="ca.unbc.cpsc472.mynextphone.AddSetActivity"
-            android:label="@string/title_activity_add_set" >
+            android:label="@string/title_activity_add_set"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 
