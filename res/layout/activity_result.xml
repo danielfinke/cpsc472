@@ -64,6 +64,7 @@
 	        android:textColor="@color/white"
 	        android:padding="5sp"
 	        android:background="@drawable/button_shape"
+	        android:visibility="invisible"
 	        android:src="@drawable/back_arrow"
 	        android:scaleType="fitCenter"
 	        android:contentDescription="@string/place_holder_short" />
