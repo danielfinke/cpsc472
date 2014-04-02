@@ -39,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10sp"
+            android:padding="5sp"
             android:layout_below="@id/result_phone_img"
             android:layout_marginTop="10sp"
             android:background="@drawable/answers_container_bg" >
@@ -78,6 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10sp"
+            android:padding="5sp"
             android:layout_below="@id/result_desc_container"
             android:layout_marginTop="10sp"
             android:background="@drawable/answers_container_bg" >
@@ -88,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:textSize="24sp"
-                android:text="@string/desc"
+                android:text="@string/reas"
                 android:textColor="@color/white" />
             
             <TextView

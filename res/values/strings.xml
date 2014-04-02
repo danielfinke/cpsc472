@@ -38,5 +38,6 @@
     <string name="name">Name:</string>
     <string name="size_of_mtx">Size of Matrix:</string>
     <string name="desc">Description</string>
+    <string name="reas">Reasoning</string>
 
 </resources>

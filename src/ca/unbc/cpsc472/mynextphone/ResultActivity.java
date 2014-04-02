@@ -2,15 +2,17 @@ package ca.unbc.cpsc472.mynextphone;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
 import ca.unbc.cpsc472.mynextphone.helpers.PhotoDownloadTask;
@@ -23,6 +25,11 @@ public class ResultActivity extends Activity{
 	private TextView name;
 	private ImageView img;
 	private TextView reasons;
+	private TextView description;
+	private RelativeLayout desc;
+	private ImageView desc_expand;
+	private RelativeLayout reas;
+	private ImageView reas_expand;
 	private ArrayList<Result> resultSet;
 	private boolean[] answered;
 	private int resultIndex;
@@ -42,6 +49,48 @@ public class ResultActivity extends Activity{
 		this.name = (TextView) this.findViewById(R.id.result_phone_name);
 		this.img = (ImageView)this.findViewById(R.id.result_phone_img);
 		this.reasons = (TextView) this.findViewById(R.id.result_phone_reasons);
+		this.description = (TextView) this.findViewById(R.id.result_desc_body);
+		
+		this.desc_expand = (ImageView) this.findViewById(R.id.result_desc_expander);
+		this.reas_expand = (ImageView) this.findViewById(R.id.result_reasons_expander);
+		
+		this.desc = (RelativeLayout) this.findViewById(R.id.result_desc_container);
+		this.reas = (RelativeLayout) this.findViewById(R.id.result_reasons_container);
+		desc.setOnClickListener(new OnClickListener(){
+
+			@SuppressLint("NewApi")
+			@Override
+			public void onClick(View arg0) {
+				if(description.getMaxLines() == 5){
+					description.setMaxLines(Integer.MAX_VALUE);	//Int equivalent of infinity
+					desc_expand.setImageResource(R.drawable.collapser);
+				} else {
+					description.setMaxLines(5);
+					desc_expand.setImageResource(R.drawable.expander);
+				}
+			}
+			
+			
+			
+		});
+		
+		reas.setOnClickListener(new OnClickListener(){
+
+			@SuppressLint("NewApi")
+			@Override
+			public void onClick(View arg0) {
+				if(reasons.getMaxLines() == 5){
+					reasons.setMaxLines(Integer.MAX_VALUE);	//Int equivalent of infinity
+					reas_expand.setImageResource(R.drawable.collapser);
+				} else {
+					reasons.setMaxLines(5);
+					reas_expand.setImageResource(R.drawable.expander);
+				}
+			}
+			
+			
+			
+		});
 		
 		//Set up our buttons
 		this.next = (ImageButton) this.findViewById(R.id.next);
@@ -122,6 +171,7 @@ public class ResultActivity extends Activity{
 		
 		
 		try{
+			this.description.setText(res.getPhoneDesc());
 			// TODO daniel getFactsLeadingToResult
 			this.reasons.setText(
 					formatReasoning(res.getPhoneName(), 

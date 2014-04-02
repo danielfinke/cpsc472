@@ -24,7 +24,8 @@
         android:id="@+id/if_body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"/>
+        android:orientation="vertical"
+        android:background="@drawable/question_bg"/>
     
     <TextView
         android:id="@+id/then_text"
@@ -34,13 +35,15 @@
         android:textStyle="bold"
         android:textSize="42sp"
         android:text="@string/then_string"
+        
         />
 
     <LinearLayout 
         android:id="@+id/then_body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"/>
+        android:orientation="vertical"
+        android:background="@drawable/question_bg"/>
     
     <Button 
         android:id="@+id/start_button"
