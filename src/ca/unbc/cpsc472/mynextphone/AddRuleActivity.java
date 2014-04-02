@@ -41,12 +41,6 @@ public class AddRuleActivity extends Activity {
 		loadThenStatement();
 	}
 	
-	@Override
-	public void onDestroy(){
-		super.onDestroy();
-		PhoneDataBaseHelper.getInstance(this).close();
-	}
-	
 	private void loadIfStatement(){
 		loadStatement(R.id.if_body);
 	}

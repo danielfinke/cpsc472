@@ -1,0 +1,672 @@
+[33mcommit 7d32679d768680bc5a76013d331865e70c82aaf8[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Apr 1 19:08:56 2014 -0700
+
+    Finished async image loading
+
+[33mcommit b324531128497f217aae5f6d679af136ece4ab58[m
+Merge: b47df63 6f8e6a7
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Apr 1 18:56:18 2014 -0700
+
+    Merge branch 'master' of ssh://git@github.com/danielfinke/cpsc472.git
+
+[33mcommit b47df6319897f1f9216172accdb190b6345e4aec[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Apr 1 18:56:12 2014 -0700
+
+    Added img paths
+
+[33mcommit 6f8e6a7e166b9df56a02d9d05d858abd1b167b66[m
+Merge: 6690c46 bc45f04
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Tue Apr 1 18:54:17 2014 -0700
+
+    Merge branch 'master' of ssh://github.com/danielfinke/cpsc472
+
+[33mcommit 6690c4665f198c77a8afe6e9eabe7a8dafbf7487[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Tue Apr 1 18:54:09 2014 -0700
+
+    Made teh app crash yo.
+
+[33mcommit bc45f046998b2dbc0fb17aad697d2d425a058184[m
+Merge: 8b9a8e8 0d899c2
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Apr 1 18:36:48 2014 -0700
+
+    Merge branch 'master' of ssh://git@github.com/danielfinke/cpsc472.git
+
+[33mcommit 8b9a8e8eef808ae49083e4ef321e83427d19aa52[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Apr 1 18:35:58 2014 -0700
+
+    OMFG, implemented save/restore state for like the millionth time
+
+[33mcommit 0d899c298a2c9fb7da3a2295b6bd27d180015921[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Tue Apr 1 18:08:28 2014 -0700
+
+    Stopped the terrible plague of tilt-induced crashes.
+
+[33mcommit ccf668ce9b6b094d7ab2ab4d511c16c732cb2a7b[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Apr 1 17:28:59 2014 -0700
+
+    Minor learning improvements
+
+[33mcommit b9413b56a5b4028c4045cc8f1826983615169fd9[m
+Merge: 123e9b1 46ce80c
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Apr 1 17:17:58 2014 -0700
+
+    Merge branch 'master' of ssh://git@github.com/danielfinke/cpsc472.git
+    
+    Conflicts:
+    	src/ca/unbc/cpsc472/mynextphone/ResultActivity.java
+
+[33mcommit 123e9b1c1c9ec1fab0c6c474050af19c17a011a5[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Apr 1 17:16:13 2014 -0700
+
+    Removed database closes. They are causing a chance that the database
+    will be closed when it is needed - depends on device. Removed it for
+    simplicity.
+
+[33mcommit 46ce80c32602237dd546a24e33264c6a64bc8414[m
+Merge: 1beab6e c8bf1eb
+Author: knudsenj <joel@RED-PC>
+Date:   Tue Apr 1 17:14:09 2014 -0700
+
+    Merge branch 'master' of ssh://git@github.com/danielfinke/cpsc472.git
+
+[33mcommit 1beab6ecf0bd2159cdd055347664c14e53dabd8f[m
+Author: knudsenj <joel@RED-PC>
+Date:   Tue Apr 1 17:13:59 2014 -0700
+
+    fix end linguistic variables to be in hi-lo range
+
+[33mcommit c8bf1eb6ff5eaa61ccb0cdf0fbdcd649fe624899[m
+Merge: 12eab80 7b94fdf
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Tue Apr 1 16:56:45 2014 -0700
+
+    Merge branch 'master' of ssh://github.com/danielfinke/cpsc472
+
+[33mcommit 380dfc3af01a2d1330800c682bd603c7c6701080[m
+Merge: 02142f4 7b94fdf
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Apr 1 16:11:44 2014 -0700
+
+    Merge branch 'master' of ssh://git@github.com/danielfinke/cpsc472.git
+    
+    Conflicts:
+    	src/ca/unbc/cpsc472/mynextphone/database/PhoneDataBaseHelper.java
+
+[33mcommit 02142f4c1964b39a5fab4dff9b0be3923af1e511[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Apr 1 16:08:10 2014 -0700
+
+    Added learning
+
+[33mcommit 7b94fdf52fa9047649a9a90dc329434804624046[m
+Merge: cff2c87 ca3ace0
+Author: knudsenj <joel@RED-PC>
+Date:   Tue Apr 1 15:34:55 2014 -0700
+
+    Merge branch 'master' of ssh://git@github.com/danielfinke/cpsc472.git
+
+[33mcommit cff2c8764bde9a3d41e68bfae66a027072cb6bab[m
+Author: knudsenj <joel@RED-PC>
+Date:   Tue Apr 1 15:27:48 2014 -0700
+
+    Addset done.
+
+[33mcommit ca3ace0cbd4f2656866a316f52fd611af78a2b9f[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Apr 1 14:39:06 2014 -0700
+
+    Added trigger for learning, named TODOs
+
+[33mcommit 12eab8096179f84a2a1b2e8939cf4e6b738abd52[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Tue Apr 1 14:13:32 2014 -0700
+
+    Just accept it. Srsly.
+
+[33mcommit 2bcf3304ec731a4e87dc04d061e728dccf22dc01[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Tue Apr 1 13:03:55 2014 -0700
+
+    recast all buttons in the resultActivity to image buttons because I'm a moron. Also, theres a bug in this commit, I'm working on it but it shouldn't make anybody's work/testing undoable
+
+[33mcommit 7c750a20f69add69271d725c979c2ae861d72f24[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Tue Apr 1 12:54:54 2014 -0700
+
+    did a bunch of cool stuff with buttons.
+
+[33mcommit 08672610ace1e4d27a58bc6338531d4c051b996b[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Tue Apr 1 11:44:36 2014 -0700
+
+    Added the new buttons to the result view
+
+[33mcommit 318fe6c4bee88bdefb705a55c1e921f2193c745e[m
+Author: knudsenj <joel@RED-PC>
+Date:   Tue Apr 1 10:07:12 2014 -0700
+
+    fix db not close() bug.  create optimistic change definitions page
+
+[33mcommit 032562223187fa20b2b8c7392a6077d47007cc06[m
+Author: knudsenj <joel@RED-PC>
+Date:   Tue Apr 1 09:31:38 2014 -0700
+
+    modify name: change definitions activity to add rule activity
+
+[33mcommit be508e3cdb69e43c1a5046030cfaa42cab78d4cc[m
+Author: knudsenj <joel@RED-PC>
+Date:   Tue Apr 1 07:43:02 2014 -0700
+
+    add a menu for changing definitions
+
+[33mcommit 93055833e8d1fed53f2c9a7aacc325cfb2eb1507[m
+Author: knudsenj <joel@RED-PC>
+Date:   Mon Mar 31 22:18:31 2014 -0700
+
+    Add list of all values to fact. update rule modification to use it
+
+[33mcommit 2afd4178c4976bb49916b783d33f2470d87a2f1a[m
+Merge: f57cc97 d41e8c5
+Author: knudsenj <joel@RED-PC>
+Date:   Mon Mar 31 21:50:55 2014 -0700
+
+    Merge branch 'master' of ssh://git@github.com/danielfinke/cpsc472.git
+
+[33mcommit f57cc9746651e68616d8c9703887be235e0f4708[m
+Author: knudsenj <joel@RED-PC>
+Date:   Mon Mar 31 21:47:28 2014 -0700
+
+    Get add rules working
+
+[33mcommit d41e8c57833a08d5e920c9152c04fb990c516691[m
+Merge: aa9a4da 8a44111
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Mon Mar 31 21:44:03 2014 -0700
+
+    Merge branch 'master' of ssh://git@github.com/danielfinke/cpsc472.git
+    
+    Conflicts:
+    	res/layout/item_answer_slider.xml
+
+[33mcommit aa9a4da36d2bb02cb659df60864a1caa8d33458a[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Mon Mar 31 21:15:47 2014 -0700
+
+    Fixed draw slider question and added fact code for slider questions
+
+[33mcommit 8a4411102c4bd6d14ee20d345fe2cebb3e141388[m
+Merge: 0c69567 5642d96
+Author: knudsenj <joel@RED-PC>
+Date:   Mon Mar 31 20:23:35 2014 -0700
+
+    Merge branch 'master' of ssh://git@github.com/danielfinke/cpsc472.git
+    
+    Conflicts:
+    	res/values/strings.xml
+
+[33mcommit 0c69567aa4244bf4a99d3fd5ab47d2c3718c2936[m
+Author: knudsenj <joel@RED-PC>
+Date:   Mon Mar 31 20:02:47 2014 -0700
+
+    Most of Rule defns done. Just need to add to rules to db on add clicked.
+
+[33mcommit 5642d96d52f25647db2ad321dbf25cfb09c47392[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Mon Mar 31 17:05:41 2014 -0700
+
+    Modified and completed logic to handle Slider Questions. Only thing still required is applying facts on click of the submit, highlighted by a '//TODO Daniel' Comment.
+
+[33mcommit e93132d71f7c2bac49378f850bdbafd827e75434[m
+Author: knudsenj <joel@142.207.249.63>
+Date:   Mon Mar 31 15:13:09 2014 -0700
+
+    fix bugs before continuing, hopefully isnt too painful.
+
+[33mcommit 01a631d80488dd8028aa70016ba0bc0bd4a986a6[m
+Author: knudsenj <joel@142.207.249.63>
+Date:   Mon Mar 31 14:55:18 2014 -0700
+
+    wtf they have question marks. These are andrews, not mine
+
+[33mcommit a0f83ce8a2d1e0a7cfd99e4b07be167d27d639aa[m
+Merge: 0647555 6daf263
+Author: knudsenj <joel@142.207.249.63>
+Date:   Mon Mar 31 14:53:45 2014 -0700
+
+    Merge branch 'master' of ssh://git@github.com/danielfinke/cpsc472.git
+
+[33mcommit 0647555ed0ac5bddaf2333f9869f62deb54b0a5b[m
+Author: knudsenj <joel@142.207.249.63>
+Date:   Mon Mar 31 14:48:22 2014 -0700
+
+    Partial change rules in DB, need to commit to pull.
+
+[33mcommit 6daf263a6a629a4a122eec2182adffb2445493ce[m
+Merge: 89a5197 bf890f2
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Mon Mar 31 14:22:39 2014 -0700
+
+    Merge branch 'master' of ssh://github.com/danielfinke/cpsc472
+
+[33mcommit 89a5197f1a1eb2c2045cb1d7a07dfe41c37d3382[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Mon Mar 31 14:22:23 2014 -0700
+
+    Basically just what I just said, but now I actually added my new files.
+
+[33mcommit 1e6cf445ac6b3b8f2e49db0534501891ac187981[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Mon Mar 31 14:21:39 2014 -0700
+
+    added the slider questions to the app. Still need to add their submit capabilities.
+
+[33mcommit bf890f20b5bfb88bd8f7d4bee790142f56fec555[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Mon Mar 31 14:08:28 2014 -0700
+
+    Lightweight reasoning for results
+
+[33mcommit d85506c5f39b56af8c26f21d96a1e0566fbcf7ce[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Mon Mar 31 13:52:33 2014 -0700
+
+    Added closeness calculation for results
+
+[33mcommit fcb7f4c7bd1187ce1531e306eba2a3e148d6b0ae[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Mon Mar 31 12:16:15 2014 -0700
+
+    Finished implementing Matrix method of fuzzy logic
+
+[33mcommit d1790c07ef03a96a46babe2a4c0e38f8f9b82a9c[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Sun Mar 30 20:27:28 2014 -0700
+
+    Fixed the save/restore again
+
+[33mcommit 9ef0dd672e3a36a1865a7a2db5f62e9a7eed187c[m
+Merge: 2a930ad 375db7f
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Sun Mar 30 16:18:02 2014 -0700
+
+    Merge branch 'master' of ssh://git@github.com/danielfinke/cpsc472.git
+
+[33mcommit 2a930adacdc4b5fb50ef02c307000d9a4ee3e7b6[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Sun Mar 30 16:17:44 2014 -0700
+
+    Re-added save/restore bundle state to work with new code
+
+[33mcommit 375db7f5cbb869facf4553b1784a2e9309ef9774[m
+Author: knudsenj <joel@RED-PC>
+Date:   Fri Mar 28 17:27:53 2014 -0700
+
+    update db with big-url in image for large image.
+
+[33mcommit 2d78913cb96c64b0b057b2d0af06d3e875d99c3b[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Thu Mar 27 19:36:01 2014 -0700
+
+    Made it so everything actually runs (some bugfixes and corrections to
+    inference included)
+
+[33mcommit 20d5c6cedef3aebf661fb7f63d0def44cad4f884[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Thu Mar 27 18:06:39 2014 -0700
+
+    Initial commits for database wrapper & inference engine/fuzzy logic for
+    the fuzzy logic project
+
+[33mcommit 79346adf417bd29046e471a4aff2521ac91fc334[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Wed Mar 12 00:50:34 2014 -0700
+
+    Updated build number
+
+[33mcommit 3b368e048da70461844b252d2136659d252af045[m
+Merge: 2c1c8e9 a3422f4
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Wed Mar 12 00:29:27 2014 -0700
+
+    merged my stuff with daniels bug fixes
+
+[33mcommit 2c1c8e9331d8b62523d4d6f7b4662f89b3e98a9e[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Wed Mar 12 00:25:05 2014 -0700
+
+    Massive UI Overhual, added a startup menu and compeletely revamped all colors and views for the different components of the app.
+
+[33mcommit a3422f46be9d5a173245dc89fdc1a02f36e92327[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Wed Mar 12 00:21:32 2014 -0700
+
+    Maybe fixed Andrew's Unable to submit answer bug
+
+[33mcommit f2f61e813929b793c71b94b7e109ae6549afa8c5[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Mar 11 21:27:58 2014 -0700
+
+    Replaced the title for the result activity
+
+[33mcommit 8e1def692c56d4c078d74ab3d4d462c4bc759324[m
+Merge: 9160f12 78433e5
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Tue Mar 11 20:33:07 2014 -0700
+
+    Merge branch 'master' of ssh://github.com/danielfinke/cpsc472
+
+[33mcommit 9160f129a4f41ecd7b52da07ac070c53e23fd1e9[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Tue Mar 11 20:32:46 2014 -0700
+
+    Minor UI changes; scaling images modifying the color scheme
+
+[33mcommit 78433e50c703162078c0350e12bdfdb4cff497cc[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Mar 11 20:06:03 2014 -0700
+
+    Updated some of the incorrect phone pictures
+
+[33mcommit 19cc18d87cea2184ed4b5819a23d735e7c166543[m
+Merge: 1610f51 b5b816c
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Mar 11 19:36:06 2014 -0700
+
+    Merge branch 'master' of ssh://git@github.com/danielfinke/cpsc472.git
+    
+    Conflicts:
+    	src/ca/unbc/cpsc472/mynextphone/ResultActivity.java
+
+[33mcommit 1610f5102765d57ea91b3d8e9a993cbcec4a94d1[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Mar 11 19:20:31 2014 -0700
+
+    Fixed the crash bug from images, fixed the bug where questions were
+    being re-asked
+
+[33mcommit b5b816c4abfa96091849e6d03a5f07e8178b0e81[m
+Author: knudsenj <joel@RED-PC>
+Date:   Tue Mar 11 13:53:09 2014 -0700
+
+    fix negative column.
+
+[33mcommit 05adcd46346cccd921f80967530569f81a456e38[m
+Author: knudsenj <joel@RED-PC>
+Date:   Tue Mar 11 13:44:34 2014 -0700
+
+    Sort facts by usefulness to result.  3 categories positive, negative, no
+    effect.
+
+[33mcommit ed41848c1a547ff0396a4a877952ab56d2022bd9[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Mon Mar 10 01:20:23 2014 -0700
+
+    fixed the button
+
+[33mcommit ef580bd9b7fb130c9e57fa213a36996f2b2850c3[m
+Merge: d717116 b00e967
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Mon Mar 10 01:17:31 2014 -0700
+
+    Merge branch 'master' of ssh://github.com/danielfinke/cpsc472
+
+[33mcommit d717116bb37c3c1a48e2f5758218ff6a2fe2336e[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Mon Mar 10 01:17:22 2014 -0700
+
+    Modified the button to make it look nicer
+
+[33mcommit b00e967db09bb7002ecc2c81912a565438668d85[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Mon Mar 10 01:14:05 2014 -0700
+
+    Fixed a couple typos for phone images
+
+[33mcommit 441b6c49af06a85e5a95079634d622e5a2d33242[m
+Merge: 4b7731a 2f40ead
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Mon Mar 10 00:59:46 2014 -0700
+
+    Merge branch 'master' of ssh://github.com/danielfinke/cpsc472
+
+[33mcommit 4b7731a8494c63d9e4a6a76af458889b9dc7612e[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Mon Mar 10 00:59:35 2014 -0700
+
+    Removed hard-coding on load instance state stuff, and finally figured out how to add the damn galaxy note II picture
+
+[33mcommit 2f40eadd366fc44bca9633faa808fcbfb22d0425[m
+Merge: ea33894 107d969
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Mon Mar 10 00:52:25 2014 -0700
+
+    Merge branch 'master' of ssh://git@github.com/danielfinke/cpsc472.git
+
+[33mcommit ea33894301e00507cebe261fa3219493a5965f08[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Mon Mar 10 00:52:16 2014 -0700
+
+    Added a start over button, fixed randomly changing images in tile
+    questions
+
+[33mcommit 107d96934a7df3a19fc553735d3a4c952e69772f[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Mon Mar 10 00:44:43 2014 -0700
+
+    Made the reasoning thing scrollable
+
+[33mcommit 3c643ba5bc248af9fc9f00247acb86ef3573e2ba[m
+Merge: 5d4373a 9edd6f6
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Mon Mar 10 00:23:38 2014 -0700
+
+    Merge branch 'master' of ssh://github.com/danielfinke/cpsc472
+
+[33mcommit 5d4373a86841d039faaef62c1be6ec6865d9c4b3[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Mon Mar 10 00:23:26 2014 -0700
+
+    Added the images for the results view and tested it and fixed a typo in the drawables section
+
+[33mcommit 9edd6f6321581a202ce6a229d88d63c61ea20a94[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Mon Mar 10 00:12:25 2014 -0700
+
+    Reasoning displays the entire working mem as a temporary solution
+
+[33mcommit 2ff2cb155caa0b58bad3d204d4a0d038511d0d85[m
+Merge: 19058bf e125b86
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Mon Mar 10 00:02:15 2014 -0700
+
+    Merge branch 'master' of ssh://github.com/danielfinke/cpsc472
+
+[33mcommit 19058bfeb5ace26e95930ebb1fa58a53b10c6084[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Mon Mar 10 00:01:56 2014 -0700
+
+    Added the images for the final resulting phones and added logic to parse them in, but lack the database info to test it
+
+[33mcommit e125b86651fc2b5511af6e2ee186a80bc4ef6b86[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Sun Mar 9 23:42:25 2014 -0700
+
+    Updated database to load picture questions, also added file names for
+    results
+
+[33mcommit cf2278833781ad907217fed84afa7d3c793e8328[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Sun Mar 9 23:25:59 2014 -0700
+
+    Updated the Tile Answer functionality so that it's integrated into the activity and should just run if there are image questions in the database.
+
+[33mcommit 5de35543867197d9d2e45be7b04e5854f525e9fa[m
+Merge: 75edc83 dad4895
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Sun Mar 9 23:10:37 2014 -0700
+
+    Merge branch 'master' of ssh://github.com/danielfinke/cpsc472
+
+[33mcommit 75edc8361902e979e5feb3a5d25acf5e20b02376[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Sun Mar 9 23:10:23 2014 -0700
+
+    Added Image Answer Questions to the device
+
+[33mcommit dad4895ab9b88406c1d5f3b8e70160614a487bc5[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Sun Mar 9 22:54:06 2014 -0700
+
+    Fixed unclosed cursor error
+
+[33mcommit 132990dd64878a925ad6761408ebb0be7d8de450[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Sun Mar 9 18:57:33 2014 -0700
+
+    Added a git ignore file that ignores the bin directory...
+
+[33mcommit abd01c8c743afce974ec3e74e443206787767044[m
+Merge: 4961ef1 6766264
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Sun Mar 9 18:56:22 2014 -0700
+
+    Merge branch 'master' of ssh://github.com/danielfinke/cpsc472
+
+[33mcommit 4961ef1ab46c890f8ddb10d78889c11014b85335[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Sun Mar 9 18:44:59 2014 -0700
+
+    Added source images for the picture question answers
+
+[33mcommit 6766264429cf0c6c8b3f89b783ddc796e95dbeb1[m
+Author: knudsenj <joel@RED-PC>
+Date:   Sun Mar 9 18:31:47 2014 -0700
+
+    fix result page at end of questionnaire
+
+[33mcommit 6e575b1181b5343e30c46126f9ed1f7b38671a8c[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Sun Mar 9 16:58:46 2014 -0700
+
+    Added all the questions and their rules to the database
+
+[33mcommit 0c2f92acea97828d3cfda45e0af1cfb4233028f4[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Fri Mar 7 14:50:11 2014 -0800
+
+    Added scoring to pick the "closest" match to the user's decision, added
+    support for generating "Result" objects, moved truth_flag into the Rule
+    instead of Fact (so facts don't need to appear twice)
+
+[33mcommit f54f957a432eb62823e7077f07f37cb889ae467b[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Mon Mar 3 16:24:38 2014 -0800
+
+    Added the results view. In later pushes I will try and give the UI a
+    little bit of something to make it look that much better
+
+[33mcommit b52e0377d15d2815a32e0dbd4f6bcd70b5310775[m
+Author: knudsenj <joel@RED-PC>
+Date:   Sun Feb 23 10:40:53 2014 -0800
+
+    add result activity, basic hello world screen. activates after questions
+    exhausted. Then some shit happened, hope this works.
+
+[33mcommit 336b22fbc59efcdc5b93a992f115a4f8b7569a65[m
+Author: knudsenj <joel@RED-PC>
+Date:   Sun Feb 23 10:31:31 2014 -0800
+
+    Revert "added result activity.  app no longer crashes after questions exhausted. uhg... may be problems with this commit."
+    
+    This reverts commit a83c40604244d0fb469bb90c855ce906dd3e3d12.
+
+[33mcommit a83c40604244d0fb469bb90c855ce906dd3e3d12[m
+Author: knudsenj <joel@RED-PC>
+Date:   Sun Feb 23 10:09:17 2014 -0800
+
+    added result activity.  app no longer crashes after questions exhausted.
+    uhg... may be problems with this commit.
+
+[33mcommit 8996b1f6f955e0d3c062c7af273987fbc2ddb65c[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Sat Feb 22 11:52:58 2014 -0800
+
+    Updated gitignore and added a nice launcher icon :)
+
+[33mcommit 1044bdac24754b786977a4d3bf580cc236d57427[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Fri Feb 21 22:25:50 2014 -0800
+
+    Added support for database questions (they impact the engine working
+    memory and inference happens automatically)
+
+[33mcommit 2b5a9817547ba2d3c07e50a8bb45deedeb4b0a36[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Wed Feb 19 17:08:49 2014 -0800
+
+    Made everything look a little bit nicer. Still not /finished/ but
+    looking better.
+
+[33mcommit 1d5d834c97383ce8e2b9575be500d68b0aaec748[m
+Merge: 01b4528 f19feaf
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Wed Feb 19 16:39:08 2014 -0800
+
+    Merge branch 'master' of ssh://git@github.com/danielfinke/cpsc472.git
+
+[33mcommit 01b4528adef418f72d316afa69684c2122c9074a[m
+Author: Andrew J Toms II <toms@unbc.ca>
+Date:   Wed Feb 19 16:38:50 2014 -0800
+
+    Added the initial stuff for the Question Activity and
+    Question/QuestionAnswer Objects. It's definitely not done but it's a
+    start.
+
+[33mcommit f19feaf193828a408220d1a6cbe8d12571a5860e[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Wed Feb 19 11:12:19 2014 -0800
+
+    Changed working memory to HashSet, added missing line for removing rules
+    after they are successfully evaluated
+
+[33mcommit 7fff7527abb68b1f1e30890358520ca1ea2f836a[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Mon Feb 17 20:16:58 2014 -0800
+
+    Added InferenceEngine class, added fact type (conclusive answer vs.
+    intermediate knowledge) to Fact model
+
+[33mcommit 031ddd39c118f8f21bdebdf600159adc065b1d10[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Feb 11 21:40:35 2014 -0800
+
+    Finished basic database wrapper
+
+[33mcommit f060ec6d350ab0b016d91591519c512b05a1cf51[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Tue Feb 11 20:41:03 2014 -0800
+
+    First commit of models and database helpers
+
+[33mcommit 10195933ea9cc1488b5438a1ccf8ae74c5397c3b[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Sat Feb 8 23:11:14 2014 -0800
+
+    Updated gitignore
+
+[33mcommit 29b8bdcb878b0796566ab7eb7376d964ff27bfda[m
+Author: Daniel Finke <danielfinke2011@gmail.com>
+Date:   Sat Feb 8 19:25:56 2014 -0800
+
+    Initial project commit

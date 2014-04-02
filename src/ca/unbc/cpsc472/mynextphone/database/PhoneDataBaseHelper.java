@@ -2,8 +2,6 @@ package ca.unbc.cpsc472.mynextphone.database;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.TreeSet;
 
 import android.content.ContentValues;
@@ -160,13 +158,26 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		Cursor cursor = getResultsCursor(getQueryStringFromLingVars(facts), getOrderByString(facts));
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
-			results.add(new Result(
-					cursor.getInt(cursor.getColumnIndex("_id")),
+			int id = cursor.getInt(cursor.getColumnIndex("_id"));
+			Result r = new Result(
+					id,
 					cursor.getString(cursor.getColumnIndex("name")),
 					cursor.getString(cursor.getColumnIndex("description")),
 					//reasoning
 					facts
-			));
+			);
+			ArrayList<String> imgPaths = new ArrayList<String>();
+			Cursor imgCursor = getPhoneImageCursor(id);
+			imgCursor.moveToFirst();
+			while(!imgCursor.isAfterLast()) {
+				imgPaths.add(imgCursor.getString(imgCursor.getColumnIndex("url")));
+				imgPaths.add(imgCursor.getString(imgCursor.getColumnIndex("big_url")));
+				imgCursor.moveToNext();
+			}
+			r.setImgPaths(imgPaths);
+			
+			results.add(r);
+			
 			cursor.moveToNext();
 		}
 		cursor.close();
@@ -201,13 +212,26 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		Cursor cursor = getResultsCursor(null, getOrderByString(facts));
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
-			results.add(new Result(
-					cursor.getInt(cursor.getColumnIndex("_id")),
+			int id = cursor.getInt(cursor.getColumnIndex("_id"));
+			Result r = new Result(
+					id,
 					cursor.getString(cursor.getColumnIndex("name")),
 					cursor.getString(cursor.getColumnIndex("description")),
 					//reasoning
 					facts
-			));
+			);
+			ArrayList<String> imgPaths = new ArrayList<String>();
+			Cursor imgCursor = getPhoneImageCursor(id);
+			imgCursor.moveToFirst();
+			while(!imgCursor.isAfterLast()) {
+				imgPaths.add(imgCursor.getString(imgCursor.getColumnIndex("url")));
+				imgPaths.add(imgCursor.getString(imgCursor.getColumnIndex("big_url")));
+				imgCursor.moveToNext();
+			}
+			r.setImgPaths(imgPaths);
+			
+			results.add(r);
+			
 			cursor.moveToNext();
 		}
 		cursor.close();
@@ -286,6 +310,75 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		this.openDataBase();
 	}
 	
+	public void applyLearning(Result r, boolean approve) {
+		try {
+			// Calculate the values based on working memory
+			ArrayList<Fact> reasoning = r.getReasoning();
+			double[] decV = new double[Fact.totalFactTypes()];
+			for(int i = 0; i < reasoning.size(); i++) {
+				Fact f = reasoning.get(i);
+				decV[Fact.FACT_TYPE.valueOf(f.getName()).ordinal()] =
+						InferenceEngine.defuzzify(f);
+			}
+	
+			// Fetch the current value for phone from db
+			Cursor cursor = this.getResult(r.id);
+			cursor.moveToFirst();
+			ArrayList<Fact> allFacts = Fact.allFactTypes();
+			double[] dbV = new double[Fact.totalFactTypes()];
+			for(int i = 0; i < Fact.totalFactTypes(); i++) {
+				String column = allFacts.get(i).getName() + "_value";
+				dbV[i] = cursor.getDouble(cursor.getColumnIndex(column));
+			}
+			
+			// Calculate new value for phone
+			ContentValues cv = new ContentValues();
+			for(int i = 0; i < Fact.totalFactTypes(); i++) {
+				double diff = Math.abs(dbV[i] - decV[i]) * 0.10;
+				if(approve) {
+					if(dbV[i] > decV[i]) {
+						double newV = dbV[i] - diff;
+						cv.put(allFacts.get(i).getName() + "_value", newV);
+					}
+					else if(dbV[i] < decV[i]) {
+						double newV = dbV[i] + diff;
+						cv.put(allFacts.get(i).getName() + "_value", newV);
+					}
+					else {
+						cv.put(allFacts.get(i).getName() + "_value", dbV[i]);
+					}
+				}
+				else {
+					if(dbV[i] > decV[i]) {
+						double newV = dbV[i] + diff;
+						cv.put(allFacts.get(i).getName() + "_value", newV);
+					}
+					else if(dbV[i] < decV[i]) {
+						double newV = dbV[i] - diff;
+						cv.put(allFacts.get(i).getName() + "_value", newV);
+					}
+					else {
+						double newV = dbV[i] + diff;
+						cv.put(allFacts.get(i).getName() + "_value", newV);
+					}
+				}
+			}
+			
+			// Finally update the database
+			myDataBase.update("data", cv, "_id = " + r.id, null);
+			// Returns incorrect values due to triggers, but still works :/
+			/*if(upRes > 1) {
+				Log.e(this.getClass().getName(), "More than one row was affected by learning. There are probably multiple phones with the same id.");
+			}
+			else if(upRes < 1) {
+				Log.e(this.getClass().getName(), "No rows were updated by learning.");
+			}*/
+		}
+		catch(Exception ex) {
+			Log.e(this.getClass().getName(), "Unable to apply learning");
+		}
+	}
+		
 	public void addSet(String name, int grouping, double... value){
 		this.openWriteableDataBase();
 		ContentValues values = new ContentValues();
@@ -345,6 +438,14 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 	
 	private Cursor getResultsCursor(String whereClause, String orderBy) {
 		return myDataBase.query("data", null, whereClause, null, null, null, orderBy, "10");
+	}
+	
+	private Cursor getResult(int id) {
+		return myDataBase.query("data", null, "_id = " + id, null, null, null, null);
+	}
+	
+	private Cursor getPhoneImageCursor(int id) {
+		return myDataBase.query("image", null, "phone_id = " + id, null, null, null, null);
 	}
 	
 	private Cursor getLinguisticTuplesCursor(String lingName) {

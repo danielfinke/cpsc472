@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
+import ca.unbc.cpsc472.mynextphone.helpers.PhotoDownloadTask;
 import ca.unbc.cpsc472.mynextphone.models.Fact;
 import ca.unbc.cpsc472.mynextphone.models.InferenceEngine;
 import ca.unbc.cpsc472.mynextphone.models.Result;
@@ -35,6 +36,7 @@ public class ResultActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_result);
+		PhoneDataBaseHelper.getInstance(this).openDataBase();
 		
 		//Set up our views
 		this.name = (TextView) this.findViewById(R.id.result_phone_name);
@@ -114,13 +116,11 @@ public class ResultActivity extends Activity{
 		Result res = this.resultSet.get(this.resultIndex);
 		this.name.setText(res.getPhoneName());
 		
-		// TODO Add asynchronous image fetch from URL in the img path
-		// Perhaps even scrolling through the 3-4 images the phone has online
-		/*int resID = getResources().getIdentifier(res.getPrimaryImgPath(), "drawable",
-				this.getPackageName());
-		this.img.setImageBitmap(BitmapScaler.decodeSampledBitmapFromResource(getResources(), resID, 100, 100));*/
-		PhoneDataBaseHelper helper = PhoneDataBaseHelper.getInstance(this);
-		helper.openDataBase();
+		PhotoDownloadTask pdt = new PhotoDownloadTask();
+		pdt.setImageView(this.img);
+		pdt.execute(res.getPrimaryImgPath());
+		
+		
 		try{
 			// TODO daniel getFactsLeadingToResult
 			this.reasons.setText(
@@ -129,7 +129,6 @@ public class ResultActivity extends Activity{
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
-		helper.close();
 		this.reasons.setMovementMethod(new ScrollingMovementMethod());
 	}
 
@@ -205,10 +204,12 @@ public class ResultActivity extends Activity{
 	 * @param v The button pressed.
 	 */
 	public void approve(View v) {
+		PhoneDataBaseHelper.getInstance(null).openWriteableDataBase();
+		PhoneDataBaseHelper.getInstance(null).applyLearning(
+				this.resultSet.get(resultIndex), true);
 		this.approve.setVisibility(View.INVISIBLE);
 		this.disapprove.setVisibility(View.INVISIBLE);
 		this.answered[this.resultIndex] = true;
-		//TODO: This.
 	}
 	
 	/**
@@ -217,9 +218,11 @@ public class ResultActivity extends Activity{
 	 * @param v The button pressed.
 	 */
 	public void disapprove(View v) {
+		PhoneDataBaseHelper.getInstance(null).openWriteableDataBase();
+		PhoneDataBaseHelper.getInstance(null).applyLearning(
+				this.resultSet.get(resultIndex), false);
 		this.approve.setVisibility(View.INVISIBLE);
 		this.disapprove.setVisibility(View.INVISIBLE);
 		this.answered[this.resultIndex] = true;
-		//TODO: This.
 	}
 }
