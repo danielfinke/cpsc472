@@ -32,7 +32,7 @@ public class AddRuleActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_add_rule);
-		// Show the Up button in the action bar.
+		// Show the Up button in the action bar. 
 		setupActionBar();
 		
 		PhoneDataBaseHelper.getInstance(this).openDataBase();

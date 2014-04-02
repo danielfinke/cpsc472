@@ -2,6 +2,8 @@ package ca.unbc.cpsc472.mynextphone.database;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.TreeSet;
 
 import android.content.ContentValues;
@@ -250,6 +252,10 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 	}
 	
 	public int getSetGroupingByValueName(String name){
+		if(Fact.isLinguisticVariable(name)){
+			return 1;
+		}
+		
 		Cursor cursor = this.getRulesCursor();
 		cursor.moveToFirst();
 		do{
