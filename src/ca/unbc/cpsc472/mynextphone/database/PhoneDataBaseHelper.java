@@ -2,8 +2,6 @@ package ca.unbc.cpsc472.mynextphone.database;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.TreeSet;
 
 import android.content.ContentValues;
@@ -313,10 +311,12 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 				double diff = Math.abs(dbV[i] - decV[i]) * 0.10;
 				if(approve) {
 					if(dbV[i] > decV[i]) {
-						cv.put(allFacts.get(i).getName() + "_value", dbV[i] - diff);
+						double newV = dbV[i] - diff;
+						cv.put(allFacts.get(i).getName() + "_value", newV);
 					}
 					else if(dbV[i] < decV[i]) {
-						cv.put(allFacts.get(i).getName() + "_value", dbV[i] + diff);
+						double newV = dbV[i] + diff;
+						cv.put(allFacts.get(i).getName() + "_value", newV);
 					}
 					else {
 						cv.put(allFacts.get(i).getName() + "_value", dbV[i]);
@@ -324,25 +324,29 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 				}
 				else {
 					if(dbV[i] > decV[i]) {
-						cv.put(allFacts.get(i).getName() + "_value", dbV[i] + diff);
+						double newV = dbV[i] + diff;
+						cv.put(allFacts.get(i).getName() + "_value", newV);
 					}
 					else if(dbV[i] < decV[i]) {
-						cv.put(allFacts.get(i).getName() + "_value", dbV[i] - diff);
+						double newV = dbV[i] - diff;
+						cv.put(allFacts.get(i).getName() + "_value", newV);
 					}
 					else {
-						cv.put(allFacts.get(i).getName() + "_value", dbV[i] + diff);
+						double newV = dbV[i] + diff;
+						cv.put(allFacts.get(i).getName() + "_value", newV);
 					}
 				}
 			}
 			
 			// Finally update the database
-			int upRes = myDataBase.update("data", cv, "_id = " + r.id, null);
-			if(upRes > 1) {
+			myDataBase.update("data", cv, "_id = " + r.id, null);
+			// Returns incorrect values due to triggers, but still works :/
+			/*if(upRes > 1) {
 				Log.e(this.getClass().getName(), "More than one row was affected by learning. There are probably multiple phones with the same id.");
 			}
 			else if(upRes < 1) {
 				Log.e(this.getClass().getName(), "No rows were updated by learning.");
-			}
+			}*/
 		}
 		catch(Exception ex) {
 			Log.e(this.getClass().getName(), "Unable to apply learning");
