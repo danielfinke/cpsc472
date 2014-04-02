@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/dark_blue">
+    android:layout_height="wrap_content"
+    android:background="@color/dark_blue" >
 
-   <RelativeLayout 
+   <RelativeLayout
        android:layout_width="match_parent"
-       android:layout_height="wrap_content">
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="10sp"
+       android:layout_marginRight="10sp"
+       android:layout_marginTop="10sp"
+       android:paddingBottom="20dp" >
         
         <TextView
 	        android:id="@+id/result_phone_name"
@@ -21,22 +25,23 @@
 	        android:gravity="center" />
         
         <ImageView
-	        android:id="@+id/result_phone_img" 
-	        android:layout_width="match_parent"
-	        android:layout_height="100sp"
-	        android:layout_below="@id/result_phone_name"
-	        android:layout_marginBottom="10sp"
-	        android:src="@drawable/cell_phone_placeholder"
-	        android:contentDescription="@string/place_holder_short"
-	        android:background="@drawable/result_img_bg"
-	        android:padding="5sp"/>
+            android:id="@+id/result_phone_img"
+            android:layout_width="match_parent"
+            android:layout_height="100sp"
+            android:layout_below="@id/result_phone_name"
+            android:background="@drawable/result_img_bg"
+            android:contentDescription="@string/place_holder_short"
+            android:padding="5sp"
+            android:src="@drawable/cell_phone_placeholder" />
         
-        <RelativeLayout 
+        <RelativeLayout
             android:id="@+id/result_desc_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
             android:layout_below="@id/result_phone_img"
-            android:background="@drawable/answers_container_bg">
+            android:layout_marginTop="10sp"
+            android:background="@drawable/answers_container_bg" >
             
             <TextView
                 android:id="@+id/result_desc_header"
@@ -68,12 +73,14 @@
             
         </RelativeLayout>
         
-        <RelativeLayout 
+        <RelativeLayout
             android:id="@+id/result_reasons_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
             android:layout_below="@id/result_desc_container"
-            android:background="@drawable/answers_container_bg">
+            android:layout_marginTop="10sp"
+            android:background="@drawable/answers_container_bg" >
             
             <TextView
                 android:id="@+id/result_reasons_header"
@@ -106,25 +113,26 @@
         </RelativeLayout>
         
         <LinearLayout
-	        android:id="@+id/result_button_bar"
-	        android:layout_width="match_parent"
-	        android:layout_height="0sp"
-	        android:layout_below="@id/result_reasons_container"
-	        android:orientation="horizontal">
+            android:id="@+id/result_button_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/result_reasons_container"
+            android:layout_marginTop="10sp"
+            android:orientation="horizontal" >
 	        
 	        <ImageButton
 	            android:id="@+id/prev"
 	            android:layout_width="0sp"
+	            android:layout_height="match_parent"
 	            android:layout_weight="1"
-		        android:layout_height="match_parent"
-		        android:onClick="loadPrevResult"
-		        android:textColor="@color/white"
-		        android:padding="5sp"
-		        android:background="@drawable/button_shape"
-		        android:visibility="invisible"
-		        android:src="@drawable/back_arrow"
-		        android:scaleType="fitCenter"
-		        android:contentDescription="@string/place_holder_short" />
+	            android:background="@drawable/button_shape"
+	            android:contentDescription="@string/place_holder_short"
+	            android:onClick="loadPrevResult"
+	            android:padding="5sp"
+	            android:scaleType="fitCenter"
+	            android:src="@drawable/back_arrow"
+	            android:textColor="@color/white"
+	            android:visibility="invisible" />
 	        
 	        <ImageButton
 	            android:id="@+id/approve"

@@ -129,7 +129,7 @@ public class ResultActivity extends Activity{
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
-		this.reasons.setMovementMethod(new ScrollingMovementMethod());
+//		this.reasons.setMovementMethod(new ScrollingMovementMethod());
 	}
 
 	/**
