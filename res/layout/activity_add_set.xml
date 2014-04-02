@@ -10,6 +10,14 @@
     tools:context=".AddSetActivity" 
     android:background="@color/dark_blue">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20sp" 
+        android:orientation="vertical"
+        android:background="@drawable/question_bg"
+        android:padding="5sp">
+
     <TextView
         android:id="@+id/which_group_text"
         android:layout_width="match_parent"
@@ -24,7 +32,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5sp"
+        android:layout_marginBottom="20sp"
+        android:background="@drawable/question_bg" >
+    
     <TextView
 		android:id="@+id/name_text"
 		android:layout_width="match_parent"
@@ -40,16 +57,23 @@
 	    android:layout_height="wrap_content"
 	    android:inputType="text"/>
     
+    </LinearLayout>
+    
     <LinearLayout 
         android:id="@+id/mtx_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"/>
+        android:layout_marginBottom="20sp"
+        android:padding="5sp"
+        android:orientation="vertical"
+        android:background="@drawable/question_bg"/>
     
     <LinearLayout 
         android:id="@+id/sliders"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20sp"
+        android:padding="5sp"
         android:orientation="vertical"/>
     
     <Button 
