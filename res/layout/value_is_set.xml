@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@drawable/question_bg" 
+    android:padding="5sp">
     
     <Spinner 
         android:id="@+id/value_spinner"
         android:tag="std_value_spinner"
-        android:layout_width="wrap_content"
+        android:layout_width="150sp"
         android:layout_height="wrap_content"
         />
     <TextView
@@ -22,18 +24,19 @@
     <Spinner 
         android:id="@+id/set_spinner"
         android:tag="std_set_spinner"
-        android:layout_width="wrap_content"
+        android:layout_width="150sp"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/is_text"
         />
     <Button 
         android:id="@+id/and_button"
-        android:layout_width="wrap_content"
+        android:layout_width="50sp"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/set_spinner"
+        android:layout_below="@id/is_text"
         android:text="@string/and_symbol"
         android:onClick="addAnother"
         android:textColor="@color/white"
+        android:layout_centerInParent="true"
         android:textSize="26sp"
         android:background="@drawable/button_shape"
         />
