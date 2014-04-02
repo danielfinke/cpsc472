@@ -158,15 +158,24 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		Cursor cursor = getResultsCursor(getQueryStringFromLingVars(facts), getOrderByString(facts));
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
+			int id = cursor.getInt(cursor.getColumnIndex("_id"));
 			Result r = new Result(
-					cursor.getInt(cursor.getColumnIndex("_id")),
+					id,
 					cursor.getString(cursor.getColumnIndex("name")),
 					cursor.getString(cursor.getColumnIndex("description")),
 					//reasoning
 					facts
 			);
 			ArrayList<String> imgPaths = new ArrayList<String>();
-			imgPaths.add(cursor.getString(cursor.getColumnIndex("web_irl")));
+			Cursor imgCursor = getPhoneImageCursor(id);
+			imgCursor.moveToFirst();
+			while(!imgCursor.isAfterLast()) {
+				imgPaths.add(imgCursor.getString(imgCursor.getColumnIndex("url")));
+				imgPaths.add(imgCursor.getString(imgCursor.getColumnIndex("big_url")));
+				imgCursor.moveToNext();
+			}
+			r.setImgPaths(imgPaths);
+			
 			results.add(r);
 			
 			cursor.moveToNext();
@@ -420,6 +429,10 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 	
 	private Cursor getResult(int id) {
 		return myDataBase.query("data", null, "_id = " + id, null, null, null, null);
+	}
+	
+	private Cursor getPhoneImageCursor(int id) {
+		return myDataBase.query("image", null, "phone_id = " + id, null, null, null, null);
 	}
 	
 	private Cursor getLinguisticTuplesCursor(String lingName) {
