@@ -86,8 +86,7 @@ public class InferenceEngine {
 		int[] ruleKeys = new int[rules.size()];
 		for(int i = 0; i < rules.size(); i++) {
 			Rule r = rules.get(i);
-			// TODO daniel save rule state
-			//r.saveState(bundle, bundlePrefix + "rule" + r.getRuleId() + "_");
+			r.saveState(bundle, bundlePrefix + "rule" + r.getRuleId() + "_");
 			ruleKeys[i] = r.getRuleId();
 		}
 		bundle.putIntArray(bundlePrefix + "ruleKeys", ruleKeys);
@@ -136,7 +135,7 @@ public class InferenceEngine {
 				double dVal = defuzzify(f);
 				String resSet = fuzzify(dVal);
 				
-				Fact resF = new Fact(f.getName());
+				Fact resF = new Fact(f.getName(), resSet);
 				resF.addTuples(PhoneDataBaseHelper.getInstance(null).getLinguisticTuples(resSet));
 				lookups.add(resF);
 			}
@@ -256,7 +255,7 @@ public class InferenceEngine {
 	
 	// Assumption that tuple dimensions and min/maxs are equivalent
 	private Fact calculateAggregate(Fact f1, Fact f2) {
-		Fact ret = new Fact(f1.getName());
+		Fact ret = new Fact(f1.getName(), f1.getSet());
 		for(int i = 0; i < f1.getTupleCount(); i++) {
 			Tuple f1T = f1.getTuples().get(i);
 			Tuple f2T = f2.getTuples().get(i);
@@ -282,7 +281,7 @@ public class InferenceEngine {
 	}
 	
 	private Fact applyFactToMtx(Fact f, double[][] mtx, Fact resultType) {
-		Fact res = new Fact(resultType.getName());
+		Fact res = new Fact(resultType.getName(), resultType.getSet());
 		for(int i = 0; i < mtx[0].length; i++) {
 			double max = 0;
 			for(int j = 0; j < mtx.length; j++) {

@@ -117,18 +117,17 @@ public abstract class QuestionAnswer {
 		}
 	}
 	
-	// TODO daniel save question answer state
-	/*public void saveState(Bundle bundle, String bundlePrefix) {
+	public void saveState(Bundle bundle, String bundlePrefix) {
 		bundle.putInt(bundlePrefix + "id", getId());
 		bundle.putString(bundlePrefix + "stringValue", stringValue);
 		
 		ArrayList<String> keys = new ArrayList<String>();
 		for(Fact f : facts) {
-			f.saveState(bundle, bundlePrefix + "fact" + f.getName() + f.getLinguisticVarString() + "_");
-			keys.add(f.getName() + f.getLinguisticVarString());
+			f.saveState(bundle, bundlePrefix + "fact" + f.getName() + f.getSet() + "_");
+			keys.add(f.getName() + f.getSet());
 		}
 		bundle.putStringArrayList(bundlePrefix + "keys", keys);
-	}*/
+	}
 	
 	public int getId() {
 		return id;
@@ -232,7 +231,7 @@ public abstract class QuestionAnswer {
 			ArrayList<Fact> newFacts = new ArrayList<Fact>();
 			for(int i = 0; i < facts.size(); i++) {
 				Fact old = facts.get(i);
-				Fact newF = new Fact(old.getName());
+				Fact newF = new Fact(old.getName(), old.getSet());
 				for(int j = 0; j < old.getTupleCount(); j++) {
 					Tuple oldT = old.getTuples().get(j);
 					double oldMin = (Double)oldT.getObject(0);

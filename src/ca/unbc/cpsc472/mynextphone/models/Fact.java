@@ -43,7 +43,7 @@ public class Fact implements Serializable {
 			String linguistic = tok2.nextToken();
 			
 			try {
-				Fact f = new Fact(factName);
+				Fact f = new Fact(factName, linguistic);
 				f.setSet(linguistic);
 				f.addTuples(PhoneDataBaseHelper.getInstance(null).getLinguisticTuples(linguistic));
 				list.add(f);
@@ -73,26 +73,39 @@ public class Fact implements Serializable {
 	public static ArrayList<Fact> allFactTypes() {
 		ArrayList<Fact> allFactTypes = new ArrayList<Fact>();
 		for(FACT_TYPE type : FACT_TYPE.values()) {
-			allFactTypes.add(new Fact(type.name()));
+			allFactTypes.add(new Fact(type.name(), null));
 		}
 		return allFactTypes;
 	}
 	
-	public Fact(String name) {
+	public Fact(String name, String set) {
 		this.name = name;
+		this.set = set;
 		this.tuples = new ArrayList<Tuple>();
 	}
 	
 	public Fact(Bundle bundle, String bundlePrefix) {
 		this.name = bundle.getString(bundlePrefix + "name");
+		this.set = bundle.getString(bundlePrefix + "set");
+		
 		this.tuples = new ArrayList<Tuple>();
-		// TODO daniel restore fact tuples from bundle
+		ArrayList<String> keys = bundle.getStringArrayList(bundlePrefix + "keys");
+		for(String key : keys) {
+			tuples.add((Tuple)bundle.getSerializable(key));
+		}
 	}
 	
 	public void saveState(Bundle bundle, String bundlePrefix) {
 		bundle.putString(bundlePrefix + "name", getName());
-		//bundle.putStringArrayList(bundlePrefix + "lingVals", getTuples());
-		// TODO daniel save fact state
+		bundle.putString(bundlePrefix + "set", getSet());
+
+		ArrayList<String> keys = new ArrayList<String>();
+		for(int i = 0; i < tuples.size(); i++) {
+			Tuple t = tuples.get(i);
+			bundle.putSerializable(bundlePrefix + "tuples" + i, t);
+			keys.add(bundlePrefix + "tuples" + i);
+		}
+		bundle.putStringArrayList(bundlePrefix + "keys", keys);
 	}
 	
 	public String getName() {

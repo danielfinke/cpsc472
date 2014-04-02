@@ -42,24 +42,23 @@ public class Rule implements Comparable<Rule> {
 		this.rightSide = rightSide;
 	}
 	
-	// TODO daniel save rule state
-	/*public void saveState(Bundle bundle, String bundlePrefix) {
+	public void saveState(Bundle bundle, String bundlePrefix) {
 		bundle.putInt(bundlePrefix + "id", getRuleId());
 		
 		ArrayList<String> leftKeys = new ArrayList<String>();
 		for(Fact f : leftSide) {
-			f.saveState(bundle, bundlePrefix + "leftSide" + f.getName() + f.getLinguisticVarString() + "_");
-			leftKeys.add(f.getName() + f.getLinguisticVarString());
+			f.saveState(bundle, bundlePrefix + "leftSide" + f.getName() + f.getSet() + "_");
+			leftKeys.add(f.getName() + f.getSet());
 		}
 		bundle.putStringArrayList(bundlePrefix + "leftKeys", leftKeys);
 		
 		ArrayList<String> rightKeys = new ArrayList<String>();
 		for(Fact f : rightSide) {
-			f.saveState(bundle, bundlePrefix + "rightSide" + f.getName() + f.getLinguisticVarString() + "_");
-			rightKeys.add(f.getName() + f.getLinguisticVarString());
+			f.saveState(bundle, bundlePrefix + "rightSide" + f.getName() + f.getSet() + "_");
+			rightKeys.add(f.getName() + f.getSet());
 		}
 		bundle.putStringArrayList(bundlePrefix + "rightKeys", rightKeys);
-	}*/
+	}
 	
 	public int getRuleId() {
 		return ruleId;
