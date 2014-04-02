@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ca.unbc.cpsc472.mynextphone.database.PhoneDataBaseHelper;
+import ca.unbc.cpsc472.mynextphone.helpers.PhotoDownloadTask;
 import ca.unbc.cpsc472.mynextphone.models.Fact;
 import ca.unbc.cpsc472.mynextphone.models.InferenceEngine;
 import ca.unbc.cpsc472.mynextphone.models.Result;
@@ -115,11 +116,11 @@ public class ResultActivity extends Activity{
 		Result res = this.resultSet.get(this.resultIndex);
 		this.name.setText(res.getPhoneName());
 		
-		// TODO Add asynchronous image fetch from URL in the img path
-		// Perhaps even scrolling through the 3-4 images the phone has online
-		/*int resID = getResources().getIdentifier(res.getPrimaryImgPath(), "drawable",
-				this.getPackageName());
-		this.img.setImageBitmap(BitmapScaler.decodeSampledBitmapFromResource(getResources(), resID, 100, 100));*/
+		PhotoDownloadTask pdt = new PhotoDownloadTask();
+		pdt.setImageView(this.img);
+		pdt.execute(res.getPrimaryImgPath());
+		
+		
 		try{
 			// TODO daniel getFactsLeadingToResult
 			this.reasons.setText(
