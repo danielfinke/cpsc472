@@ -62,12 +62,6 @@ public class ResultActivity extends Activity{
 		this.drawResult(); 
 		
 	}
-	
-	@Override
-	public void onDestroy(){
-		super.onDestroy();
-		PhoneDataBaseHelper.getInstance(this).close();
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
