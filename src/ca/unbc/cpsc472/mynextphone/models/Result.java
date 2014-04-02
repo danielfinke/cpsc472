@@ -61,6 +61,10 @@ public class Result implements Serializable {
 		return reasoning;
 	}
 	
+	public void setImgPaths(ArrayList<String> paths) {
+		this.imgPaths = paths;
+	}
+	
 	@Override
 	public String toString() {
 		String ret = "Result [phoneName=" + phoneName + ", reasoning={";

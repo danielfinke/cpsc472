@@ -158,13 +158,17 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		Cursor cursor = getResultsCursor(getQueryStringFromLingVars(facts), getOrderByString(facts));
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
-			results.add(new Result(
+			Result r = new Result(
 					cursor.getInt(cursor.getColumnIndex("_id")),
 					cursor.getString(cursor.getColumnIndex("name")),
 					cursor.getString(cursor.getColumnIndex("description")),
 					//reasoning
 					facts
-			));
+			);
+			ArrayList<String> imgPaths = new ArrayList<String>();
+			imgPaths.add(cursor.getString(cursor.getColumnIndex("web_irl")));
+			results.add(r);
+			
 			cursor.moveToNext();
 		}
 		cursor.close();
