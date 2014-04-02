@@ -1,129 +1,189 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/dark_blue"
-    tools:context=".ResultActivity" >
+    android:background="@color/dark_blue">
 
-    <TextView
-        android:id="@+id/result_phone_name"
-        android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_marginBottom="10sp"
-        android:layout_weight="1"
-        android:text="@string/place_holder_short"
-        android:textStyle="bold"
-        android:textSize="30sp"
-        android:textColor="@color/white"
-        android:background="@drawable/question_bg"
-        android:gravity="center" />
-    
-    <ImageView
-        android:id="@+id/result_phone_img" 
-        android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_weight="2"
-        android:layout_marginBottom="10sp"
-        android:src="@drawable/cell_phone_placeholder"
-        android:contentDescription="@string/place_holder_short"
-        android:background="@drawable/result_img_bg"
-        android:padding="5sp"/>
-    
-    <TextView 
-        android:id="@+id/result_phone_reasons"
-        android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_marginBottom="10sp"
-        android:maxLines="14"
-        android:scrollbars="vertical"
-        android:layout_weight="4"
-        android:text="@string/place_holder_long"
-        android:textSize="20sp"
-        android:textColor="@color/white"
-        android:padding="5sp"
-        android:background="@drawable/question_bg" />
-    
-    <LinearLayout
-        android:id="@+id/result_button_bar"
-        android:layout_width="match_parent"
-        android:layout_height="0sp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+   <RelativeLayout 
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
         
-        <ImageButton
-            android:id="@+id/prev"
-            android:layout_width="0sp"
-	        android:layout_weight="1"
-	        android:layout_height="match_parent"
-	        android:onClick="loadPrevResult"
+        <TextView
+	        android:id="@+id/result_phone_name"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginBottom="10sp"
+	        android:text="@string/place_holder_short"
+	        android:textStyle="bold"
+	        android:textSize="30sp"
 	        android:textColor="@color/white"
-	        android:padding="5sp"
-	        android:background="@drawable/button_shape"
-	        android:visibility="invisible"
-	        android:src="@drawable/back_arrow"
-	        android:scaleType="fitCenter"
-	        android:contentDescription="@string/place_holder_short" />
+	        android:background="@drawable/question_bg"
+	        android:gravity="center" />
         
-        <ImageButton
-            android:id="@+id/approve"
-            android:layout_width="0sp"
-	        android:layout_weight="1"
-	        android:layout_marginLeft="5sp"
-	        android:layout_height="match_parent"
-	        android:onClick="approve"
-	        android:textColor="@color/white"
-	        android:padding="5sp"
-	        android:background="@drawable/button_shape"
-	        android:src="@drawable/approve"
-	        android:scaleType="fitCenter"
-	        android:contentDescription="@string/place_holder_short" />
-    
-	    <ImageButton
-	        android:id="@+id/restart"
-	        android:layout_width="0sp"
-	        android:layout_weight="1"
-	        android:layout_marginLeft="5sp"
-	        android:layout_height="match_parent"
-	        android:onClick="startOver"
-	        android:textColor="@color/white"
-	        android:padding="5sp"
-	        android:background="@drawable/button_shape"
-	        android:src="@drawable/restart"
-	        android:scaleType="fitCenter"
-	        android:contentDescription="@string/place_holder_short" />
+        <ImageView
+	        android:id="@+id/result_phone_img" 
+	        android:layout_width="match_parent"
+	        android:layout_height="100sp"
+	        android:layout_below="@id/result_phone_name"
+	        android:layout_marginBottom="10sp"
+	        android:src="@drawable/cell_phone_placeholder"
+	        android:contentDescription="@string/place_holder_short"
+	        android:background="@drawable/result_img_bg"
+	        android:padding="5sp"/>
+        
+        <RelativeLayout 
+            android:id="@+id/result_desc_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/result_phone_img"
+            android:background="@drawable/answers_container_bg">
+            
+            <TextView
+                android:id="@+id/result_desc_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:textSize="24sp"
+                android:text="@string/desc"
+                android:textColor="@color/white" />
+            
+            <TextView
+                android:id="@+id/result_desc_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/result_desc_header"
+                android:textSize="20sp"
+                android:maxLines="5"
+                android:text="@string/place_holder_long"
+                android:textColor="@color/white"  />
+                
+            <ImageView
+                android:id="@+id/result_desc_expander"
+                android:layout_height="30sp"
+                android:layout_width="30sp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/result_desc_body"
+                android:src="@drawable/expander"
+                android:contentDescription="@string/place_holder_short" />
+            
+        </RelativeLayout>
+        
+        <RelativeLayout 
+            android:id="@+id/result_reasons_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/result_desc_container"
+            android:background="@drawable/answers_container_bg">
+            
+            <TextView
+                android:id="@+id/result_reasons_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:textSize="24sp"
+                android:text="@string/desc"
+                android:textColor="@color/white" />
+            
+            <TextView
+                android:id="@+id/result_phone_reasons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/result_reasons_header"
+                android:textSize="20sp"
+                android:maxLines="5"
+                android:text="@string/place_holder_long"
+                android:textColor="@color/white"  />
+                
+            <ImageView
+                android:id="@+id/result_reasons_expander"
+                android:layout_height="30sp"
+                android:layout_width="30sp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/result_phone_reasons"
+                android:src="@drawable/expander"
+                android:contentDescription="@string/place_holder_short" />
+            
+        </RelativeLayout>
+        
+        <LinearLayout
+	        android:id="@+id/result_button_bar"
+	        android:layout_width="match_parent"
+	        android:layout_height="0sp"
+	        android:layout_below="@id/result_reasons_container"
+	        android:orientation="horizontal">
+	        
+	        <ImageButton
+	            android:id="@+id/prev"
+	            android:layout_width="0sp"
+	            android:layout_weight="1"
+		        android:layout_height="match_parent"
+		        android:onClick="loadPrevResult"
+		        android:textColor="@color/white"
+		        android:padding="5sp"
+		        android:background="@drawable/button_shape"
+		        android:visibility="invisible"
+		        android:src="@drawable/back_arrow"
+		        android:scaleType="fitCenter"
+		        android:contentDescription="@string/place_holder_short" />
+	        
+	        <ImageButton
+	            android:id="@+id/approve"
+	            android:layout_width="0sp"
+		        android:layout_weight="1"
+		        android:layout_marginLeft="5sp"
+		        android:layout_height="match_parent"
+		        android:onClick="approve"
+		        android:textColor="@color/white"
+		        android:padding="5sp"
+		        android:background="@drawable/button_shape"
+		        android:src="@drawable/approve"
+		        android:scaleType="fitCenter"
+		        android:contentDescription="@string/place_holder_short" />
 	    
-	    <ImageButton
-            android:id="@+id/disapprove"
-            android:layout_width="0sp"
-	        android:layout_weight="1"
-	        android:layout_marginLeft="5sp"
-	        android:layout_height="match_parent"
-	        android:onClick="disapprove"
-	        android:textColor="@color/white"
-	        android:padding="5sp"
-	        android:background="@drawable/button_shape"
-	        android:src="@drawable/disapprove"
-	        android:scaleType="fitCenter"
-	        android:contentDescription="@string/place_holder_short" />
+		    <ImageButton
+		        android:id="@+id/restart"
+		        android:layout_width="0sp"
+		        android:layout_weight="1"
+		        android:layout_marginLeft="5sp"
+		        android:layout_height="match_parent"
+		        android:onClick="startOver"
+		        android:textColor="@color/white"
+		        android:padding="5sp"
+		        android:background="@drawable/button_shape"
+		        android:src="@drawable/restart"
+		        android:scaleType="fitCenter"
+		        android:contentDescription="@string/place_holder_short" />
+	
+		    <ImageButton
+	            android:id="@+id/disapprove"
+	            android:layout_width="0sp"
+		        android:layout_weight="1"
+		        android:layout_marginLeft="5sp"
+		        android:layout_height="match_parent"
+		        android:onClick="disapprove"
+		        android:textColor="@color/white"
+		        android:padding="5sp"
+		        android:background="@drawable/button_shape"
+		        android:src="@drawable/disapprove"
+		        android:scaleType="fitCenter"
+		        android:contentDescription="@string/place_holder_short" />
+	
+		    <ImageButton
+	            android:id="@+id/next"
+	            android:layout_width="0sp"
+		        android:layout_weight="1"
+		        android:layout_marginLeft="5sp"
+		        android:layout_height="match_parent"
+		        android:onClick="loadNextResult"
+		        android:padding="5sp"
+		        android:background="@drawable/button_shape"
+		        android:src="@drawable/next_arrow"
+		        android:scaleType="fitCenter"
+		        android:contentDescription="@string/place_holder_short" />
 	    
-	    <ImageButton
-            android:id="@+id/next"
-            android:layout_width="0sp"
-	        android:layout_weight="1"
-	        android:layout_marginLeft="5sp"
-	        android:layout_height="match_parent"
-	        android:onClick="loadNextResult"
-	        android:padding="5sp"
-	        android:background="@drawable/button_shape"
-	        android:src="@drawable/next_arrow"
-	        android:scaleType="fitCenter"
-	        android:contentDescription="@string/place_holder_short" />
+	    </LinearLayout>
+        
+    </RelativeLayout>
     
-    </LinearLayout>
-    
-</LinearLayout>
+
+</ScrollView>
