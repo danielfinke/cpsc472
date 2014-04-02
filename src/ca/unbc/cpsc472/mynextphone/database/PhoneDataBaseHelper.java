@@ -212,13 +212,26 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		Cursor cursor = getResultsCursor(null, getOrderByString(facts));
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
-			results.add(new Result(
-					cursor.getInt(cursor.getColumnIndex("_id")),
+			int id = cursor.getInt(cursor.getColumnIndex("_id"));
+			Result r = new Result(
+					id,
 					cursor.getString(cursor.getColumnIndex("name")),
 					cursor.getString(cursor.getColumnIndex("description")),
 					//reasoning
 					facts
-			));
+			);
+			ArrayList<String> imgPaths = new ArrayList<String>();
+			Cursor imgCursor = getPhoneImageCursor(id);
+			imgCursor.moveToFirst();
+			while(!imgCursor.isAfterLast()) {
+				imgPaths.add(imgCursor.getString(imgCursor.getColumnIndex("url")));
+				imgPaths.add(imgCursor.getString(imgCursor.getColumnIndex("big_url")));
+				imgCursor.moveToNext();
+			}
+			r.setImgPaths(imgPaths);
+			
+			results.add(r);
+			
 			cursor.moveToNext();
 		}
 		cursor.close();
