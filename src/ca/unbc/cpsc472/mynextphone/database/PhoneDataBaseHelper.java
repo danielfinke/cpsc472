@@ -30,6 +30,12 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
     
     private static PhoneDataBaseHelper helper = null;
     
+    /*
+     * Fetches a singleton instance of the PhoneDatabaseHelper
+     * 
+     * @param context	a context to tie the instance to
+     * @return			the singleton PhoneDataBaseHelper instance
+     */
     public static PhoneDataBaseHelper getInstance(Context context) {
     	if(helper == null) {
     		helper = new PhoneDataBaseHelper(context);
@@ -37,6 +43,13 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
     	return helper;
     }
 
+    /*
+     * PhoneDataBaseHelper constructor that automatically tries to create
+     * the SQLite database and/or copy it from assets as necessary
+     * 
+     * @param context	a context to tie the instance to
+     * @return			a new PhoneDataBaseHelper tied to the app's SQLite database
+     */
 	protected PhoneDataBaseHelper(Context context) {
 		super(context);
 		DB_PATH = context.getFilesDir().getParent() + "/databases/";
@@ -57,7 +70,9 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 	}
     
     /*
-	 * Fetches all available questions from the database
+	 * Fetches all available questions from the database.
+	 * 
+	 * @return		ArrayList of all questions available for the survey
 	 */
 	public ArrayList<Question> getQuestions() throws Exception {
 		if(!dbIsOpen()) {
@@ -92,6 +107,11 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		return questions;
 	}
 	
+	/*
+	 * Fetches a count of the total number of questions available to be asked
+	 * 
+	 * @return		the total number of questions
+	 */
 	public long getQuestionCount() throws Exception {
 		if(!dbIsOpen()) {
 			throw new Exception();
@@ -100,6 +120,13 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		return DatabaseUtils.queryNumEntries(myDataBase, "question");
 	}
 	
+	/*
+	 * Produces a list of answers tied to a specific question
+	 * 
+	 * @param questionId		the id # representing the question
+	 * @param type				the question type (for use in QuestionAnswer constructor)
+	 * @return					an ArrayList of the potential answers for the question
+	 */
 	public ArrayList<QuestionAnswer> getAnswersForQuestionId(int questionId, QuestionAnswerType type) throws Exception {
 		if(!dbIsOpen()) {
 			throw new Exception();
@@ -128,6 +155,8 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 	 * Note that each rule row in the database does not represent a unique rule,
 	 * I simply compressed the schema of left and right sides into one table.
 	 * This simplifies the task of adding new rows in SQLite (no placeholder column)
+	 * 
+	 * @return		an ArrayList of every rule in the database for inference
 	 */
 	public ArrayList<Rule> getRules() throws Exception {
 		if(!dbIsOpen()) {
@@ -149,6 +178,13 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		return rules;
 	}
 	
+	/*
+	 * Gets a list of potential devices based on a list of facts.
+	 * 
+	 * @param facts			list of query facts
+	 * @param reasoning		justification for the results (for their constructors)
+	 * @return				an ArrayList of result devices
+	 */
 	public ArrayList<Result> getResultsWithFacts(ArrayList<Fact> facts, ArrayList<Fact> reasoning) throws Exception {
 		if(!dbIsOpen()) {
 			throw new Exception();
@@ -159,6 +195,8 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
 			int id = cursor.getInt(cursor.getColumnIndex("_id"));
+			
+			// Create a new result instance
 			Result r = new Result(
 					id,
 					cursor.getString(cursor.getColumnIndex("name")),
@@ -166,6 +204,8 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 					//reasoning
 					facts
 			);
+			
+			// Loop over the set of images for the device, and add them to the result
 			ArrayList<String> imgPaths = new ArrayList<String>();
 			Cursor imgCursor = getPhoneImageCursor(id);
 			imgCursor.moveToFirst();
@@ -203,6 +243,13 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		return new ArrayList<String>(values);
 	}
 	
+	/*
+	 * In case of no results for the fact set, returns the closest results instead.
+	 * 
+	 * @param facts			list of query facts
+	 * @param reasoning		justification for the results (for their constructors)
+	 * @return				an ArrayList of result devices		
+	 */
 	public ArrayList<Result> getNearestResults(ArrayList<Fact> facts, ArrayList<Fact> reasoning) throws Exception {
 		if(!dbIsOpen()) {
 			throw new Exception();
@@ -213,6 +260,8 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()) {
 			int id = cursor.getInt(cursor.getColumnIndex("_id"));
+			
+			// Create a new result instance
 			Result r = new Result(
 					id,
 					cursor.getString(cursor.getColumnIndex("name")),
@@ -220,6 +269,8 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 					//reasoning
 					facts
 			);
+			
+			// Loop over the set of images for the device, and add them to the result
 			ArrayList<String> imgPaths = new ArrayList<String>();
 			Cursor imgCursor = getPhoneImageCursor(id);
 			imgCursor.moveToFirst();
@@ -239,6 +290,12 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		return results;
 	}
 	
+	/*
+	 * Fetches all the tuples that cumulatively produce a set.
+	 * 
+	 * @tuple lingName		name of linguistic variable of the set
+	 * @return				an ArrayList of the tuples that represent the set
+	 */
 	public ArrayList<Tuple> getLinguisticTuples(String lingName) throws Exception {
 		if(!dbIsOpen()) {
 			throw new Exception();
@@ -302,6 +359,11 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		return -1;
 	}
 	
+	/*
+	 * Adds a new rule to the rule table in the database.
+	 * 
+	 * @param rule		rule in string format
+	 */
 	public void addRule(String rule){
 		this.openWriteableDataBase();
 		ContentValues values = new ContentValues();
@@ -310,6 +372,13 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 		this.openDataBase();
 	}
 	
+	/*
+	 * Modifies values for a result device to more adequately represent
+	 * the user's preferences
+	 * 
+	 * @param r			the result device to be modified
+	 * @param approve	whether the values should become closer (true) or further (false)
+	 */
 	public void applyLearning(Result r, boolean approve) {
 		try {
 			// Calculate the values based on working memory
@@ -332,6 +401,8 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 			}
 			
 			// Calculate new value for phone
+			// Values either become closer by 10%
+			// or further away by 10%
 			ContentValues cv = new ContentValues();
 			for(int i = 0; i < Fact.totalFactTypes(); i++) {
 				double diff = Math.abs(dbV[i] - decV[i]) * 0.10;
@@ -378,7 +449,14 @@ public class PhoneDataBaseHelper extends DataBaseHelper {
 			Log.e(this.getClass().getName(), "Unable to apply learning");
 		}
 	}
-		
+	
+	/*
+	 * Add a new set into the database, for use in custom rules
+	 * 
+	 * @param name		the name of the new set
+	 * @param grouping	which collection of sets the set should belong to
+	 * @param value		one or more values to apply uniformly to the set distribution
+	 */
 	public void addSet(String name, int grouping, double... value){
 		this.openWriteableDataBase();
 		ContentValues values = new ContentValues();

@@ -10,6 +10,11 @@ public class Rule implements Comparable<Rule> {
 	private ArrayList<Fact> leftSide;
 	private ArrayList<Fact> rightSide;
 	
+	/*
+	 * Parses out a rule from a rule string in our custom format
+	 * 
+	 * @param rule		the rule string
+	 */
 	private void assignConditionAndResult(String rule) {
 		StringTokenizer tok = new StringTokenizer(rule, ">");
 		
@@ -19,11 +24,25 @@ public class Rule implements Comparable<Rule> {
 		this.rightSide = Fact.parseFactsToList(right);
 	}
 	
+	/*
+	 * Creates a rule from database data
+	 * 
+	 * @param ruleId	unique identifier of rule
+	 * @param rule		rule string in our custom format
+	 * @return			the new rule instance
+	 */
 	public Rule(int ruleId, String rule) {
 		this.ruleId = ruleId;
 		assignConditionAndResult(rule);
 	}
 	
+	/*
+	 * Create a rule from some previous state
+	 * 
+	 * @param bundle		the bundle to load previous state from
+	 * @param bundlePrefix	path to uniquely ID this rule
+	 * @return				the restored rule
+	 */
 	public Rule(Bundle bundle, String bundlePrefix) {
 		this.ruleId = bundle.getInt(bundlePrefix + "id");
 		
@@ -42,6 +61,12 @@ public class Rule implements Comparable<Rule> {
 		this.rightSide = rightSide;
 	}
 	
+	/*
+	 * Save the state of a rule
+	 * 
+	 * @param bundle		bundle to store state into
+	 * @param bundlePrefix	path to uniquely ID this rule
+	 */
 	public void saveState(Bundle bundle, String bundlePrefix) {
 		bundle.putInt(bundlePrefix + "id", getRuleId());
 		
@@ -60,14 +85,29 @@ public class Rule implements Comparable<Rule> {
 		bundle.putStringArrayList(bundlePrefix + "rightKeys", rightKeys);
 	}
 	
+	/*
+	 * Return id of the rule
+	 * 
+	 * @return		rule id
+	 */
 	public int getRuleId() {
 		return ruleId;
 	}
 	
+	/*
+	 * Get all facts in the antecedent of the rule
+	 * 
+	 * @return		an ArrayList of Fact objects in the antecedent
+	 */
 	public ArrayList<Fact> getLeftSide() {
 		return leftSide;
 	}
 	
+	/*
+	 * Get all facts in the conclusion of the rule
+	 * 
+	 * @return		an ArrayList of Fact objects in the conclusion
+	 */
 	public ArrayList<Fact> getRightSide() {
 		return rightSide;
 	}

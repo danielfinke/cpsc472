@@ -19,16 +19,28 @@ public class QuestionManager {
 	private ArrayList<Question> questions;
 	private InferenceEngine engine;
 	
+	/*
+	 * Creates a QuestionManager for a given context
+	 * 
+	 * @param c		linked context
+	 * @return		new QuestionManager
+	 */
 	public QuestionManager(Context c) {
 		PhoneDataBaseHelper.getInstance(c).openDataBase();
 	}
 	
+	/*
+	 * Safely recycles this object
+	 */
 	public void recycle() {
 		PhoneDataBaseHelper.getInstance(null).close();
 	}
 	
 	/*
 	 * Save the state of the working memory and the remaining questions
+	 * 
+	 * @param outState			the bundle to save state into
+	 * @param curQuestionId		the question the app is currently on
 	 */
 	public void saveState(Bundle outState, int curQuestionId) {
 		// Store the question ids
@@ -53,6 +65,8 @@ public class QuestionManager {
 	
 	/*
 	 * Reload the working memory and list of remaining questions
+	 * 
+	 * @param savedState		the bundle to restore state from
 	 */
 	public void restoreState(Bundle savedState) {
 		try {
@@ -127,6 +141,11 @@ public class QuestionManager {
 		return questions.remove(q);
 	}
 	
+	/*
+	 * Request results from the inference engine
+	 * 
+	 * @return		an ArrayList of Result objects (recommended devices for user)
+	 */
 	public ArrayList<Result> getResults() {
 		try {
 			return getEngine().getResultsForWorkingMem();
@@ -136,6 +155,11 @@ public class QuestionManager {
 		return null;
 	}
 	
+	/*
+	 * Submit an answer to the inference engine and re-evaluate inference
+	 * 
+	 * @param qa		the answer chosen for the question
+	 */
 	public void submitAnswer(QuestionAnswer qa) {
 		try {
 			InferenceEngine e = getEngine();
@@ -148,6 +172,10 @@ public class QuestionManager {
 	
 	/*
 	 * Returns true if the question id is in the list of ids
+	 * 
+	 * @param q				question to check for
+	 * @param questionIds	all question ids to check
+	 * @return				true if the question has an id in the list of ids supplied
 	 */
 	private boolean isQuestionInBundle(Question q, int[] questionIds) {
 		int qId = q.getId();

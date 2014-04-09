@@ -11,6 +11,12 @@ public class InferenceEngine {
 	private ArrayList<Fact> workingMem;
 	private ArrayList<Rule> rules;
 	
+	/*
+	 * Return a defuzzified value for a Fact
+	 * 
+	 * @param f		the fact to defuzzify
+	 * @return		the concrete value of the fact
+	 */
 	public static double defuzzify(Fact f) throws Exception {
 		// Get min value of first tuple
 		double tMin = (Double)f.getTuples().get(0).getObject(0);
@@ -34,6 +40,13 @@ public class InferenceEngine {
 		return num / denom;
 	}
 	
+	/*
+	 * Fuzzify a concrete value into a set value.
+	 * ONLY APPLIES TO DEVICE-RELEVANT LINGUISTIC VARIABLES
+	 * 
+	 * @param val		the concrete value
+	 * @return			the name of val's set
+	 */
 	public static String fuzzify(double val) {
 		if(val >= 0 && val <= 0.2) {
 			return "VERY_LOW";
@@ -54,6 +67,11 @@ public class InferenceEngine {
 		return null;
 	}
 	
+	/*
+	 * Create a basic inference engine object
+	 * 
+	 * @return		a new instance
+	 */
 	public InferenceEngine() {
 		workingMem = new ArrayList<Fact>();
 		try {
@@ -63,6 +81,12 @@ public class InferenceEngine {
 		}
 	}
 	
+	/*
+	 * Create an inference engine object based on some initial data
+	 * 
+	 * @param initialMem	initial Facts to be loaded into working memory
+	 * @return				a new instance with some pre-loaded data
+	 */
 	public InferenceEngine(ArrayList<Fact> initialMem) {
 		workingMem = new ArrayList<Fact>();
 		addFactsToMem(initialMem);
@@ -73,6 +97,12 @@ public class InferenceEngine {
 		}
 	}
 	
+	/*
+	 * Save the inference engine state into a bundle
+	 * 
+	 * @param bundle		the bundle to store inference data into
+	 * @param bundlePrefix	the path to uniquely ID this inference engine
+	 */
 	public void saveState(Bundle bundle, String bundlePrefix) {
 		// Store the working memory
 		ArrayList<String> memKeys = new ArrayList<String>();
@@ -92,6 +122,12 @@ public class InferenceEngine {
 		bundle.putIntArray(bundlePrefix + "ruleKeys", ruleKeys);
 	}
 	
+	/*
+	 * Restores inference/working memory state from a bundle
+	 * 
+	 * @param bundle		the bundle containing old state info
+	 * @param bundlePrefix	the path to uniquely ID this inference engine
+	 */
 	public void restoreState(Bundle bundle, String bundlePrefix) {
 		// First load the working memory
 		ArrayList<Fact> facts = new ArrayList<Fact>();
@@ -110,10 +146,21 @@ public class InferenceEngine {
 		this.rules = rules;
 	}
 	
+	/*
+	 * Return a list of the working memory facts
+	 * 
+	 * @return		an ArrayList containing Fact objects currently in working memory
+	 */
 	public ArrayList<Fact> getWorkingMem() {
 		return workingMem;
 	}
 	
+	/*
+	 * Return a fact from memory that belongs to the specified linguistic variable
+	 * 
+	 * @param lingVar		the desired linguistic variable
+	 * @return				a Fact for the desired linguistic variable, if in working mem
+	 */
 	public Fact getFact(String lingVar) {
 		for(int i = 0; i < workingMem.size(); i++) {
 			if(workingMem.get(i).getName().equals(lingVar)) {
@@ -123,6 +170,12 @@ public class InferenceEngine {
 		return null;
 	}
 	
+	/*
+	 * Calculates the state of the working memory and gets appropriate devices based
+	 * upon it.
+	 * 
+	 * @return 		an ArrayList of Result devices to suggest to the user
+	 */
 	public ArrayList<Result> getResultsForWorkingMem() {
 		try {
 			ArrayList<Fact> lookups = new ArrayList<Fact>();
@@ -132,6 +185,7 @@ public class InferenceEngine {
 					continue;
 				}
 				
+				// Match up sets to our pre-defined ones for decision-making
 				double dVal = defuzzify(f);
 				String resSet = fuzzify(dVal);
 				
@@ -166,6 +220,11 @@ public class InferenceEngine {
 		return null;
 	}
 	
+	/*
+	 * Add a fact to the working memory
+	 * 
+	 * @param f		the fact to be added
+	 */
 	public void addFactToMem(Fact f) {
 		Fact oldF = getFact(f.getName());
 		if(oldF != null) {
@@ -176,6 +235,11 @@ public class InferenceEngine {
 		}
 	}
 	
+	/*
+	 * Add multiple facts to the working memory
+	 * 
+	 * @param facts		all facts to be added
+	 */
 	public void addFactsToMem(ArrayList<Fact> facts) {
 		for(Fact f : facts) {
 			addFactToMem(f);
@@ -214,6 +278,9 @@ public class InferenceEngine {
 	/*
 	 * Checks if the rule's conditions are met, and if so, adds the deduced facts
 	 * to the working memory and discards the rule for future iterations
+	 * 
+	 * @param rule		the rule to be evaluated
+	 * @return			whether the rule evaluated succesfully
 	 */
 	private boolean evaluateRule(Rule rule) throws Exception {
 		// Calculate left side (with ANDs)
@@ -304,6 +371,9 @@ public class InferenceEngine {
 	/*
 	 * Returns true if enough information has been collected in the working memory
 	 * to make a decision
+	 * 
+	 * @return		whether the memory has enough information to make
+	 * 				an adequate decision
 	 */
 	// TODO daniel improve with freq/scaling in fact merges
 	public boolean isMemSufficientForDecision() {
@@ -324,6 +394,13 @@ public class InferenceEngine {
 		return true;
 	}
 	
+	/*
+	 * Used for determining if the working memory contains
+	 * facts that are part of the antecedent of a rule
+	 * 
+	 * @param r		the rule to check for antecedent presence
+	 * @return		whether the memory contains all the antecedent facts
+	 */
 	public boolean isAntecedentInMem(Rule r) {
 		for(Fact f : r.getLeftSide()) {
 			boolean inMem = false;
