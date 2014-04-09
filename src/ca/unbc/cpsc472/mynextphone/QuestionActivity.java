@@ -273,6 +273,7 @@ public class QuestionActivity extends Activity {
 
 				@Override
 				public void onClick(View arg0) {
+					arg0.setClickable(false);
 					SliderAnswer sa = (SliderAnswer)question.getAnswers().get(0);
 					sa.applySliderValue(skbr.getProgress() / 100.0);
 					answerQuestion(question.getAnswers().get(0));
